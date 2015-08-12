@@ -29,7 +29,7 @@ public class BewomUser {
 	
 	public MySQL m = new MySQL();
 	
-	static HashMap<UUID, BewomUser> onlineUsers = new HashMap<>();
+	static HashMap<UUID, BewomUser> onlineUsers = new HashMap<UUID, BewomUser>();
 	
 	private boolean logout = false;
 	
@@ -123,24 +123,24 @@ public class BewomUser {
 				}
 				break;
 			}
-			
+
 		} else {
-			
+
 			setPermissionLevel(1);
 			Team teamUser = player.getWorld().getScoreboard().getTeam(PERM_USER);
-			
-			if(!teamUser.getPlayers().contains(player)){
-				for(Team team : player.getWorld().getScoreboard().getTeams()) {
-					team.removePlayer(player);
+			if(teamUser != null){			
+				if(!teamUser.getPlayers().contains(player)){
+
+					for(Team team : player.getWorld().getScoreboard().getTeams()) {
+						team.removePlayer(player);
+					}
+					teamUser.addPlayer(player);
 				}
-				teamUser.addPlayer(player);
 			}
-			
 		}
-		
 	}
 
-	/**
+		/**
 	 * Returns the {@link Player} attached to this {@link BewomUser}.
 	 * @return {@link Player}
 	 */
@@ -207,7 +207,7 @@ public class BewomUser {
 				
 		String perm = (String) m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueID() + "'", "hash");
 		if(perm != null){
-			boolean perm2 = (boolean) m.executeQuery("SELECT * FROM `users_info` WHERE `uuid`='" + player.getUniqueID() + "'", "active");
+			boolean perm2 = (Boolean) m.executeQuery("SELECT * FROM `users_info` WHERE `uuid`='" + player.getUniqueID() + "'", "active");
 			if(perm2){
 				return WebRegistration.VALID;
 			} else {

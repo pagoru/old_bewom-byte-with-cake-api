@@ -7,7 +7,13 @@ import org.cakepowered.api.event.EventSuscribe;
 import org.cakepowered.api.event.InitializationEvent;
 import org.cakepowered.api.event.ServerStoppingEvent;
 
+import es.bewom.centrospokemon.CentroManager;
+import es.bewom.commands.Commands;
+import es.bewom.spawn.SpawnManager;
+import es.bewom.teleport.TPManager;
+import es.bewom.user.BewomUser;
 import es.bewom.user.UserEventsHandler;
+import es.bewom.warps.WarpManager;
 
 /**
  * 
@@ -16,7 +22,7 @@ import es.bewom.user.UserEventsHandler;
  *
  */
 
-@CakePlugin(id="bewomByte", name="bewom byte")
+@CakePlugin(id="bewomByte", name="bewom byte", version = "0.0.1")
 public class BewomByte {
 	
 	public static Game game;
@@ -39,16 +45,16 @@ public class BewomByte {
 		
 		log.debug("Loading BewomByte commands."); 
 		
-//		Commands commands = new Commands(this, game);
-//		commands.registerAll();
+		Commands commands = new Commands();
+		commands.registerAll();
 		
 		log.debug("Loading BewomByte events.");
 		
-//		BewomUser.setGame(this);
-//		TPManager.init(this);
-//		SpawnManager.load();
-//		WarpManager.load();
-//		CentroManager.init(this);
+		BewomUser.setGame(this);
+		TPManager.init(this);
+		SpawnManager.load();
+		WarpManager.load();
+		CentroManager.init(this);
 		
 		game.getEventRegistry().registerEventListener(new UserEventsHandler(game));
 //		game.getEventRegistry().registerEvent(new WarpManager());
@@ -60,8 +66,8 @@ public class BewomByte {
 	 */
 	@EventSuscribe
 	public void onServerClosing(ServerStoppingEvent e) {
-//		WarpManager.save();
-//		CentroManager.save();
+		WarpManager.save();
+		CentroManager.save();
 	}
 	
 	/**

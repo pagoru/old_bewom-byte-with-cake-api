@@ -17,7 +17,7 @@ import es.bewom.BewomByte;
 
 public class CentroManager {
 	
-	public static ArrayList<CentroPokemon> centros = new ArrayList<>();
+	public static ArrayList<CentroPokemon> centros = new ArrayList<CentroPokemon>();
 	
 	public static String add(PreciseLocation location) {
 		if(centros.size() > 0) {

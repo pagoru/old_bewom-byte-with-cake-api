@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class MySQL {
 	
-	public final String DB = "jdbc:mysql://bewomdev.darkaqua.net/bewom.es";
+	public final String DB = "jdbc:mysql://bewom.es/bewom.es";
 	public final String user = "plugin";
 	public final String password = "UzjnGApn8bD3TWUV";
 	
@@ -20,7 +20,7 @@ public class MySQL {
 		try {
 			conexion = DriverManager.getConnection (DB, user, password);
 			Statement s = conexion.createStatement();
-			ResultSet rs = s.executeQuery (e);
+			ResultSet rs = s.executeQuery(e);
 			
 			if(c != null){
 				
@@ -29,18 +29,14 @@ public class MySQL {
 					o = rs.getObject(c);
 					
 				}
-				
 			}
 			
 			conexion.close();
 			
 		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-			
 		return o;
-		
 	}
 
 }
