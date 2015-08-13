@@ -20,7 +20,7 @@ public class TPManager{
 	
 	public static void init(BewomByte plugin) {
 		
-		requests = new ArrayList<>();
+		requests = new ArrayList<TPRequest>();
 		BewomByte.game.getEventRegistry().registerEventListener(new TPManager());
 	}
 	

@@ -29,7 +29,7 @@ public class BewomUser {
 	
 	public MySQL m = new MySQL();
 	
-	static HashMap<UUID, BewomUser> onlineUsers = new HashMap<>();
+	static HashMap<UUID, BewomUser> onlineUsers = new HashMap<UUID, BewomUser>();
 	
 	private boolean logout = false;
 	
@@ -125,24 +125,24 @@ public class BewomUser {
 				}
 				break;
 			}
-			
+
 		} else {
-			
+
 			setPermissionLevel(1);
 			Team teamUser = player.getWorld().getScoreboard().getTeam(PERM_USER);
-			
-			if(!teamUser.getPlayers().contains(player)){
-				for(Team team : player.getWorld().getScoreboard().getTeams()) {
-					team.removePlayer(player);
+			if(teamUser != null){			
+				if(!teamUser.getPlayers().contains(player)){
+
+					for(Team team : player.getWorld().getScoreboard().getTeams()) {
+						team.removePlayer(player);
+					}
+					teamUser.addPlayer(player);
 				}
-				teamUser.addPlayer(player);
 			}
-			
 		}
-		
 	}
 
-	/**
+		/**
 	 * Returns the {@link Player} attached to this {@link BewomUser}.
 	 * @return {@link Player}
 	 */

@@ -39,9 +39,7 @@ public class MySQL {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-			
 		return o;
-		
 	}
 
 }

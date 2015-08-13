@@ -27,7 +27,7 @@ public class WarpManager {
 	
 	private static BewomByte plugin;
 
-	static ArrayList<Warp> warps = new ArrayList<>();
+	static ArrayList<Warp> warps = new ArrayList<Warp>();
 
 	/**
 	 * Adds a warp to the list of available warps.
@@ -163,7 +163,7 @@ public class WarpManager {
 			Warp[] warpsArray = gson.fromJson(new FileReader("bewom/warps.json"),
 					Warp[].class);
 
-			ArrayList<Warp> warpsList = new ArrayList<>();
+			ArrayList<Warp> warpsList = new ArrayList<Warp>();
 			if(!warpsList.isEmpty()) {
 				for (Warp warp : warpsArray) {
 					warpsList.add(warp);

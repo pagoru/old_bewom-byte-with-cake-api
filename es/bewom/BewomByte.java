@@ -23,6 +23,7 @@ import es.bewom.warps.WarpManager;
  */
 
 @CakePlugin(id="bewomByte", name="bewom byte", version = "0.1")
+
 public class BewomByte {
 	
 	public static Game game;
@@ -66,8 +67,8 @@ public class BewomByte {
 	 */
 	@EventSuscribe
 	public void onServerClosing(ServerStoppingEvent e) {
-//		WarpManager.save();
-//		CentroManager.save();
+		WarpManager.save();
+		CentroManager.save();
 	}
 	
 	/**
