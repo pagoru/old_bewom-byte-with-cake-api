@@ -7,6 +7,7 @@ import org.cakepowered.api.base.Game;
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.event.BlockBreakEvent;
 import org.cakepowered.api.event.PlayerInteractEvent;
+import org.cakepowered.api.util.Location;
 import org.cakepowered.api.world.World;
 import org.cakepowered.api.world.block.Block;
 import org.cakepowered.api.world.block.Blocks;
@@ -21,11 +22,11 @@ public class P {
 	
 	public static void on(Game game, PlayerInteractEvent event){
 		
-		Player p = (Player) event.getPlayer();
-		Block b = (Block) event.getPosition();
+		Player p = event.getPlayer();
 		double x = event.getPosition().getX();
 		double y = event.getPosition().getY();
 		double z = event.getPosition().getZ();
+		Block b =  event.getWorld().getBlock((int)x, (int)y, (int)z);
 		World world = p.getWorld();
 		
 		if(b != null){

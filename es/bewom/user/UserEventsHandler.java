@@ -108,9 +108,8 @@ public class UserEventsHandler {
 			case BewomUser.PERM_LEVEL_ADMIN:
 				message = TextFormating.DARK_RED + "/" + name + TextFormating.WHITE + " <" + TextFormating.BOLD + postName;
 			}
-			game.getServer().sendMessageToAll(message);		
+			game.getServer().sendMessageToAll(message);
 		}
-		
 		event.setEventCanceled(true);
 	}
 

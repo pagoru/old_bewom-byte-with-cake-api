@@ -14,12 +14,15 @@ public class MySQL {
 	
 	public Object executeQuery(String e, String c){
 		
+		System.out.println("String e: "+e);
+		System.out.println("String c: "+c);
 		Object o = null;
 		
 		Connection conexion;
 		try {
 			conexion = DriverManager.getConnection (DB, user, password);
 			Statement s = conexion.createStatement();
+			
 			ResultSet rs = s.executeQuery(e);
 			
 			if(c != null){
