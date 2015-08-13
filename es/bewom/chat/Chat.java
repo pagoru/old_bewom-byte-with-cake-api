@@ -14,7 +14,7 @@ public class Chat {
 	private static Game game = BewomByte.game;
 	private static BewomLog l = new BewomLog();
 	
-	public static void sendMessage(Player p, String m, String msg){
+	public static void sendMessage(Player p, String msg){
 		
 		if(msg != null){
 			
@@ -30,7 +30,7 @@ public class Chat {
 			
 		}
 		
-		l.add(p.getUniqueID(), m);
+		l.add(p.getUniqueID(), msg);
 	}
 
 }

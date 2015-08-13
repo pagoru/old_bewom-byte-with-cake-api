@@ -22,7 +22,8 @@ import es.bewom.warps.WarpManager;
  *
  */
 
-@CakePlugin(id="bewomByte", name="bewom byte", version = "0.0.1")
+@CakePlugin(id="bewomByte", name="bewom byte", version = "0.1")
+
 public class BewomByte {
 	
 	public static Game game;
@@ -57,7 +58,7 @@ public class BewomByte {
 		CentroManager.init(this);
 		
 		game.getEventRegistry().registerEventListener(new UserEventsHandler(game));
-//		game.getEventRegistry().registerEvent(new WarpManager());
+		game.getEventRegistry().registerEventListener(new WarpManager());
 	}
 	
 	/**
