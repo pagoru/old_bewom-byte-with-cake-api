@@ -65,7 +65,9 @@ public class BewomUser {
 	
 	public void updatePermissions(){
 		
-		String perm = (String) m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + player.getUniqueID() + "'", "type");
+		String perm = m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "type");
+		
+		System.out.println(perm);
 		
 		if(perm != null){
 		
@@ -207,8 +209,8 @@ public class BewomUser {
 				
 		String perm = (String) m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueID() + "'", "hash");
 		if(perm != null){
-			boolean perm2 = (boolean) m.executeQuery("SELECT * FROM `users_info` WHERE `uuid`='" + player.getUniqueID() + "'", "active");
-			if(perm2){
+			String perm2 = (String) m.executeQuery("SELECT * FROM `users_info` WHERE `uuid`='" + player.getUniqueID() + "'", "active");
+			if(!perm2.equals("0")){
 				return WebRegistration.VALID;
 			} else {
 				return WebRegistration.NOT_VALID;

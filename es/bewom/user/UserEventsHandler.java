@@ -46,7 +46,7 @@ public class UserEventsHandler {
 		BewomUser user = new BewomUser(player);
 		BewomUser.addUser(user);
 		
-		System.out.println(user.getLastMove());
+		System.out.println(user.getRegistration());
 		
 		player.sendMessage("//login");
 		

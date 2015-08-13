@@ -37,7 +37,9 @@ public class CommandPonerCentro extends CommandBase {
 			player.sendMessage(TextFormating.RED + "No tienes permisos.");
 			return;
 		}
-
+		
+		System.out.println(player.getLocation().getX());
+		
 		String error = CentroManager.add(player.getLocation());
 
 		if(error != null) {
