@@ -48,8 +48,6 @@ public class UserEventsHandler {
 		
 		System.out.println(user.getRegistration());
 		
-		player.sendMessage("//login");
-		
 		if (user.getRegistration() == WebRegistration.VALID) {
 //			player.sendTitle(
 //				Titles.builder()
@@ -103,10 +101,13 @@ public class UserEventsHandler {
 			switch(b.getPermissionLevel()) {
 			case BewomUser.PERM_LEVEL_USER:
 				message = TextFormating.GRAY + "/" + name + TextFormating.WHITE + " <" + postName;
+				break;
 			case BewomUser.PERM_LEVEL_VIP:
 				message = TextFormating.DARK_AQUA + "/" + name + TextFormating.WHITE + " <" + postName;
+				break;
 			case BewomUser.PERM_LEVEL_ADMIN:
 				message = TextFormating.DARK_RED + "/" + name + TextFormating.WHITE + " <" + TextFormating.BOLD + postName;
+				break;
 			}
 			game.getServer().sendMessageToAll(message);
 		}
