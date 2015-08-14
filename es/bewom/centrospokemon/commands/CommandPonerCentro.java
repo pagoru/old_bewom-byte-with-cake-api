@@ -38,7 +38,7 @@ public class CommandPonerCentro extends CommandBase {
 			return;
 		}
 				
-		String error = CentroManager.add(new PreciseLocation(player.getLocation().getWorld(), 
+		String error = CentroManager.add(new PreciseLocation(player.getLocation().getDimension(), 
 				player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), 
 				DirectionYaw.getYawFromDirection(player.getDirection()), 0));
 

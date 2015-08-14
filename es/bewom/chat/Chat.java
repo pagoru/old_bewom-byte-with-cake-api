@@ -25,8 +25,6 @@ public class Chat {
 				BewomUser user = BewomUser.getUser(player);
 				if(user.getRegistration() == WebRegistration.VALID){
 					player.sendMessage(formatedMSG);
-				} else {
-					break;
 				}
 				
 			}
@@ -35,5 +33,22 @@ public class Chat {
 		
 		l.add(p.getUniqueID(), msg);
 	}
-
+	
+	public static String getCleanText(String t){
+		
+		if(t.length() > 5){
+			String s1 = t.substring(0, 1).toUpperCase();
+			String s2 = t.substring(t.length() - 1, t.length());
+			String s3 = t.substring(1, t.length());
+			
+			if(!s2.equals("?") && !s2.equals("!") && !s2.equals(".") && !s2.equals(":") && !s2.equals(";")){
+				return s1 + s3 + ".";
+			}
+			
+			return s1 + s3;
+		}
+		
+		return t;
+	}
+	
 }

@@ -5,6 +5,7 @@ import org.cakepowered.api.util.text.TextFormating;
 public class TextMessages {
 	
 	public static final String NO_PERMISSIONS = TextFormating.RED + "No tienes permisos.";
+	public static final String ERROR = TextFormating.RED + "No me hexperava heste heror.";
 	public static final String NOT_CONSOLE_COMPATIBLE = "Este comando no funciona en consola.";
 
 	public static final String TP_SUCCESS = TextFormating.RED + "Teletransporte exitoso.";

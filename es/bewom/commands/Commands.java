@@ -28,5 +28,9 @@ public class Commands {
 		
 		reg.registerCommand(new CommandP());
 		
+		reg.registerCommand(new CommandGM());
+		
+		reg.registerCommand(new CommandKick());
+		
 	}
 }

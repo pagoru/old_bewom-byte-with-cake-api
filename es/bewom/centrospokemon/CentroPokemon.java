@@ -11,7 +11,7 @@ import es.bewom.BewomByte;
 public class CentroPokemon {
 	
 	@Expose
-	public String world;
+	public int dimension;
 	@Expose
 	public double x;
 	@Expose
@@ -24,7 +24,7 @@ public class CentroPokemon {
 	public float pitch;
 	
 	public CentroPokemon(PreciseLocation loc) {
-		this.world = loc.getWorld().getName();
+		this.dimension = loc.getDimension();
 		this.x = loc.getX();
 		this.y = loc.getY();
 		this.z = loc.getZ();
@@ -33,14 +33,14 @@ public class CentroPokemon {
 	}
 
 	public boolean isEqualTo(PreciseLocation loc) {
-		if(loc == new PreciseLocation(BewomByte.game.getServer().getWorld(world), x, y, z, yaw, pitch)) {
+		if(loc == new PreciseLocation(BewomByte.game.getServer().getWorld("world").getDimension(), x, y, z, yaw, pitch)) {
 			return true;
 		}
 		return false;
 	}
 	
 	public boolean isNear(PreciseLocation location) {
-		if(!world.equals(location.getWorld().getName())) return false;
+		if(dimension != location.getDimension()) return false;
 		if(location.getPosition().distance(getVector()) < 1) {
 			return true;
 		}
@@ -58,7 +58,7 @@ public class CentroPokemon {
 	}
 	
 	public PreciseLocation getLocation(){
-		return new PreciseLocation(BewomByte.game.getServer().getWorld(world), x, y, z, yaw, pitch);
+		return new PreciseLocation(BewomByte.game.getServer().getWorld("world").getDimension(), x, y, z, yaw, pitch);
 	}
 
 }

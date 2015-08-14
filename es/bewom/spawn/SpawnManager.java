@@ -25,16 +25,16 @@ public class SpawnManager {
 		SpawnManager.spawn = spawn;
 	}
 	
-	public static void setSpawn(Location location, String world) {
+	public static void setSpawn(Location location, int world) {
 		Spawn spawn = new Spawn(location, world);
 		setSpawn(spawn);
 	}
 	
 	public static void setSpawn(PreciseLocation location) {
-		setSpawn(location.toLocation(), location.getWorld().getName());
+		setSpawn(location.toLocation(), location.getDimension());
 	}
 	
-	public static void setSpawn(int x, int y, int z, String world) {
+	public static void setSpawn(int x, int y, int z, int world) {
 		Spawn spawn = new Spawn(x, y, z, world);
 		setSpawn(spawn);
 	}
@@ -88,22 +88,22 @@ public class SpawnManager {
 	public static class Spawn {
 		
 		public int x, y, z;
-		public String world;
+		public int world;
 		
-		public Spawn(int x, int y, int z, String world) {
+		public Spawn(int x, int y, int z, int world) {
 			this.x = x;
 			this.y = y;
 			this.z = z;
 		}
 		
-		public Spawn(Location location, String world) {
+		public Spawn(Location location, int world) {
 			this.x = location.getX();
 			this.y = location.getY();
 			this.z = location.getZ();
 			this.world = world;
 		}
 		
-		public void setWorld(String world) {
+		public void setWorld(int world) {
 			this.world = world;
 		}
 		
@@ -123,7 +123,7 @@ public class SpawnManager {
 			return z;
 		}
 		
-		public String getWorld() {
+		public int getDimension() {
 			return world;
 		}
 		
