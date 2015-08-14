@@ -3,6 +3,8 @@ package es.bewom.centrospokemon.commands;
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
+import org.cakepowered.api.util.DirectionYaw;
+import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.util.text.TextFormating;
 
 import es.bewom.centrospokemon.CentroManager;
@@ -17,7 +19,7 @@ public class CommandPonerCentro extends CommandBase {
 	
 	@Override
 	public String getCommandUsage(CommandSender commandSender) {
-		return "Establecer un centro pokemon en la posición actual.";
+		return "Establecer un centro pokemon en la posicion actual.";
 	}
 
 	@Override
@@ -35,10 +37,10 @@ public class CommandPonerCentro extends CommandBase {
 			player.sendMessage(TextFormating.RED + "No tienes permisos.");
 			return;
 		}
-		
-		System.out.println(player.getLocation().getX());
-		
-		String error = CentroManager.add(player.getLocation());
+				
+		String error = CentroManager.add(new PreciseLocation(player.getLocation().getWorld(), 
+				player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), 
+				DirectionYaw.getYawFromDirection(player.getDirection()), 0));
 
 		if(error != null) {
 			commandSender.sendMessage(TextFormating.RED + error);

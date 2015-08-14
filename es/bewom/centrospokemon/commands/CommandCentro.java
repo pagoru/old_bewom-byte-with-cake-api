@@ -22,7 +22,7 @@ public class CommandCentro extends CommandBase {
 	
 	@Override
 	public String getCommandUsage(CommandSender commandSender) {
-		return "Ir al centro pokemon más cercano.";
+		return "Ir al centro pokemon mas cercano.";
 	}
 
 	@Override
@@ -44,8 +44,7 @@ public class CommandCentro extends CommandBase {
 		
 		CentroPokemon cp = CentroManager.getClosest(player.getLocation());
 		if(cp != null) {
-			Vector3d vec = cp.getVector().add(0.5, 0, 0.5);
-			player.setPosition(vec);
+			player.setLocation(cp.getLocation());
 		}
 		player.sendMessage(TextFormating.RED + "Teletransporte exitoso.");
 	}

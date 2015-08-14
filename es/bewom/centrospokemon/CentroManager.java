@@ -12,6 +12,7 @@ import org.cakepowered.api.util.Vector3d;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 
 import es.bewom.BewomByte;
 
@@ -47,7 +48,7 @@ public class CentroManager {
 		if(centros.size() == 0) return null;
 		CentroPokemon closest = centros.get(0);
 		for(CentroPokemon centro : centros) {
-			if(!centro.world.equals(location.getWorld().getName())){
+			if(!centro.getLocation().getWorld().getName().equals(location.getWorld().getName())){
 				continue;
 			}
 			int dist1 = closest.distance(vector3d);
@@ -77,7 +78,7 @@ public class CentroManager {
 			File file = new File("bewom/centros_pokemon.json");
 			if(!file.exists()) file.createNewFile();
 			
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
 			String json = gson.toJson(centroArray);
 			
 			FileWriter writer = new FileWriter(file);
@@ -86,7 +87,7 @@ public class CentroManager {
 			writer.close();
 		
 		} catch (IOException e) {
-			e.printStackTrace();
+			BewomByte.log.debug(e.getMessage());
 		}
 		
 	}
@@ -106,7 +107,7 @@ public class CentroManager {
 			
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
 			
 			CentroPokemon[] centroArray = gson.fromJson(reader, CentroPokemon[].class);
 			
@@ -119,7 +120,7 @@ public class CentroManager {
 			}
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			BewomByte.log.debug(e.getMessage());
 		}
 		
 	}

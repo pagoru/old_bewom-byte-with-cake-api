@@ -39,13 +39,11 @@ public class P {
 						for (Door d : doors) {
 							if(d.setDoorPos(0).isSelected(x, y, z, world)){
 								PreciseLocation loc = d.setDoorPos(1).getPreciseLocation();
-								p.moveToWorld(loc);
 								p.setLocation(loc);
 								event.setEventCanceled(true);
 							}
 							if(d.setDoorPos(1).isSelected(x, y, z, world)){
 								PreciseLocation loc = d.setDoorPos(0).getPreciseLocation();
-								p.moveToWorld(loc);
 								p.setLocation(loc);
 								event.setEventCanceled(true);
 							}

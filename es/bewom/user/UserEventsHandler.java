@@ -42,12 +42,7 @@ public class UserEventsHandler {
 	public void onUserJoin(PlayerJoinEvent event) {
 
 		Player player = event.getPlayer();
-		CentroPokemon cp = CentroManager.getClosest(player.getLocation());
-		if(cp != null) {
-			Vector3d vec = cp.getVector().add(0.5, 0, 0.5);
-			player.setPosition(vec);
-		}
-
+		
 		BewomUser user = new BewomUser(player);
 		BewomUser.addUser(user);
 		
@@ -67,6 +62,11 @@ public class UserEventsHandler {
 			
 		} else if (user.getRegistration() == WebRegistration.BANNED) {
 			user.updatePermissions();
+		}
+		
+		CentroPokemon cp = CentroManager.getClosest(player.getLocation());
+		if(cp != null) {
+			player.setLocation(cp.getLocation());
 		}
 		
 	}
@@ -143,9 +143,9 @@ public class UserEventsHandler {
 		Player player = event.getPlayer();
 		CentroPokemon cp = CentroManager.getClosest(player.getLocation());
 		if(cp != null) {
-			Vector3d vec = cp.getVector().add(0.5, 0, 0.5);
-			player.setPosition(vec);
+			player.setLocation(cp.getLocation());
 		}
+		System.out.println("Respawn!" + cp.getLocation().getX());
 	}
 	
 	@EventSuscribe

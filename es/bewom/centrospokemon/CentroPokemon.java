@@ -4,30 +4,36 @@ import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.util.Vector3d;
 import org.cakepowered.api.util.Vector3i;
 
+import com.google.gson.annotations.Expose;
+
+import es.bewom.BewomByte;
+
 public class CentroPokemon {
 	
-	public static String DEFAULT_WORLD = "world";
-	
-	public int x, y, z;
+	@Expose
 	public String world;
+	@Expose
+	public double x;
+	@Expose
+	public double y;
+	@Expose
+	public double z;
+	@Expose
+	public float yaw;
+	@Expose
+	public float pitch;
 	
-	public CentroPokemon(int x, int y, int z, String world) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.world = world;
-	}
-	
-	public CentroPokemon(PreciseLocation location) {
-		Vector3i vec = location.getPosition().toVector3i();
-		this.x = vec.getX();
-		this.y = vec.getY();
-		this.z = vec.getZ();
-		this.world = location.getWorld().getName();
+	public CentroPokemon(PreciseLocation loc) {
+		this.world = loc.getWorld().getName();
+		this.x = loc.getX();
+		this.y = loc.getY();
+		this.z = loc.getZ();
+		this.yaw = loc.getYaw();
+		this.pitch = loc.getPitch();
 	}
 
-	public boolean isEqualTo(PreciseLocation location) {
-		if(location.getPosition().toVector3i().equals(new Vector3i(x, y, z)) && world == location.getWorld().getName()) {
+	public boolean isEqualTo(PreciseLocation loc) {
+		if(loc == new PreciseLocation(BewomByte.game.getServer().getWorld(world), x, y, z, yaw, pitch)) {
 			return true;
 		}
 		return false;
@@ -47,12 +53,12 @@ public class CentroPokemon {
 		return (int) Math.abs(pos.toVector3d().distance(loc.toVector3d()));
 	}
 	
-	public String getWorld() {
-		return world;
-	}
-	
 	public Vector3d getVector() {
 		return new Vector3d(x, y, z);
+	}
+	
+	public PreciseLocation getLocation(){
+		return new PreciseLocation(BewomByte.game.getServer().getWorld(world), x, y, z, yaw, pitch);
 	}
 
 }
