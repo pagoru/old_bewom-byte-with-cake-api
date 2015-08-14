@@ -1,10 +1,7 @@
 package es.bewom.p.commands;
 
-import java.util.List;
-
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
-import org.cakepowered.api.command.CommandExecutor;
 import org.cakepowered.api.command.CommandSender;
 
 import es.bewom.p.Door;
