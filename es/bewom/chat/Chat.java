@@ -1,9 +1,13 @@
 package es.bewom.chat;
 
+import java.util.Collection;
+
 import org.cakepowered.api.base.Game;
 import org.cakepowered.api.base.Player;
 
 import es.bewom.BewomByte;
+import es.bewom.user.BewomUser;
+import es.bewom.user.WebRegistration;
 
 public class Chat {
 	
@@ -14,9 +18,18 @@ public class Chat {
 		
 		if(formatedMSG != null){
 			
-//			Collection<Player> src = game.getServer().getOnlinePlayers();
+			Collection<Player> src = game.getServer().getOnlinePlayers();
 			
-			game.getServer().sendMessageToAll(formatedMSG);		
+			for(Player player : src){
+				
+				BewomUser user = BewomUser.getUser(player);
+				if(user.getRegistration() == WebRegistration.VALID){
+					player.sendMessage(formatedMSG);
+				} else {
+					break;
+				}
+				
+			}
 			
 		}
 		
