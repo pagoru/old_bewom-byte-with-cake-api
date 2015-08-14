@@ -13,6 +13,7 @@ import org.cakepowered.api.event.PlayerInteractEvent;
 import org.cakepowered.api.event.PlayerJoinEvent;
 import org.cakepowered.api.event.PlayerQuitEvent;
 import org.cakepowered.api.event.PlayerRespawnEvent;
+import org.cakepowered.api.scoreboard.Team;
 import org.cakepowered.api.util.Location;
 import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.util.Title;
@@ -47,21 +48,30 @@ public class UserEventsHandler {
 		BewomUser.addUser(user);
 		
 		Chat.sendMessage(player, null, "//login");
-
+		
+		System.out.println(user.getPermissionLevel());
+		
 		if (user.getRegistration() == WebRegistration.VALID) {
-			player.sendTitle(new Title(TextFormating.DARK_AQUA+"Bienvenid@!", TextFormating.WHITE+"Hazte con todos...", 120));
+			player.sendTitle(new Title(TextFormating.DARK_AQUA+"Bienvenid@!", TextFormating.WHITE+"Hazte con todos...", 0, 0, 120));
 			user.updatePermissions();
 
 		} else if (user.getRegistration() == WebRegistration.NOT_VALID) {
-			player.sendTitle(new Title(TextFormating.DARK_RED+"Verifica tu correo!", TextFormating.WHITE+"Si no encuentras el correo, busca en spam...", 72000));
-
+			player.sendTitle(new Title(TextFormating.DARK_RED+"Verifica tu correo!", TextFormating.WHITE+"Si no encuentras el correo, busca en spam...", 0, 0, 72000));
+			
+			user.leaveAllTeams();
+			player.setGameMode(3);
+			
 		} else if (user.getRegistration() == WebRegistration.NOT_REGISTERED) {
 			user.createHashFirstTime();
-			player.sendTitle(new Title(TextFormating.DARK_RED+"Porfavor, registrate!", TextFormating.WHITE+"Haz click en el link del chat...", 72000));
-			player.sendLink(TextFormating.DARK_AQUA+"http://bewom.es/crear");
-			
+			player.sendTitle(new Title(TextFormating.DARK_RED+"Porfavor, registrate!", TextFormating.WHITE+"Haz click en el link del chat...", 0, 0, 72000));
+			player.sendLink(TextFormating.DARK_AQUA + user.getRegisterLink());
+
+			user.leaveAllTeams();
+			player.setGameMode(3);
 		} else if (user.getRegistration() == WebRegistration.BANNED) {
 			user.updatePermissions();
+			
+			player.setGameMode(3);
 		}
 		
 		CentroPokemon cp = CentroManager.getClosest(player.getLocation());

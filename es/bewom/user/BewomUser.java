@@ -1,6 +1,7 @@
 package es.bewom.user;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import org.cakepowered.api.base.Player;
@@ -43,7 +44,8 @@ public class BewomUser {
 	
 	private int permissionLevel;
 	
-	private String registerLink = "http://bewomdev.darkaqua.net/crear/";
+	private String registerLink = "http://bewom.es/crear/";
+	private boolean getRegisterLink = false;
 	private int registration = -1;
 	
 	/**
@@ -59,9 +61,21 @@ public class BewomUser {
 		permissionLevel = checkPermissionLevel(); //PERM_LEVEL_USER
 		
 		String hash = (String) m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueID() + "'", "hash");
-		if(hash != null){
+		if(!hash.equals("")){
 			registerLink += hash;
+			getRegisterLink = true;
 		}
+	}
+	
+	public void leaveAllTeams(){
+		
+		List<Team> teams = player.getWorld().getScoreboard().getTeams();
+		for (Team t : teams) {
+			if(t.getPlayers().contains(player)){
+				t.removePlayer(player);
+			}
+		}
+		
 	}
 	
 	public void updatePermissions(){
@@ -195,12 +209,15 @@ public class BewomUser {
 	}
 	
 	public void createHashFirstTime(){
-		Ran r = new Ran();
-		String h = r.next(32);
-		
-		registerLink += h;
-		
-		m.executeQuery("INSERT INTO `crear`(`uuid`, `user`, `hash`) VALUES ('" + player.getUniqueID() + "', '" + player.getUserName() + "', '" + h + "')", null);
+		if(!getRegisterLink){
+			Ran r = new Ran();
+			String h = r.next(32);
+			
+			registerLink += h;
+			
+			m.executeQuery("INSERT INTO `crear`(`uuid`, `user`, `hash`) VALUES ('" + player.getUniqueID() + "', '" + player.getUserName() + "', '" + h + "')", null);
+			getRegisterLink = true;
+		}
 	}
 	
 	/**
@@ -211,10 +228,10 @@ public class BewomUser {
 	private int checkWebsiteRegistration() {
 		//TODO: Check Registration in the database.
 				
-		String perm = (String) m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueID() + "'", "hash");
-		if(perm != null){
+		String perm = (String) m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueID() + "'", "valid");
+		if(perm.equals("0")){
 			String perm2 = (String) m.executeQuery("SELECT * FROM `users_info` WHERE `uuid`='" + player.getUniqueID() + "'", "active");
-			if(!perm2.equals("0")){
+			if(perm2.equals("1")){
 				return WebRegistration.VALID;
 			} else {
 				return WebRegistration.NOT_VALID;

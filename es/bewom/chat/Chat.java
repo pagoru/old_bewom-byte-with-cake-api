@@ -20,7 +20,16 @@ public class Chat {
 			
 			Collection<Player> src = game.getServer().getOnlinePlayers();
 			
-			game.getServer().sendMessageToAll(formatedMSG);		
+			for(Player player : src){
+				
+				BewomUser user = BewomUser.getUser(player);
+				if(user.getRegistration() == WebRegistration.VALID){
+					player.sendMessage(formatedMSG);
+				} else {
+					break;
+				}
+				
+			}
 			
 		}
 		
