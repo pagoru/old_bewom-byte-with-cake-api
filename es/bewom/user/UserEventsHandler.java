@@ -1,5 +1,7 @@
 package es.bewom.user;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.UUID;
 
 import org.cakepowered.api.base.Game;
@@ -13,14 +15,11 @@ import org.cakepowered.api.event.PlayerInteractEvent;
 import org.cakepowered.api.event.PlayerJoinEvent;
 import org.cakepowered.api.event.PlayerQuitEvent;
 import org.cakepowered.api.event.PlayerRespawnEvent;
-import org.cakepowered.api.scoreboard.Team;
-import org.cakepowered.api.util.Location;
+import org.cakepowered.api.event.ServerUpdateEvent;
 import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.util.Title;
-import org.cakepowered.api.util.Vector3d;
 import org.cakepowered.api.util.text.TextFormating;
 
-import es.bewom.BewomByte;
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.chat.Chat;
@@ -48,8 +47,6 @@ public class UserEventsHandler {
 		BewomUser.addUser(user);
 		
 		Chat.sendMessage(player, null, "//login");
-		
-		System.out.println(user.getPermissionLevel());
 		
 		if (user.getRegistration() == WebRegistration.VALID) {
 			player.sendTitle(new Title(TextFormating.DARK_AQUA+"Bienvenid@!", TextFormating.WHITE+"Hazte con todos...", 0, 0, 120));
@@ -128,7 +125,9 @@ public class UserEventsHandler {
 			}
 			
 		}
-		
+		if(position_map.containsKey(uuid)){
+			position_map.remove(uuid);
+		}
 	}
 
 	/**
@@ -212,4 +211,25 @@ public class UserEventsHandler {
 		
 	}
 	
+	public HashMap<UUID, PreciseLocation> position_map = new HashMap<UUID, PreciseLocation>();
+	
+	@EventSuscribe
+	public void tick(ServerUpdateEvent event){
+		Collection<Player> players = event.getServer().getOnlinePlayers();
+		for(Player p : players){
+			BewomUser user = BewomUser.getUser(p);
+			if (user.getRegistration() != WebRegistration.VALID) {
+				onPlayerMove(user);
+			}
+		}
+	}
+
+	private void onPlayerMove(BewomUser user) {
+		if(position_map.containsKey(user.getUUID())){
+			user.getPlayer().setLocation(position_map.get(user.getUUID()));
+		}else{
+			PreciseLocation loc = user.getPlayer().getLocation();
+			position_map.put(user.getUUID(), loc);
+		}
+	}
 }

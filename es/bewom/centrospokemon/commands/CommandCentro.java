@@ -3,12 +3,8 @@ package es.bewom.centrospokemon.commands;
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
-import org.cakepowered.api.util.PreciseLocation;
-import org.cakepowered.api.util.Vector3d;
 import org.cakepowered.api.util.text.TextFormating;
-import org.cakepowered.api.world.World;
 
-import es.bewom.BewomByte;
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.texts.TextMessages;
