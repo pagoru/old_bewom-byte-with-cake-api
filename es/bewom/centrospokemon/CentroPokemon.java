@@ -1,6 +1,5 @@
 package es.bewom.centrospokemon;
 
-import org.cakepowered.api.util.Location;
 import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.util.Vector3d;
 import org.cakepowered.api.util.Vector3i;

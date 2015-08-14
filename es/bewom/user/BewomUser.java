@@ -62,7 +62,6 @@ public class BewomUser {
 		if(hash != null){
 			registerLink += hash;
 		}
-		
 	}
 	
 	public void updatePermissions(){

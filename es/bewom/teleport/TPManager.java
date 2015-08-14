@@ -1,7 +1,6 @@
 package es.bewom.teleport;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.event.EventSuscribe;

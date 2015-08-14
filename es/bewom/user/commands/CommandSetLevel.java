@@ -1,7 +1,5 @@
 package es.bewom.user.commands;
 
-import java.util.Optional;
-
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;

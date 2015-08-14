@@ -24,10 +24,10 @@ public class P {
 	public static void on(Game game, PlayerInteractEvent event){
 		
 		Player p = event.getPlayer();
-		Block b = event.getWorld().getBlock(event.getPosition().getX(), event.getPosition().getY(), event.getPosition().getZ());
 		double x = event.getPosition().getX();
 		double y = event.getPosition().getY();
 		double z = event.getPosition().getZ();
+		Block b =  event.getWorld().getBlock((int)x, (int)y, (int)z);
 		World world = p.getWorld();
 		
 		if(b != null){

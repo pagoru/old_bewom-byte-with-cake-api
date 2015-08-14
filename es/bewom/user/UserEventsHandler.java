@@ -15,6 +15,7 @@ import org.cakepowered.api.event.PlayerQuitEvent;
 import org.cakepowered.api.event.PlayerRespawnEvent;
 import org.cakepowered.api.util.Location;
 import org.cakepowered.api.util.PreciseLocation;
+import org.cakepowered.api.util.Title;
 import org.cakepowered.api.util.Vector3d;
 import org.cakepowered.api.util.text.TextFormating;
 
@@ -39,59 +40,37 @@ public class UserEventsHandler {
 	 */
 	@EventSuscribe
 	public void onUserJoin(PlayerJoinEvent event) {
-		
+
 		Player player = event.getPlayer();
 		CentroPokemon cp = CentroManager.getClosest(player.getLocation());
 		if(cp != null) {
 			Vector3d vec = cp.getVector().add(0.5, 0, 0.5);
 			player.setPosition(vec);
 		}
-		
+
 		BewomUser user = new BewomUser(player);
 		BewomUser.addUser(user);
 		
 		Chat.sendMessage(player, null, "//login");
-		
+
 		if (user.getRegistration() == WebRegistration.VALID) {
-//			player.sendTitle(
-//				Titles.builder()
-//					.title(Texts.of(TextColors.DARK_AQUA, "Bienvenid@!"))
-//					.subtitle(Texts.of(TextColors.WHITE, "Hazte con todos..."))
-//					.stay(120)
-//					.build());
+			player.sendTitle(new Title(TextFormating.DARK_AQUA+"Bienvenid@!", TextFormating.WHITE+"Hazte con todos...", 120));
 			user.updatePermissions();
+
 		} else if (user.getRegistration() == WebRegistration.NOT_VALID) {
-//			player.sendTitle(
-//				Titles.builder()
-//					.title(Texts.of(TextColors.DARK_RED, "Verifica tu correo!"))
-//					.subtitle(Texts.of(TextColors.WHITE, "Si no encuentras el correo, busca en spam..."))
-//					.stay(72000)
-//					.build());
-			
-//			Sigo sin saber que hace esto de player.offer
-//			player.offer(event.getUser().getGameModeData().type().set(GameModes.SPECTATOR));
-			
+			player.sendTitle(new Title(TextFormating.DARK_RED+"Verifica tu correo!", TextFormating.WHITE+"Si no encuentras el correo, busca en spam...", 72000));
+
 		} else if (user.getRegistration() == WebRegistration.NOT_REGISTERED) {
 			user.createHashFirstTime();
-			
-//			player.sendTitle(
-//				Titles.builder()
-//					.title(Texts.of(TextColors.DARK_RED, "Porfavor, registrate!"))
-//					.subtitle(Texts.of(TextColors.WHITE, "Haz click en el link del chat..."))
-//					.stay(72000)
-//					.build());
-			player.sendMessage(TextFormating.DARK_AQUA+"http://bewom.es/crear");
-//			algun dia lo descubrire
-//			event.getUser().offer(event.getUser().getGameModeData().type().set(GameModes.SPECTATOR));
+			player.sendTitle(new Title(TextFormating.DARK_RED+"Porfavor, registrate!", TextFormating.WHITE+"Haz click en el link del chat...", 72000));
+			player.sendLink(TextFormating.DARK_AQUA+"http://bewom.es/crear");
 			
 		} else if (user.getRegistration() == WebRegistration.BANNED) {
 			user.updatePermissions();
-//			o no
-//			player.offer(player.getGameModeData().type().set(GameModes.SPECTATOR));
 		}
-
+		
 	}
-	
+
 	@EventSuscribe
 	public void onUserChat(PlayerChatEvent event) {
 		
@@ -115,7 +94,6 @@ public class UserEventsHandler {
 			}
 			Chat.sendMessage(event.getPlayer(), message, event.getMessage());
 		}
-		
 		event.setEventCanceled(true);
 	}
 
