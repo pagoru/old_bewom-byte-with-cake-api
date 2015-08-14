@@ -56,6 +56,7 @@ public class BewomByte {
 		CentroManager.init(this);
 		
 		game.getEventRegistry().registerEventListener(new UserEventsHandler(game));
+		
 	}
 	
 	/**

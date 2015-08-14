@@ -40,7 +40,7 @@ public class UserEventsHandler {
 	 */
 	@EventSuscribe
 	public void onUserJoin(PlayerJoinEvent event) {
-
+		
 		Player player = event.getPlayer();
 		
 		BewomUser user = new BewomUser(player);

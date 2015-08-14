@@ -48,13 +48,18 @@ public class CentroManager {
 		if(centros.size() == 0) return null;
 		CentroPokemon closest = centros.get(0);
 		for(CentroPokemon centro : centros) {
-			if(!centro.getLocation().getWorld().getName().equals(location.getWorld().getName())){
-				continue;
-			}
-			int dist1 = closest.distance(vector3d);
-			int dist2 = centro.distance(vector3d);
-			if(dist2 < dist1) {
-				closest = centro;
+			if(centro.getLocation().getWorld().getName().equals(location.getWorld().getName())){
+				int dist1 = closest.distance(vector3d);
+				int dist2 = centro.distance(vector3d);
+				if(dist2 < dist1) {
+					closest = centro;
+				}
+			} else if (centro.getLocation().getWorld().getName().equals("world")){
+				int dist1 = closest.distance(vector3d);
+				int dist2 = centro.distance(vector3d);
+				if(dist2 < dist1) {
+					closest = centro;
+				}
 			}
 		}
 		return closest;
