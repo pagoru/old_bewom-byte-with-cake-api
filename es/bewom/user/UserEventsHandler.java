@@ -1,6 +1,7 @@
 package es.bewom.user;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -48,28 +49,7 @@ public class UserEventsHandler {
 		
 		Chat.sendMessage(player, null, "//login");
 		
-		if (user.getRegistration() == WebRegistration.VALID) {
-			player.sendTitle(new Title(TextFormating.DARK_AQUA+"Bienvenid@!", TextFormating.WHITE+"Hazte con todos...", 0, 0, 120));
-			user.updatePermissions();
-
-		} else if (user.getRegistration() == WebRegistration.NOT_VALID) {
-			player.sendTitle(new Title(TextFormating.DARK_RED+"Verifica tu correo!", TextFormating.WHITE+"Si no encuentras el correo, busca en spam...", 0, 0, 72000));
-			
-			user.leaveAllTeams();
-			player.setGameMode(3);
-			
-		} else if (user.getRegistration() == WebRegistration.NOT_REGISTERED) {
-			user.createHashFirstTime();
-			player.sendTitle(new Title(TextFormating.DARK_RED+"Porfavor, registrate!", TextFormating.WHITE+"Haz click en el link del chat...", 0, 0, 72000));
-			player.sendLink(TextFormating.DARK_AQUA + user.getRegisterLink());
-
-			user.leaveAllTeams();
-			player.setGameMode(3);
-		} else if (user.getRegistration() == WebRegistration.BANNED) {
-			user.updatePermissions();
-			
-			player.setGameMode(3);
-		}
+		user.updateRegistration();
 		
 		CentroPokemon cp = CentroManager.getClosest(player.getLocation());
 		if(cp != null) {
@@ -85,21 +65,27 @@ public class UserEventsHandler {
 		
 		if (b.getRegistration() == WebRegistration.VALID) {
 			String message = "";
-			String postName = event.getMessage();
+			String postName = Chat.getCleanText(event.getMessage());
 			String name = event.getUsername();
 			
-			switch(b.getPermissionLevel()) {
-			case BewomUser.PERM_LEVEL_USER:
-				message = TextFormating.GRAY + "/" + name + TextFormating.WHITE + " < " + postName;
-				break;
-			case BewomUser.PERM_LEVEL_VIP:
-				message = TextFormating.DARK_AQUA + "/" + name + TextFormating.WHITE + " < " + postName;
-				break;
-			case BewomUser.PERM_LEVEL_ADMIN:
-				message = TextFormating.DARK_RED + "/" + name + TextFormating.WHITE + " < " + TextFormating.BOLD + postName;
-				break;
+			if(!postName.equals(b.lastMessage)){
+				
+				switch(b.getPermissionLevel()) {
+				case BewomUser.PERM_LEVEL_USER:
+					message = TextFormating.GRAY + "/" + name + TextFormating.WHITE + " < " + postName;
+					break;
+				case BewomUser.PERM_LEVEL_VIP:
+					message = TextFormating.DARK_AQUA + "/" + name + TextFormating.WHITE + " < " + postName;
+					break;
+				case BewomUser.PERM_LEVEL_ADMIN:
+					message = TextFormating.DARK_RED + "/" + name + TextFormating.WHITE + " < " + TextFormating.BOLD + postName;
+					break;
+				}
+				
+				b.lastMessage = postName;
+				Chat.sendMessage(event.getPlayer(), message, event.getMessage());
+				
 			}
-			Chat.sendMessage(event.getPlayer(), message, event.getMessage());
 		}
 		event.setEventCanceled(true);
 	}
@@ -130,23 +116,6 @@ public class UserEventsHandler {
 		}
 	}
 
-	/**
-	 * Event triggered when a player moves. If the player is not registered in
-	 * the website he cannot move.
-	 * 
-	 * @param event
-	 */
-//	evento no disponible en forge, se tiene que implementar usando un ServerUpdateEvent
-//	@Subscribe
-//	public void onUserMoved(PlayerMoveEvent event) {
-//		BewomUser b = BewomUser.getUser(event.getUser());
-//		
-//		if (b.getRegistration() != WebRegistration.VALID) {
-//			event.setCancelled(true);
-//		}
-//		
-//	}
-	
 	@EventSuscribe
 	public void onUserRespawn(PlayerRespawnEvent event) {
 		Player player = event.getPlayer();
@@ -220,6 +189,16 @@ public class UserEventsHandler {
 			BewomUser user = BewomUser.getUser(p);
 			if (user.getRegistration() != WebRegistration.VALID) {
 				onPlayerMove(user);
+				Date date = new Date();
+				long d = ((date.getTime()/1000) - (user.loginDate/1000));
+				if(d == user.registerDateVariable){
+					user.registration = user.checkWebsiteRegistration();
+					user.updateRegistration();
+					user.registerDateVariable += 15;
+					if(d > 180){
+						p.kick(TextFormating.RED + "Has sido kickeado por inactividad durante el registro.");
+					}
+				}
 			}
 		}
 	}

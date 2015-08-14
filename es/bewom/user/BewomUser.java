@@ -1,5 +1,6 @@
 package es.bewom.user;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -7,6 +8,7 @@ import java.util.UUID;
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.scoreboard.Scoreboard;
 import org.cakepowered.api.scoreboard.Team;
+import org.cakepowered.api.util.Title;
 import org.cakepowered.api.util.text.TextFormating;
 
 import es.bewom.BewomByte;
@@ -46,7 +48,12 @@ public class BewomUser {
 	
 	private String registerLink = "http://bewom.es/crear/";
 	private boolean getRegisterLink = false;
-	private int registration = -1;
+	public int registration = -1;
+	public boolean registerLinkSended = false;
+	public long registerDateVariable = 15;
+	public long loginDate;
+	
+	public String lastMessage;
 	
 	/**
 	 * Constructor. Creates a {@link BewomUser} from a player.
@@ -54,6 +61,7 @@ public class BewomUser {
 	 */
 	public BewomUser(Player player) {
 		
+		this.loginDate = new Date().getTime();
 		this.player = player;
 		this.uuid = player.getUniqueID();
 		lastMove = plugin.getGame().getServer().getRunningTimeTicks();
@@ -94,7 +102,7 @@ public class BewomUser {
 				setPermissionLevel(1);
 			}
 			
-			player.setGameMode(0);	
+			player.setGameMode(2);	
 			switch(permissionLevel) {
 			case PERM_LEVEL_ADMIN:
 				Team team = player.getWorld().getScoreboard().getTeam(PERM_ADMIN);
@@ -225,7 +233,7 @@ public class BewomUser {
 	 * Grabs {@link WebRegistration} value from web server.
 	 * @return 
 	 */
-	private int checkWebsiteRegistration() {
+	public int checkWebsiteRegistration() {
 		//TODO: Check Registration in the database.
 				
 		String perm = (String) m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueID() + "'", "valid");
@@ -360,6 +368,36 @@ public class BewomUser {
 
 	public void setLogout(boolean logout) {
 		this.logout = logout;
+	}
+
+	public void updateRegistration() {
+		
+		if (getRegistration() == WebRegistration.VALID) {
+			player.sendTitle(new Title(TextFormating.DARK_AQUA+"Bienvenid@!", TextFormating.WHITE+"Hazte con todos...", 0, 0, 120));
+			updatePermissions();
+			
+		} else if (getRegistration() == WebRegistration.NOT_VALID) {
+			player.sendTitle(new Title(TextFormating.DARK_RED+"Verifica tu correo!", TextFormating.WHITE+"Si no encuentras el correo, busca en spam...", 0, 0, 900));
+			
+			leaveAllTeams();
+			player.setGameMode(3);
+			
+		} else if (getRegistration() == WebRegistration.NOT_REGISTERED) {
+			createHashFirstTime();
+			player.sendTitle(new Title(TextFormating.DARK_RED+"Porfavor, registrate!", TextFormating.WHITE+"Haz click en el link del chat...", 0, 0, 900));
+			if(!registerLinkSended){
+				player.sendLink(TextFormating.DARK_AQUA + getRegisterLink());
+				registerLinkSended = true;
+			}
+
+			leaveAllTeams();
+			player.setGameMode(3);
+		} else if (getRegistration() == WebRegistration.BANNED) {
+			updatePermissions();
+			
+			player.setGameMode(3);
+		}
+		
 	}
 	
 }

@@ -37,12 +37,12 @@ public class P {
 				if(doors != null){
 					if(!second && !first){
 						for (Door d : doors) {
-							if(d.setDoorPos(0).isSelected(x, y, z, world)){
+							if(d.setDoorPos(0).isSelected(x, y, z, world.getDimension())){
 								PreciseLocation loc = d.setDoorPos(1).getPreciseLocation();
 								p.setLocation(loc);
 								event.setEventCanceled(true);
 							}
-							if(d.setDoorPos(1).isSelected(x, y, z, world)){
+							if(d.setDoorPos(1).isSelected(x, y, z, world.getDimension())){
 								PreciseLocation loc = d.setDoorPos(0).getPreciseLocation();
 								p.setLocation(loc);
 								event.setEventCanceled(true);
@@ -57,8 +57,7 @@ public class P {
 					if(equalsAnyWoodenDoorTypes(doorW)){
 						y -= 1;
 					}
-					System.out.println(p.getLocation().getYaw());
-					PreciseLocation l = new PreciseLocation(p.getWorld(), x, y, z, DirectionYaw.getOpossiteYawFromDirection(p.getDirection()), 0);
+					PreciseLocation l = new PreciseLocation(p.getDimensionID(), x, y, z, DirectionYaw.getOpossiteYawFromDirection(p.getDirection()), 0);
 					doors.get(lastDoor).setDoorPos(0).setLocation(l);
 					second = false;
 					p.sendMessage("Puertas seleccionadas.");
@@ -69,8 +68,7 @@ public class P {
 					if(equalsAnyWoodenDoorTypes(doorW)){
 						y -= 1;
 					}
-					System.out.println(p.getLocation().getYaw());
-					PreciseLocation l = new PreciseLocation(p.getWorld(), x, y, z, DirectionYaw.getOpossiteYawFromDirection(p.getDirection()), 0);
+					PreciseLocation l = new PreciseLocation(p.getDimensionID(), x, y, z, DirectionYaw.getOpossiteYawFromDirection(p.getDirection()), 0);
 					doors.get(lastDoor).setDoorPos(1).setLocation(l);
 					first = false;
 					second = true;
