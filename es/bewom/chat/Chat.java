@@ -14,19 +14,13 @@ public class Chat {
 	private static Game game = BewomByte.game;
 	private static BewomLog l = new BewomLog();
 	
-	public static void sendMessage(Player p, String msg){
+	public static void sendMessage(Player p, String formatedMSG, String msg){
 		
-		if(msg != null){
+		if(formatedMSG != null){
 			
 			Collection<Player> src = game.getServer().getOnlinePlayers();
 			
-			for(Player player : src) {
-				
-				if(BewomUser.getUser(player).getRegistration() == WebRegistration.VALID){
-					player.sendMessage(msg);					
-				}
-				
-			}
+			game.getServer().sendMessageToAll(formatedMSG);		
 			
 		}
 		

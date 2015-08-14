@@ -2,62 +2,39 @@ package es.bewom.p;
 
 import org.cakepowered.api.util.Location;
 import org.cakepowered.api.util.PreciseLocation;
+import org.cakepowered.api.util.Vector3d;
 import org.cakepowered.api.world.World;
 
 public class Door {
 	
-	private World[] world = {null, null};
-	private double[] x = new double[2];
-	private double[] y = new double[2];
-	private double[] z = new double[2];
-	
+	private PreciseLocation[] loc = {null, null};
 	private int pos;
 	
-	public World[] getWorld() {
-		return world;
+	public boolean isSameWorld(){
+		
+		System.out.println(loc[0].getWorld().getName() + "_" + loc[1].getWorld().getName());
+		if(loc[0].getWorld().getName().equals(loc[1].getWorld().getName())){
+			return true;
+		}
+		return false;
+		
 	}
-	public double[] getX() {
-		return x;
-	}
-	public double[] getY() {
-		return y;
-	}
-	public double[] getZ() {
-		return z;
-	}
-	public PreciseLocation getLocation(){
-		return new PreciseLocation(world[pos], x[pos] + 0.5, y[pos], z[pos] + 0.5);
+	
+	public PreciseLocation getPreciseLocation(){
+		return new PreciseLocation(loc[pos].getWorld(), loc[pos].getX() + 0.5, loc[pos].getY(), loc[pos].getZ() + 0.5, loc[pos].getYaw(), loc[pos].getPitch());
 	}
 	
 	public Door setDoorPos(int pos){
 		this.pos = pos;
 		return this;
 	}
-	public Door setWorld(World world) {
-		this.world[pos] = world;
-		return this;
-	}
-	public Door setX(double x) {
-		this.x[pos] = x;
-		return this;
-	}
-	public Door setY(double y) {
-		this.y[pos] = y;
-		return this;
-	}
-	public Door setZ(double z) {
-		this.z[pos] = z;
-		return this;
-	}
-	public Door setLocation(double x, double y, double z){
-		this.x[pos] = x;
-		this.y[pos] = y;
-		this.z[pos] = z;
+	public Door setLocation(PreciseLocation loc){
+		this.loc[pos] = loc;
 		return this;
 	}
 	
 	public boolean isSelected(double x, double y, double z, World world){
-		if(x == this.x[pos] && (y == this.y[pos] || y == this.y[pos] + 1) && z == this.z[pos] && world.equals(this.world[pos])){
+		if(x == loc[pos].getX() && (y == loc[pos].getY() || y == loc[pos].getY() + 1) && z == loc[pos].getZ() && world.getName().equals(loc[pos].getWorld().getName())){
 			return true;									
 		}
 		return false;

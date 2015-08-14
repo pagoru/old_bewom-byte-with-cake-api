@@ -46,7 +46,7 @@ public class CommandSpawn extends CommandBase {
 		
 		PreciseLocation loc = new PreciseLocation(
 				BewomByte.game.getServer().getWorld(SpawnManager.getSpawn().getWorld()),
-				SpawnManager.getSpawn().getVector());
+				SpawnManager.getSpawn().getVector(), player.getLocation().getYaw(), player.getLocation().getPitch());
 		player.moveToWorld(loc);
 		player.sendMessage(TextMessages.TP_SUCCESS);
 	}

@@ -4,6 +4,7 @@ import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
 import org.cakepowered.api.util.PreciseLocation;
+import org.cakepowered.api.util.Vector3d;
 import org.cakepowered.api.util.text.TextFormating;
 import org.cakepowered.api.world.World;
 
@@ -40,15 +41,12 @@ public class CommandCentro extends CommandBase {
 			player.sendMessage(TextMessages.NO_PERMISSIONS);
 			return;
 		}
-
-		CentroPokemon cp = CentroManager.getClosest(player.getLocation());
-		if(cp == null) {
-			player.sendMessage(TextFormating.RED + "No hay Centros Pokemon cercanos.");
-			return;
-		}
 		
-		World world = BewomByte.game.getServer().getWorld(cp.getWorld());
-		player.moveToWorld(new PreciseLocation(world, cp.getVector()));
+		CentroPokemon cp = CentroManager.getClosest(player.getLocation());
+		if(cp != null) {
+			Vector3d vec = cp.getVector().add(0.5, 0, 0.5);
+			player.setPosition(vec);
+		}
 		player.sendMessage(TextFormating.RED + "Teletransporte exitoso.");
 	}
 

@@ -13,11 +13,15 @@ import org.cakepowered.api.event.PlayerInteractEvent;
 import org.cakepowered.api.event.PlayerJoinEvent;
 import org.cakepowered.api.event.PlayerQuitEvent;
 import org.cakepowered.api.event.PlayerRespawnEvent;
+import org.cakepowered.api.util.Location;
+import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.util.Vector3d;
 import org.cakepowered.api.util.text.TextFormating;
 
+import es.bewom.BewomByte;
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
+import es.bewom.chat.Chat;
 import es.bewom.p.P;
 
 public class UserEventsHandler {
@@ -46,9 +50,7 @@ public class UserEventsHandler {
 		BewomUser user = new BewomUser(player);
 		BewomUser.addUser(user);
 		
-		System.out.println(user.getRegistration());
-		
-		player.sendMessage("//login");
+		Chat.sendMessage(player, null, "//login");
 		
 		if (user.getRegistration() == WebRegistration.VALID) {
 //			player.sendTitle(
@@ -99,16 +101,19 @@ public class UserEventsHandler {
 			String message = "";
 			String postName = event.getMessage();
 			String name = event.getUsername();
-					
+			
 			switch(b.getPermissionLevel()) {
 			case BewomUser.PERM_LEVEL_USER:
-				message = TextFormating.GRAY + "/" + name + TextFormating.WHITE + " <" + postName;
+				message = TextFormating.GRAY + "/" + name + TextFormating.WHITE + " < " + postName;
+				break;
 			case BewomUser.PERM_LEVEL_VIP:
-				message = TextFormating.DARK_AQUA + "/" + name + TextFormating.WHITE + " <" + postName;
+				message = TextFormating.DARK_AQUA + "/" + name + TextFormating.WHITE + " < " + postName;
+				break;
 			case BewomUser.PERM_LEVEL_ADMIN:
-				message = TextFormating.DARK_RED + "/" + name + TextFormating.WHITE + " <" + TextFormating.BOLD + postName;
+				message = TextFormating.DARK_RED + "/" + name + TextFormating.WHITE + " < " + TextFormating.BOLD + postName;
+				break;
 			}
-			game.getServer().sendMessageToAll(message);		
+			Chat.sendMessage(event.getPlayer(), message, event.getMessage());
 		}
 		
 		event.setEventCanceled(true);
@@ -128,7 +133,7 @@ public class UserEventsHandler {
 			
 			if(!u.isLogout()){
 				
-				player.sendMessage("//logout");
+				Chat.sendMessage(player, null, "//logout");
 				u.setLogout(true);
 				u.remove();
 				
@@ -159,11 +164,10 @@ public class UserEventsHandler {
 	public void onUserRespawn(PlayerRespawnEvent event) {
 		Player player = event.getPlayer();
 		CentroPokemon cp = CentroManager.getClosest(player.getLocation());
-		if(cp == null) {
-			return;
+		if(cp != null) {
+			Vector3d vec = cp.getVector().add(0.5, 0, 0.5);
+			player.setPosition(vec);
 		}
-		Vector3d vec = cp.getVector().add(0.5, 0, 0.5);
-		player.setSpawnLocation(vec);
 	}
 	
 	@EventSuscribe

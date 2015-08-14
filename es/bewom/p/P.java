@@ -7,6 +7,8 @@ import org.cakepowered.api.base.Game;
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.event.BlockBreakEvent;
 import org.cakepowered.api.event.PlayerInteractEvent;
+import org.cakepowered.api.util.DirectionYaw;
+import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.world.World;
 import org.cakepowered.api.world.block.Block;
 import org.cakepowered.api.world.block.Blocks;
@@ -21,8 +23,8 @@ public class P {
 	
 	public static void on(Game game, PlayerInteractEvent event){
 		
-		Player p = (Player) event.getPlayer();
-		Block b = (Block) event.getPosition();
+		Player p = event.getPlayer();
+		Block b = event.getWorld().getBlock(event.getPosition().getX(), event.getPosition().getY(), event.getPosition().getZ());
 		double x = event.getPosition().getX();
 		double y = event.getPosition().getY();
 		double z = event.getPosition().getZ();
@@ -33,15 +35,21 @@ public class P {
 			if(equalsAnyWoodenDoorTypes(b)){
 				
 				if(doors != null){
-					for (Door d : doors) {
-						if(d.setDoorPos(0).isSelected(x, y, z, world)){
-							event.setEventCanceled(true);
-							p.moveToWorld(d.setDoorPos(1).getLocation());
-						}
-						if(d.setDoorPos(1).isSelected(x, y, z, world)){
-							event.setEventCanceled(true);
-							p.moveToWorld(d.setDoorPos(0).getLocation());
-						}
+					if(!second && !first){
+						for (Door d : doors) {
+							if(d.setDoorPos(0).isSelected(x, y, z, world)){
+								PreciseLocation loc = d.setDoorPos(1).getPreciseLocation();
+								p.moveToWorld(loc);
+								p.setLocation(loc);
+								event.setEventCanceled(true);
+							}
+							if(d.setDoorPos(1).isSelected(x, y, z, world)){
+								PreciseLocation loc = d.setDoorPos(0).getPreciseLocation();
+								p.moveToWorld(loc);
+								p.setLocation(loc);
+								event.setEventCanceled(true);
+							}
+						}					
 					}
 				}
 				
@@ -51,7 +59,9 @@ public class P {
 					if(equalsAnyWoodenDoorTypes(doorW)){
 						y -= 1;
 					}
-					doors.get(lastDoor).setDoorPos(0).setLocation(x, y, z).setWorld(world);
+					System.out.println(p.getLocation().getYaw());
+					PreciseLocation l = new PreciseLocation(p.getWorld(), x, y, z, DirectionYaw.getOpossiteYawFromDirection(p.getDirection()), 0);
+					doors.get(lastDoor).setDoorPos(0).setLocation(l);
 					second = false;
 					p.sendMessage("Puertas seleccionadas.");
 				}
@@ -61,7 +71,9 @@ public class P {
 					if(equalsAnyWoodenDoorTypes(doorW)){
 						y -= 1;
 					}
-					doors.get(lastDoor).setDoorPos(1).setLocation(x, y, z).setWorld(world);
+					System.out.println(p.getLocation().getYaw());
+					PreciseLocation l = new PreciseLocation(p.getWorld(), x, y, z, DirectionYaw.getOpossiteYawFromDirection(p.getDirection()), 0);
+					doors.get(lastDoor).setDoorPos(1).setLocation(l);
 					first = false;
 					second = true;
 					p.sendMessage("Selecciona la segunda puerta.");
@@ -71,18 +83,6 @@ public class P {
 			
 		}
 		
-	}
-	
-	public static boolean equalsAnyWoodenDoorTypes(Block b){
-		if(b == Blocks.WOODEN_DOOR
-				|| b == Blocks.ACACIA_DOOR
-				|| b == Blocks.BIRCH_DOOR
-				|| b == Blocks.DARK_OAK_DOOR
-				|| b == Blocks.JUNGLE_DOOR
-				|| b == Blocks.SPRUCE_DOOR){
-			return true;
-		}
-		return false;
 	}
 	
 	public static void on(Game game, BlockBreakEvent event){
@@ -96,12 +96,7 @@ public class P {
 		
 		if(b != null){
 			
-			if(b == Blocks.WOODEN_DOOR
-					|| b == Blocks.ACACIA_DOOR
-					|| b == Blocks.BIRCH_DOOR
-					|| b == Blocks.DARK_OAK_DOOR
-					|| b == Blocks.JUNGLE_DOOR
-					|| b == Blocks.SPRUCE_DOOR){
+			if(equalsAnyWoodenDoorTypes(b)){
 				
 				event.setEventCanceled(true);
 				
@@ -109,6 +104,19 @@ public class P {
 			
 		}
 		
+	}
+	
+	public static boolean equalsAnyWoodenDoorTypes(Block b){
+		
+		if(b.getUnlocalizedName().equals(Blocks.WOODEN_DOOR.getUnlocalizedName())
+				|| b.getUnlocalizedName().equals(Blocks.ACACIA_DOOR.getUnlocalizedName())
+				|| b.getUnlocalizedName().equals(Blocks.BIRCH_DOOR.getUnlocalizedName())
+				|| b.getUnlocalizedName().equals(Blocks.DARK_OAK_DOOR.getUnlocalizedName())
+				|| b.getUnlocalizedName().equals(Blocks.JUNGLE_DOOR.getUnlocalizedName())
+				|| b.getUnlocalizedName().equals(Blocks.SPRUCE_DOOR.getUnlocalizedName())){
+			return true;
+		}
+		return false;
 	}
 	
 }

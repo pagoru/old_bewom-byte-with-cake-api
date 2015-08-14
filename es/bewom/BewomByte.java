@@ -13,7 +13,6 @@ import es.bewom.spawn.SpawnManager;
 import es.bewom.teleport.TPManager;
 import es.bewom.user.BewomUser;
 import es.bewom.user.UserEventsHandler;
-import es.bewom.warps.WarpManager;
 
 /**
  * 
@@ -54,11 +53,9 @@ public class BewomByte {
 		BewomUser.setGame(this);
 		TPManager.init(this);
 		SpawnManager.load();
-		WarpManager.load();
 		CentroManager.init(this);
 		
 		game.getEventRegistry().registerEventListener(new UserEventsHandler(game));
-		game.getEventRegistry().registerEventListener(new WarpManager());
 	}
 	
 	/**
@@ -67,7 +64,6 @@ public class BewomByte {
 	 */
 	@EventSuscribe
 	public void onServerClosing(ServerStoppingEvent e) {
-		WarpManager.save();
 		CentroManager.save();
 	}
 	

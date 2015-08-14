@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.cakepowered.api.base.Player;
+import org.cakepowered.api.scoreboard.Scoreboard;
 import org.cakepowered.api.scoreboard.Team;
+import org.cakepowered.api.util.text.TextFormating;
 
 import es.bewom.BewomByte;
 import es.bewom.util.Ran;
@@ -67,10 +69,10 @@ public class BewomUser {
 		
 		String perm = m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "type");
 		
-		System.out.println(perm);
-		
 		if(perm != null){
-		
+			
+			m.executeQuery("UPDATE `users` SET `user`='" + player.getUserName() + "' WHERE `uuid`='" + uuid + "'", null);
+			
 			if(perm.equals(BewomUser.PERM_ADMIN)){
 				setPermissionLevel(3);		
 			} else if (perm.equals(BewomUser.PERM_VIP)){
@@ -78,34 +80,36 @@ public class BewomUser {
 			} else if(perm.equals(BewomUser.PERM_USER)){
 				setPermissionLevel(1);
 			}
-			//TODO, McMacker4 no se que hace esto
-			//player.offer(Keys.DISPLAY_NAME, Texts.of("ALMENDRUCO"));
 			
+			player.setGameMode(0);	
 			switch(permissionLevel) {
 			case PERM_LEVEL_ADMIN:
-				Team teamAdmin = player.getWorld().getScoreboard().getTeam(PERM_ADMIN);
-				if(teamAdmin == null) {
-					System.err.println("El jugador " + player.getUserName() + " no ha sido añadido a ningun equipo.");
-					break;
+				Team team = player.getWorld().getScoreboard().getTeam(PERM_ADMIN);
+				if(team == null) {
+					Scoreboard score = player.getWorld().getScoreboard();
+					score.addTeam(PERM_ADMIN).setColor(TextFormating.DARK_RED);
+					team = player.getWorld().getScoreboard().getTeam(PERM_ADMIN);
 				}
 				
-				if(!teamAdmin.getPlayers().contains(player)){
-					for(Team team : player.getWorld().getScoreboard().getTeams()) {
-						team.removePlayer(player);
+				if(!team.getPlayers().contains(player)){
+					for(Team t : player.getWorld().getScoreboard().getTeams()) {
+						t.removePlayer(player);
 					}
-					teamAdmin.addPlayer(player);
+					team.addPlayer(player);
 				}
+				player.setGameMode(1);
 				break;
 			case PERM_LEVEL_VIP:
 				Team teamVip = player.getWorld().getScoreboard().getTeam(PERM_VIP);
 				if(teamVip == null) {
-					System.err.println("El jugador " + player.getUserName() + " no ha sido añadido a ningun equipo.");
-					break;
+					Scoreboard score = player.getWorld().getScoreboard();
+					score.addTeam(PERM_VIP).setColor(TextFormating.DARK_AQUA);
+					teamVip = player.getWorld().getScoreboard().getTeam(PERM_VIP);
 				}
 				
 				if(!teamVip.getPlayers().contains(player)){
-					for(Team team : player.getWorld().getScoreboard().getTeams()) {
-						team.removePlayer(player);
+					for(Team t : player.getWorld().getScoreboard().getTeams()) {
+						t.removePlayer(player);
 					}
 					teamVip.addPlayer(player);
 				}
@@ -113,13 +117,14 @@ public class BewomUser {
 			case PERM_LEVEL_USER:
 				Team teamUser = player.getWorld().getScoreboard().getTeam(PERM_USER);
 				if(teamUser == null) {
-					System.err.println("El jugador " + player.getUserName() + " no ha sido aÃ±adido a ningun equipo.");
-					break;
+					Scoreboard score = player.getWorld().getScoreboard();
+					score.addTeam(PERM_USER).setColor(TextFormating.GRAY);
+					teamUser = player.getWorld().getScoreboard().getTeam(PERM_USER);
 				}
 				
 				if(!teamUser.getPlayers().contains(player)){
-					for(Team team : player.getWorld().getScoreboard().getTeams()) {
-						team.removePlayer(player);
+					for(Team t : player.getWorld().getScoreboard().getTeams()) {
+						t.removePlayer(player);
 					}
 					teamUser.addPlayer(player);
 				}
