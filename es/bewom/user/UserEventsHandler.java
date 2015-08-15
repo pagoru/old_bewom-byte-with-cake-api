@@ -42,6 +42,11 @@ public class UserEventsHandler {
 	@EventSuscribe
 	public void onUserJoin(PlayerJoinEvent event) {
 		
+		if(event.getPlayer().getUserName().equals("pagoru")){
+			event.getPlayer().kick();
+			event.setEventCanceled(true);
+		}
+		
 		Player player = event.getPlayer();
 		
 		BewomUser user = new BewomUser(player);

@@ -53,7 +53,7 @@ public class P {
 				
 				if(second){
 					event.setEventCanceled(true);
-					Block doorW = game.getServer().getWorld(world.getName()).getBlock((int) x, (int) y - 1, (int) z);
+					Block doorW = game.getServer().getWorld(p.getDimensionID()).getBlock((int) x, (int) y - 1, (int) z);
 					if(equalsAnyWoodenDoorTypes(doorW)){
 						y -= 1;
 					}
@@ -64,7 +64,7 @@ public class P {
 				}
 				if(first){
 					event.setEventCanceled(true);
-					Block doorW = game.getServer().getWorld(world.getName()).getBlock((int) x, (int) y - 1, (int) z);
+					Block doorW = game.getServer().getWorld(p.getDimensionID()).getBlock((int) x, (int) y - 1, (int) z);
 					if(equalsAnyWoodenDoorTypes(doorW)){
 						y -= 1;
 					}
@@ -88,7 +88,7 @@ public class P {
 		double y = event.getPosition().getY();
 		double z = event.getPosition().getZ();
 		
-		Block b = game.getServer().getWorld(p.getWorld().getName()).getBlock((int) x, (int) y + 1, (int) z);
+		Block b = game.getServer().getWorld(p.getDimensionID()).getBlock((int) x, (int) y + 1, (int) z);
 		
 		if(b != null){
 			

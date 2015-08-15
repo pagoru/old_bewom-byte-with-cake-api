@@ -33,7 +33,7 @@ public class CentroPokemon {
 	}
 
 	public boolean isEqualTo(PreciseLocation loc) {
-		if(loc == new PreciseLocation(BewomByte.game.getServer().getWorld("world").getDimension(), x, y, z, yaw, pitch)) {
+		if(loc == new PreciseLocation(dimension, x, y, z, yaw, pitch)) {
 			return true;
 		}
 		return false;
@@ -58,7 +58,7 @@ public class CentroPokemon {
 	}
 	
 	public PreciseLocation getLocation(){
-		return new PreciseLocation(BewomByte.game.getServer().getWorld("world").getDimension(), x, y, z, yaw, pitch);
+		return new PreciseLocation(dimension, x, y, z, yaw, pitch);
 	}
 
 }

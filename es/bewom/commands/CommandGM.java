@@ -32,12 +32,8 @@ public class CommandGM extends CommandBase {
 			return;
 		}
 
-		BewomUser user = BewomUser.getUser(player);
-		if(user.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) {
-			player.sendMessage(TextMessages.NO_PERMISSIONS);
-			return;
-		}
-		
+		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
+				
 		int gm = 0;
 		
 		switch(args[0]) {

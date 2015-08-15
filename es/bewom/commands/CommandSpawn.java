@@ -1,4 +1,4 @@
-package es.bewom.centrospokemon.commands;
+package es.bewom.commands;
 
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
@@ -10,35 +10,26 @@ import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
-public class CommandCentro extends CommandBase {
+public class CommandSpawn extends CommandBase {
 	
-	public CommandCentro() {
-		super("cp", "centro", "centropokemon");
-	}
-	
-	@Override
-	public String getCommandUsage(CommandSender commandSender) {
-		return "Ir al centro pokemon mas cercano.";
+	public CommandSpawn() {
+		super("spawn");
 	}
 
 	@Override
 	public void execute(CommandSender commandSender, String[] args) {
 		Player player;
-		
+
 		if(commandSender.getPlayer() != null) {
 			player = commandSender.getPlayer();
 		} else {
 			commandSender.sendMessage(TextMessages.NOT_CONSOLE_COMPATIBLE);
 			return;
 		}
+
+		player.setLocation(CentroManager.centros.get(0).getLocation());		
+		player.sendMessage(TextFormating.RED + "Has sido teletransportado al spawn.");
 		
-		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_VIP) return;
-		
-		CentroPokemon cp = CentroManager.getClosest(player.getLocation());
-		if(cp != null) {
-			player.setLocation(cp.getLocation());
-		}
-		player.sendMessage(TextFormating.RED + "Teletransporte exitoso.");
 	}
 
 }

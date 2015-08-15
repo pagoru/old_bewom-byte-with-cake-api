@@ -31,12 +31,8 @@ public class CommandPonerCentro extends CommandBase {
 		} else {
 			commandSender.sendMessage(TextMessages.NOT_CONSOLE_COMPATIBLE);
 		}
-
-		BewomUser user = BewomUser.getUser(player);
-		if(user.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) {
-			player.sendMessage(TextFormating.RED + "No tienes permisos.");
-			return;
-		}
+		
+		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
 				
 		String error = CentroManager.add(new PreciseLocation(player.getLocation().getDimension(), 
 				player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), 

@@ -24,37 +24,39 @@ public class CommandKick extends CommandBase {
 		Player player = commandSender.getPlayer();
 		BewomUser user = BewomUser.getUser(player);
 		
-		if(user.isAdmin()){
-			if(BewomByte.game.getServer().getPlayer(args[0]) != null){
+		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
+		
+		if(BewomByte.game.getServer().getPlayer(args[0]) != null){
+			String kickArgs = "";
+			String kick = 
+					TextFormating.RED + "Has sido advertid@ por " + 
+					TextFormating.BOLD + player.getUserName() + 
+					TextFormating.RESET + TextFormating.RED + " por" + TextFormating.BOLD  + " incumplir las normas.";
+			if(args.length > 1){
 				
-				String kick = 
-						TextFormating.RED + "Has sido advertido por " + 
-						TextFormating.BOLD + player.getUserName() + 
-						TextFormating.RESET + TextFormating.RED + " por" + TextFormating.BOLD  + " incumplir las normas.";
-				if(args.length > 1){
-					String kickArgs = "";
-					for (int i = 1; i < args.length; i++) {
-						kickArgs += " " + args[i];
-					}
-					kick = 
-						TextFormating.RED + "Has sido advertido por " + 
-						TextFormating.BOLD + player.getUserName() + 
-						TextFormating.RESET + TextFormating.RED + " por" +
-						TextFormating.BOLD + kickArgs + ".";				
+				for (int i = 1; i < args.length; i++) {
+					kickArgs += " " + args[i];
 				}
-				
-				BewomByte.game.getServer().getPlayer(args[0]).kick(kick);
-				Chat.sendMessage(player, TextMessages.BROADCAST + args[0] + " ha sido advertido por " + player.getUserName() + " por " + kick, "/kick " + args[0] + " " + kick);	
-				
-			} else {
-				
-				player.sendMessage(TextMessages.ERROR);
-				
+				kick = 
+					TextFormating.RED + "Has sido advertid@ por " + 
+					TextFormating.BOLD + player.getUserName() + 
+					TextFormating.RESET + TextFormating.RED + " por" +
+					TextFormating.BOLD + kickArgs + ".";				
 			}
+			
+			BewomByte.game.getServer().getPlayer(args[0]).kick(kick);
+			user.m.executeQuery("INSERT INTO `users_kicks`(`uuid`, `uuidAdmin`, `motivo`) VALUES ('" + 
+					BewomByte.game.getServer().getPlayer(args[0]).getUniqueID() + "', '" + player.getUniqueID() + "', '" + kickArgs + "')", null);
+			
+			Chat.sendMessage(player, 
+					TextMessages.BROADCAST + 
+					TextFormating.DARK_RED + TextFormating.BOLD + args[0] + 
+					TextFormating.RESET + TextFormating.DARK_RED + " ha sido advertid@ por " + 
+					TextFormating.BOLD + player.getUserName() + ".", "/kick " + args[0] + " " + kick);	
 			
 		} else {
 			
-			player.sendMessage(TextMessages.NO_PERMISSIONS);
+			player.sendMessage(TextMessages.ERROR);
 			
 		}
 		

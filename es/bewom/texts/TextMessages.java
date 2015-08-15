@@ -24,6 +24,7 @@ public class TextMessages {
 			TextFormating.WHITE +
 			TextFormating.RESET + "/" +
 			TextFormating.BOLD + TextFormating.DARK_RED + "WOM" +  
-			TextFormating.RESET + TextFormating.WHITE + " < ";
+			TextFormating.RESET + TextFormating.WHITE + " < " +
+			TextFormating.BOLD + "";
 	
 }

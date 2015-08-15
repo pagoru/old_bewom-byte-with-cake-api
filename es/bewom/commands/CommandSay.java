@@ -1,18 +1,21 @@
-package es.bewom.p.commands;
+package es.bewom.commands;
 
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
+import org.cakepowered.api.util.text.TextFormating;
 
+import es.bewom.BewomByte;
+import es.bewom.chat.Chat;
 import es.bewom.p.Door;
 import es.bewom.p.P;
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
-public class CommandP extends CommandBase {
+public class CommandSay extends CommandBase {
 	
-	public CommandP() {
-		super("p");
+	public CommandSay() {
+		super("say", "s");
 	}
 	
 	@Override
@@ -24,11 +27,26 @@ public class CommandP extends CommandBase {
 		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
 		
 		if(user.isAdmin()){
-			
-			player.sendMessage("Selecciona la primera puerta.");
-			P.first = true;
-			P.lastDoor = P.doors.size();
-			P.doors.add(new Door());
+			if(args.length > 0){
+				
+				String text = "";
+				
+				for (int i = 0; i < args.length; i++) {
+					if(i == 0){
+						text += args[0]; 
+					} else {
+						text += " " + args[i];
+					}
+					
+				}
+				
+				Chat.sendMessage(player, TextMessages.BROADCAST + text + ".", "/say " + text);	
+				
+			} else {
+				
+				player.sendMessage(TextMessages.ERROR);
+				
+			}
 			
 		} else {
 			

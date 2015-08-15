@@ -30,12 +30,9 @@ public class CommandQuitarCentro extends CommandBase {
 			commandSender.sendMessage(TextMessages.NOT_CONSOLE_COMPATIBLE);
 			return;
 		}
-
-		BewomUser user = BewomUser.getUser(player);
-		if(user.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) {
-			player.sendMessage(TextMessages.NO_PERMISSIONS);
-		}
-
+		
+		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
+		
 		String error = CentroManager.remove(player.getLocation());
 
 		if(error != null) {

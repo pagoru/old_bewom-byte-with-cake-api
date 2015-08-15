@@ -7,8 +7,6 @@ import es.bewom.centrospokemon.commands.CommandCentro;
 import es.bewom.centrospokemon.commands.CommandPonerCentro;
 import es.bewom.centrospokemon.commands.CommandQuitarCentro;
 import es.bewom.p.commands.CommandP;
-import es.bewom.spawn.commands.CommandSetSpawn;
-import es.bewom.spawn.commands.CommandSpawn;
 
 public class Commands {
 
@@ -21,8 +19,6 @@ public class Commands {
 		reg.registerCommand(new CommandPonerCentro());	
 		//quitarcentro
 		reg.registerCommand(new CommandQuitarCentro());	
-		//setspawn
-		reg.registerCommand(new CommandSetSpawn());		
 		//spawn
 		reg.registerCommand(new CommandSpawn());
 		
@@ -31,6 +27,12 @@ public class Commands {
 		reg.registerCommand(new CommandGM());
 		
 		reg.registerCommand(new CommandKick());
+		
+		reg.registerCommand(new CommandBan());
+		
+		reg.registerCommand(new CommandSay());
+		
+		reg.registerCommand(new CommandPlugins());
 		
 	}
 }
