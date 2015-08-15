@@ -19,7 +19,6 @@ import org.cakepowered.api.event.PlayerQuitEvent;
 import org.cakepowered.api.event.PlayerRespawnEvent;
 import org.cakepowered.api.event.ServerUpdateEvent;
 import org.cakepowered.api.util.PreciseLocation;
-import org.cakepowered.api.util.Title;
 import org.cakepowered.api.util.text.TextFormating;
 
 import es.bewom.BewomByte;
@@ -213,12 +212,15 @@ public class UserEventsHandler {
 			position_map.put(user.getUUID(), loc);
 		}
 	}
-	
+
 	@EventSuscribe
 	public void onEntitySpawn(EntitySpawnEvent event){
 		if(event.getWorld().getDimension() != 0)return;//cambiar 0 por la dimension de las casas
 		if(!(event.getEntity() instanceof Player)){
-			event.setEventCanceled(true);
+			if(event.getEntity().getModID() != null && event.getEntity().getModID().equals("pixelmon")){
+
+				event.setEventCanceled(true);
+			}
 		}else{
 			BewomByte.log.debug("Este evento se ejecuta tambien con jugadores: "+event.getEntity());
 		}
