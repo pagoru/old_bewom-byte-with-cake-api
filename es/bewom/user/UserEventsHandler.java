@@ -9,6 +9,7 @@ import org.cakepowered.api.base.Game;
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.event.BlockBreakEvent;
 import org.cakepowered.api.event.BlockPlaceEvent;
+import org.cakepowered.api.event.EntitySpawnEvent;
 import org.cakepowered.api.event.EventSuscribe;
 import org.cakepowered.api.event.PlayerChatEvent;
 import org.cakepowered.api.event.PlayerInteractEntityEvent;
@@ -18,9 +19,9 @@ import org.cakepowered.api.event.PlayerQuitEvent;
 import org.cakepowered.api.event.PlayerRespawnEvent;
 import org.cakepowered.api.event.ServerUpdateEvent;
 import org.cakepowered.api.util.PreciseLocation;
-import org.cakepowered.api.util.Title;
 import org.cakepowered.api.util.text.TextFormating;
 
+import es.bewom.BewomByte;
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.chat.Chat;
@@ -214,6 +215,19 @@ public class UserEventsHandler {
 		}else{
 			PreciseLocation loc = user.getPlayer().getLocation();
 			position_map.put(user.getUUID(), loc);
+		}
+	}
+
+	@EventSuscribe
+	public void onEntitySpawn(EntitySpawnEvent event){
+		if(event.getWorld().getDimension() != 0)return;//cambiar 0 por la dimension de las casas
+		if(!(event.getEntity() instanceof Player)){
+			if(event.getEntity().getModID() != null && event.getEntity().getModID().equals("pixelmon")){
+
+				event.setEventCanceled(true);
+			}
+		}else{
+			BewomByte.log.debug("Este evento se ejecuta tambien con jugadores: "+event.getEntity());
 		}
 	}
 }
