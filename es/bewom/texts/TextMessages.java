@@ -18,13 +18,11 @@ public class TextMessages {
 	
 	public static final String WORLD_NOT_FOUND = TextFormating.RED + "No se ha encontrado el mundo especificado.";
 	
-	public static final String BROADCAST = TextFormating.WHITE+"/"+
-			TextFormating.DARK_RED +
-			TextFormating.OBFUSCATED + "K" +
-			TextFormating.WHITE +
-			TextFormating.RESET + "/" +
-			TextFormating.BOLD + TextFormating.DARK_RED + "WOM" +  
-			TextFormating.RESET + TextFormating.WHITE + " < " +
-			TextFormating.BOLD + "";
+	public static final String BROADCAST = 
+			TextFormating.DARK_RED + "" + TextFormating.BOLD +"/" +
+			TextFormating.OBFUSCATED +  "" + TextFormating.BOLD + "K" +
+			TextFormating.DARK_RED + "" + TextFormating.BOLD + "/" +
+			TextFormating.DARK_RED +  "" + TextFormating.BOLD + "WOM" +  
+			TextFormating.RESET + TextFormating.WHITE + " < ";
 	
 }

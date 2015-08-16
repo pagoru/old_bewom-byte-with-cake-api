@@ -224,13 +224,16 @@ public class UserEventsHandler {
 	}
 	
 	public void playerUpdateGameMode(Player player){
-		if(player.getGameMode() != 3){
-			if(player.getDimensionID() == Dimensions.EXTERIORES){
-				if(player.getGameMode() != 2)
-				player.setGameMode(2);
-			} else {
-				if(player.getGameMode() != 0)
-				player.setGameMode(0);
+		BewomUser u = BewomUser.getUser(player);
+		if(u.getPermissionLevel() != u.PERM_LEVEL_ADMIN){
+			if(player.getGameMode() != 3){
+				if(player.getDimensionID() == Dimensions.EXTERIORES){
+					if(player.getGameMode() != 2)
+					player.setGameMode(2);
+				} else {
+					if(player.getGameMode() != 0)
+					player.setGameMode(0);
+				}
 			}
 		}
 	}

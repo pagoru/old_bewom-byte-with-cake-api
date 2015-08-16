@@ -1,10 +1,16 @@
 package es.bewom.commands;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
+import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
 
+import es.bewom.BewomByte;
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.texts.TextMessages;
@@ -20,6 +26,36 @@ public class CommandGM extends CommandBase {
 	public CommandGM() {
 		super("gm");
 	}
+	
+	@Override
+	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
+		List<String> tab = new ArrayList<String>();
+		if(args.length == 2){
+			tab.add("0");
+			tab.add("1");
+			tab.add("2");
+			tab.add("3");
+			return tab;
+		} else if(args.length == 2){
+			Collection<Player> col = BewomByte.game.getServer().getOnlinePlayers();
+			for (Player p : col) {
+				tab.add(p.getUserName());
+			}
+			for (int i = 0; i < tab.size(); i++) {
+				if(args[0].length() <= tab.get(i).length()){
+					if(args[0].substring(0, args[0].length()).toLowerCase().equals(tab.get(i).substring(0, args[0].length()).toLowerCase())){
+						List<String> p = new ArrayList<String>();
+						p.add(tab.get(i));
+						return p;
+					}
+				}
+			}
+			
+			return tab;
+		}
+		
+		return null;
+	}
 
 	@Override
 	public void execute(CommandSender commandSender, String[] args) {
@@ -31,9 +67,9 @@ public class CommandGM extends CommandBase {
 			commandSender.sendMessage(TextMessages.NOT_CONSOLE_COMPATIBLE);
 			return;
 		}
-
+		
 		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
-				
+		
 		int gm = 0;
 		
 		switch(args[0]) {
@@ -75,8 +111,21 @@ public class CommandGM extends CommandBase {
 			break;
 		}
 		
-		player.setGameMode(gm);
-		player.sendMessage(TextFormating.RED + "Gamemode actualizado.");
+		if(args[1] != null){
+			Player p = BewomByte.game.getServer().getPlayer(args[1]);
+			
+			if(p != null){
+				p.setGameMode(gm);
+				p.sendMessage(TextFormating.RED + "Gamemode actualizado.");
+				player.sendMessage(TextFormating.RED + "Gamemode de " + p.getUserName() + " actualizado.");
+				return;
+			}
+		} else {
+			
+			player.setGameMode(gm);
+			player.sendMessage(TextFormating.RED + "Gamemode actualizado.");
+			
+		}
 		
 	}
 

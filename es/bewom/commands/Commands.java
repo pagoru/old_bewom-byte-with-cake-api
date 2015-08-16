@@ -36,5 +36,7 @@ public class Commands {
 		
 		reg.registerCommand(new CommandDinero());
 		
+		reg.registerCommand(new CommandTpx());
+		
 	}
 }

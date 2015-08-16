@@ -1,5 +1,6 @@
 package es.bewom.user;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +33,7 @@ public class BewomUser {
 	
 	private static BewomByte plugin;
 	
-	public MySQL m = new MySQL();
+	public static MySQL m = new MySQL();
 	
 	static HashMap<UUID, BewomUser> onlineUsers = new HashMap<UUID, BewomUser>();
 	
@@ -72,7 +73,7 @@ public class BewomUser {
 		registration = checkWebsiteRegistration(); //WebRegistration.VALID
 		permissionLevel = checkPermissionLevel(); //PERM_LEVEL_USER
 		
-		String hash = (String) m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueID() + "'", "hash");
+		String hash = m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueID() + "'", "hash").get(0);
 		if(!hash.equals("")){
 			registerLink += hash;
 			getRegisterLink = true;
@@ -92,7 +93,7 @@ public class BewomUser {
 	
 	public void updatePermissions(){
 		
-		String perm = m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "type");
+		String perm = m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "type").get(0);
 		
 		if(perm != null){
 			
@@ -241,9 +242,9 @@ public class BewomUser {
 	public int checkWebsiteRegistration() {
 		//TODO: Check Registration in the database.
 				
-		String perm = (String) m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueID() + "'", "valid");
+		String perm = (String) m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueID() + "'", "valid").get(0);
 		if(perm.equals("0")){
-			String perm2 = (String) m.executeQuery("SELECT * FROM `users_info` WHERE `uuid`='" + player.getUniqueID() + "'", "active");
+			String perm2 = (String) m.executeQuery("SELECT * FROM `users_info` WHERE `uuid`='" + player.getUniqueID() + "'", "active").get(0);
 			if(perm2.equals("1")){
 				return WebRegistration.VALID;
 			} else {
@@ -378,18 +379,18 @@ public class BewomUser {
 	public void updateRegistration() {
 		
 		if (getRegistration() == WebRegistration.VALID) {
-			player.sendTitle(new Title(TextFormating.DARK_AQUA+"Bienvenid@!", TextFormating.WHITE+"Hazte con todos...", 120, 0, 0));
+			player.sendTitle(new Title(TextFormating.DARK_AQUA+"Bienvenid@!", TextFormating.WHITE+"Hazte con todos...", 120, 0, 60));
 			updatePermissions();
 			
 		} else if (getRegistration() == WebRegistration.NOT_VALID) {
-			player.sendTitle(new Title(TextFormating.DARK_RED+"Verifica tu correo!", TextFormating.WHITE+"Si no encuentras el correo, busca en spam...", 900, 0, 0));
+			player.sendTitle(new Title(TextFormating.DARK_RED+"Verifica tu correo!", TextFormating.WHITE+"Si no encuentras el correo, busca en spam...", 900, 0, 60));
 			
 			leaveAllTeams();
 			player.setGameMode(3);
 			
 		} else if (getRegistration() == WebRegistration.NOT_REGISTERED) {
 			createHashFirstTime();
-			player.sendTitle(new Title(TextFormating.DARK_RED+"Porfavor, registrate!", TextFormating.WHITE+"Haz click en el link del chat...", 900, 0, 0));
+			player.sendTitle(new Title(TextFormating.DARK_RED+"Porfavor, registrate!", TextFormating.WHITE+"Haz click en el link del chat...", 900, 0, 60));
 			if(!registerLinkSended){
 				player.sendLink(TextFormating.DARK_AQUA + getRegisterLink());
 				registerLinkSended = true;
@@ -405,13 +406,34 @@ public class BewomUser {
 		
 	}
 	
-	public int getMoney(){
-		return Integer.parseInt(m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + player.getUniqueID() + "'", "money"));
+	public static int getMoney(UUID uuid2){
+		return Integer.parseInt(m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid2 + "'", "money").get(0));
 	}
 	
-	public void addMoney(int a){
-		int money = a + getMoney();
-		m.executeQuery("INSERT INTO `users` (`money`) VALUES ('" + money + "') WHERE `uuid`='" + player.getUniqueID() + "'", null);
+	public static int getMoney(String name){
+		return Integer.parseInt(m.executeQuery("SELECT * FROM `users` WHERE `user`='" + name + "'", "money").get(0));
+	}
+	
+	public static void addMoney(UUID uuid, int a){
+		int money = a + getMoney(uuid);
+		m.executeQuery("INSERT INTO `users` (`money`) VALUES ('" + money + "') WHERE `uuid`='" + uuid + "'", null);
+	}
+	
+	public static List<String> getPlayersUUIDRegistered(){
+		return m.executeQuery("SELECT * FROM `users`", "uuid");
+	}
+	
+	public static List<Player> getPlayersRegistered(){
+		List<String> uuids = m.executeQuery("SELECT * FROM `users`", "uuid");
+		List<Player> players = new ArrayList<Player>();
+		for (int i = 0; i < uuids.size(); i++) {
+			players.add(BewomByte.game.getServer().getPlayer(uuids.get(i)));
+		}
+		return players;
+	}
+	
+	public static List<String> getPlayersUsernameRegistered(){
+		return m.executeQuery("SELECT * FROM `users`", "user");
 	}
 	
 }
