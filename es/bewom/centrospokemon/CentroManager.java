@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import es.bewom.BewomByte;
+import es.bewom.util.Dimensions;
 
 public class CentroManager {
 	
@@ -53,7 +54,7 @@ public class CentroManager {
 				if(dist2 < dist1) {
 					closest = centro;
 				}
-			} else if (centro.getLocation().getDimension() == 0){
+			} else if (centro.getLocation().getDimension() == Dimensions.EXTERIORES){
 				int dist1 = closest.distance(vector3d);
 				int dist2 = centro.distance(vector3d);
 				if(dist2 < dist1) {

@@ -20,13 +20,13 @@ public class DeniedBlocks {
 	
 	public static void on(Game game, BlockPlaceEvent event){
 		
-		Block b = (Block) event.getBlock();
+		Block b = event.getBlock();
 		
 		if(b != null){
 			
 			for (int i = 0; i < DENIED.length; i++) {
 				
-				if(b == DENIED[i]){
+				if(b.getUnlocalizedName().equals(DENIED[i].getUnlocalizedName())){
 					
 					event.setEventCanceled(true);
 					break;

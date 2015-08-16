@@ -9,6 +9,7 @@ import org.cakepowered.api.event.ServerStoppingEvent;
 
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.commands.Commands;
+import es.bewom.p.P;
 import es.bewom.teleport.TPManager;
 import es.bewom.user.BewomUser;
 import es.bewom.user.UserEventsHandler;
@@ -52,6 +53,7 @@ public class BewomByte {
 		BewomUser.setGame(this);
 		TPManager.init(this);
 		CentroManager.init(this);
+		P.init(this);
 		
 		game.getEventRegistry().registerEventListener(new UserEventsHandler(game));
 		

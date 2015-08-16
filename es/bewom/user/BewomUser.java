@@ -53,6 +53,10 @@ public class BewomUser {
 	public long registerDateVariable = 15;
 	public long loginDate;
 	
+	public boolean registerPandY = true;
+	public float registerPitch = 0.0f;
+	public float registerYaw = 0.0f;
+	
 	public String lastMessage;
 	
 	/**
@@ -102,7 +106,7 @@ public class BewomUser {
 				setPermissionLevel(1);
 			}
 			
-			player.setGameMode(2);	
+			player.setGameMode(2);
 			switch(permissionLevel) {
 			case PERM_LEVEL_ADMIN:
 				Team team = player.getWorld().getScoreboard().getTeam(PERM_ADMIN);
@@ -118,6 +122,7 @@ public class BewomUser {
 					}
 					team.addPlayer(player);
 				}
+				BewomByte.game.getCommandDispacher().executeCommand(BewomByte.game.getServer().getCommandSender(), "/op " + player.getName());
 				player.setGameMode(1);
 				break;
 			case PERM_LEVEL_VIP:
@@ -373,18 +378,18 @@ public class BewomUser {
 	public void updateRegistration() {
 		
 		if (getRegistration() == WebRegistration.VALID) {
-			player.sendTitle(new Title(TextFormating.DARK_AQUA+"Bienvenid@!", TextFormating.WHITE+"Hazte con todos...", 0, 0, 120));
+			player.sendTitle(new Title(TextFormating.DARK_AQUA+"Bienvenid@!", TextFormating.WHITE+"Hazte con todos...", 120, 0, 0));
 			updatePermissions();
 			
 		} else if (getRegistration() == WebRegistration.NOT_VALID) {
-			player.sendTitle(new Title(TextFormating.DARK_RED+"Verifica tu correo!", TextFormating.WHITE+"Si no encuentras el correo, busca en spam...", 0, 0, 900));
+			player.sendTitle(new Title(TextFormating.DARK_RED+"Verifica tu correo!", TextFormating.WHITE+"Si no encuentras el correo, busca en spam...", 900, 0, 0));
 			
 			leaveAllTeams();
 			player.setGameMode(3);
 			
 		} else if (getRegistration() == WebRegistration.NOT_REGISTERED) {
 			createHashFirstTime();
-			player.sendTitle(new Title(TextFormating.DARK_RED+"Porfavor, registrate!", TextFormating.WHITE+"Haz click en el link del chat...", 0, 0, 900));
+			player.sendTitle(new Title(TextFormating.DARK_RED+"Porfavor, registrate!", TextFormating.WHITE+"Haz click en el link del chat...", 900, 0, 0));
 			if(!registerLinkSended){
 				player.sendLink(TextFormating.DARK_AQUA + getRegisterLink());
 				registerLinkSended = true;
@@ -398,6 +403,15 @@ public class BewomUser {
 			player.setGameMode(3);
 		}
 		
+	}
+	
+	public int getMoney(){
+		return Integer.parseInt(m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + player.getUniqueID() + "'", "money"));
+	}
+	
+	public void addMoney(int a){
+		int money = a + getMoney();
+		m.executeQuery("INSERT INTO `users` (`money`) VALUES ('" + money + "') WHERE `uuid`='" + player.getUniqueID() + "'", null);
 	}
 	
 }

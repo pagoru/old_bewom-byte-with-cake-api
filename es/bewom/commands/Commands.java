@@ -34,5 +34,7 @@ public class Commands {
 		
 		reg.registerCommand(new CommandPlugins());
 		
+		reg.registerCommand(new CommandDinero());
+		
 	}
 }

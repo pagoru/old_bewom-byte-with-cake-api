@@ -9,6 +9,7 @@ import org.cakepowered.api.base.Game;
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.event.BlockBreakEvent;
 import org.cakepowered.api.event.BlockPlaceEvent;
+import org.cakepowered.api.event.EntityAttackedEvent;
 import org.cakepowered.api.event.EntitySpawnEvent;
 import org.cakepowered.api.event.EventSuscribe;
 import org.cakepowered.api.event.PlayerChatEvent;
@@ -26,6 +27,7 @@ import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.chat.Chat;
 import es.bewom.p.P;
+import es.bewom.util.Dimensions;
 
 public class UserEventsHandler {
 	
@@ -42,12 +44,7 @@ public class UserEventsHandler {
 	 */
 	@EventSuscribe
 	public void onUserJoin(PlayerJoinEvent event) {
-		
-		if(event.getPlayer().getUserName().equals("pagoru")){
-			event.getPlayer().kick();
-			event.setEventCanceled(true);
-		}
-		
+				
 		Player player = event.getPlayer();
 		
 		BewomUser user = new BewomUser(player);
@@ -84,7 +81,7 @@ public class UserEventsHandler {
 					message = TextFormating.DARK_AQUA + "/" + name + TextFormating.WHITE + " < " + postName;
 					break;
 				case BewomUser.PERM_LEVEL_ADMIN:
-					message = TextFormating.DARK_RED + "/" + name + TextFormating.WHITE + " < " + TextFormating.BOLD + postName;
+					message = TextFormating.DARK_RED + "" + TextFormating.BOLD + "/" + name + TextFormating.WHITE + " < " + postName;
 					break;
 				}
 				
@@ -126,6 +123,8 @@ public class UserEventsHandler {
 	public void onUserRespawn(PlayerRespawnEvent event) {
 		Player player = event.getPlayer();
 		CentroPokemon cp = CentroManager.getClosest(player.getLocation());
+
+		playerUpdateGameMode(player);
 		if(cp != null) {
 			player.setLocation(cp.getLocation());
 		}
@@ -134,24 +133,61 @@ public class UserEventsHandler {
 	
 	@EventSuscribe
 	public void on(PlayerInteractEvent event){
-
+		
 		Player player = event.getPlayer();
 		BewomUser user = BewomUser.getUser(player);
-		
-		if (!user.isAdmin() && player.getWorld().getName().equals("world")) {
-			event.setEventCanceled(true);
+
+		playerUpdateGameMode(player);
+		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
+			
+			if(isPixelmonInteraction(event)){
+				event.setEventCanceled(true);
+			}
 		}
 		
 		P.on(game, event);
 	}
 	
-	@EventSuscribe
+	private boolean isPixelmonInteraction(PlayerInteractEvent e) {
+		String n = e.getInteractBlock().getUnlocalizedName().substring(5, e.getInteractBlock().getUnlocalizedName().length());	
+		if(n.equals("apricorn")
+				|| n.endsWith("pc")
+				|| n.endsWith("trademachine")
+				|| n.endsWith("mechanicalanvil")
+				|| n.endsWith("anvil")
+				|| n.endsWith("pokechest")
+				|| n.endsWith("ultrachest")
+				|| n.endsWith("masterchest")
+				|| n.endsWith("PokeGift")){
+			return false;
+		}
+		return true;
+	}
+
+	@EventSuscribe //click derecho
 	public void on(PlayerInteractEntityEvent event){
 		
 		Player player = event.getPlayer();
 		BewomUser user = BewomUser.getUser(player);
+
+		playerUpdateGameMode(player);
+		if(event.getEntity().getName().contains("entity.pixelmon")&& player.getDimensionID() == Dimensions.INTERIORES){
+			event.setEventCanceled(true);
+		}		
+		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
+			event.setEventCanceled(true);
+		}
 		
-		if (!user.isAdmin() && player.getWorld().getName().equals("world")) {
+	}
+	
+	@EventSuscribe
+	public void on(EntityAttackedEvent event){
+				
+		Player player = event.getPlayer();
+		BewomUser user = BewomUser.getUser(player);
+
+		playerUpdateGameMode(player);
+		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
 			event.setEventCanceled(true);
 		}
 		
@@ -162,12 +198,13 @@ public class UserEventsHandler {
 		
 		Player player = event.getPlayer();
 		BewomUser user = BewomUser.getUser(player);
-		
-		if (!user.isAdmin()) {
-			if(player.getWorld().getName().equals("world")){
-				event.setEventCanceled(true);			
-			}
+
+		playerUpdateGameMode(player);
+		if(!user.isAdmin()){
 			DeniedBlocks.on(game, event);
+			if (player.getDimensionID() == Dimensions.EXTERIORES) {
+				event.setEventCanceled(true);
+			}
 		}
 		
 	}
@@ -178,12 +215,25 @@ public class UserEventsHandler {
 		Player player = event.getPlayer();
 		BewomUser user = BewomUser.getUser(player);
 		
-		if (!user.isAdmin() && player.getWorld().getName().equals("world")) {
+		playerUpdateGameMode(player);		
+		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
 			event.setEventCanceled(true);
 		}
 		
 		P.on(game, event);
 		
+	}
+	
+	public void playerUpdateGameMode(Player player){
+		if(player.getGameMode() != 3){
+			if(player.getDimensionID() == Dimensions.EXTERIORES){
+				if(player.getGameMode() != 2)
+				player.setGameMode(2);
+			} else {
+				if(player.getGameMode() != 0)
+				player.setGameMode(0);
+			}
+		}
 	}
 	
 	public HashMap<UUID, PreciseLocation> position_map = new HashMap<UUID, PreciseLocation>();
@@ -197,6 +247,24 @@ public class UserEventsHandler {
 				onPlayerMove(user);
 				Date date = new Date();
 				long d = ((date.getTime()/1000) - (user.loginDate/1000));
+				
+				if(user.registerPitch >= 19.0f && user.registerPitch <= 21.0f){
+					user.registerPandY = true;
+				} else if(user.registerPitch <= -19.0f && user.registerPitch >= -21.0f){
+					user.registerPandY = false;
+				}
+				if(user.registerYaw >= 359 && user.registerYaw <= 360){
+					user.registerYaw = 0;
+				}
+				
+				user.registerYaw += 0.05f;
+				if(user.registerPandY){
+					user.registerPitch -= 0.02f;
+				} else if(!user.registerPandY) {
+					user.registerPitch += 0.02f;
+				}
+				
+				p.setLocation(new PreciseLocation(p.getDimensionID(), p.getLocation().getX(), p.getLocation().getY() + 5, p.getLocation().getZ(), user.registerYaw, user.registerPitch));
 				if(d == user.registerDateVariable){
 					user.registration = user.checkWebsiteRegistration();
 					user.updateRegistration();
@@ -215,19 +283,6 @@ public class UserEventsHandler {
 		}else{
 			PreciseLocation loc = user.getPlayer().getLocation();
 			position_map.put(user.getUUID(), loc);
-		}
-	}
-
-	@EventSuscribe
-	public void onEntitySpawn(EntitySpawnEvent event){
-		if(event.getWorld().getDimension() != 0)return;//cambiar 0 por la dimension de las casas
-		if(!(event.getEntity() instanceof Player)){
-			if(event.getEntity().getModID() != null && event.getEntity().getModID().equals("pixelmon")){
-
-				event.setEventCanceled(true);
-			}
-		}else{
-			BewomByte.log.debug("Este evento se ejecuta tambien con jugadores: "+event.getEntity());
 		}
 	}
 }

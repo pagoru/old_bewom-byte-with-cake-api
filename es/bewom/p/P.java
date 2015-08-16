@@ -1,5 +1,10 @@
 package es.bewom.p;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +17,12 @@ import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.world.World;
 import org.cakepowered.api.world.block.Block;
 import org.cakepowered.api.world.block.Blocks;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import es.bewom.BewomByte;
+import es.bewom.centrospokemon.CentroPokemon;
 
 public class P {
 	
@@ -27,7 +38,7 @@ public class P {
 		double x = event.getPosition().getX();
 		double y = event.getPosition().getY();
 		double z = event.getPosition().getZ();
-		Block b =  event.getWorld().getBlock((int)x, (int)y, (int)z);
+		Block b =  event.getInteractBlock();
 		World world = p.getWorld();
 		
 		if(b != null){
@@ -61,6 +72,7 @@ public class P {
 					doors.get(lastDoor).setDoorPos(0).setLocation(l);
 					second = false;
 					p.sendMessage("Puertas seleccionadas.");
+					save();
 				}
 				if(first){
 					event.setEventCanceled(true);
@@ -113,6 +125,72 @@ public class P {
 			return true;
 		}
 		return false;
+	}
+	
+	public static void save() {
+		
+		try {
+		
+			Door[] doorsArray = new Door[doors.size()];
+			for(int i = 0; i < doors.size(); i++) {
+				doorsArray[i] = doors.get(i);
+			}
+			
+			File folder = new File("bewom");
+			if(!folder.exists()) folder.mkdirs();
+			
+			File file = new File("bewom/P.json");
+			if(!file.exists()) file.createNewFile();
+			
+			Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
+			String json = gson.toJson(doorsArray);
+			
+			FileWriter writer = new FileWriter(file);
+			writer.write(json);
+			
+			writer.close();
+		
+		} catch (IOException e) {
+			BewomByte.log.debug(e.getMessage());
+		}
+		
+	}
+	
+	/**
+	 * Loads all {@link CentroPokemon} from a Json file.
+	 */
+	public static void load() {
+		
+		try {
+		
+			File folder = new File("bewom");
+			if(!folder.exists()) folder.mkdirs();
+			
+			File file = new File("bewom/P.json");
+			if(!file.exists()) file.createNewFile();
+			
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			
+			Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
+			
+			Door[] doorsArray = gson.fromJson(reader, Door[].class);
+			
+			doors.clear();
+			
+			if(doorsArray != null){
+				for(Door d : doorsArray) {
+					doors.add(d);
+				}			
+			}
+			
+		} catch (IOException e) {
+			BewomByte.log.debug(e.getMessage());
+		}
+		
+	}
+	
+	public static void init(BewomByte plugin) {
+		load();
 	}
 	
 }
