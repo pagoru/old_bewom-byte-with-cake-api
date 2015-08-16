@@ -134,7 +134,7 @@ public class UserEventsHandler {
 	
 	@EventSuscribe
 	public void on(PlayerInteractEvent event){
-
+		
 		Player player = event.getPlayer();
 		BewomUser user = BewomUser.getUser(player);
 		
@@ -154,7 +154,6 @@ public class UserEventsHandler {
 		if (!user.isAdmin() && player.getWorld().getName().equals("world")) {
 			event.setEventCanceled(true);
 		}
-		
 	}
 	
 	@EventSuscribe
