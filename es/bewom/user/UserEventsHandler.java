@@ -190,7 +190,6 @@ public class UserEventsHandler {
 		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
 			event.setEventCanceled(true);
 		}
-		
 	}
 	
 	@EventSuscribe
