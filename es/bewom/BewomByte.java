@@ -60,6 +60,8 @@ public class BewomByte {
 		
 		game.getEventRegistry().registerEventListener(new UserEventsHandler(game));
 		
+		game.getWorldManager().createFlatWorld(2);
+		
 	}
 	
 	/**

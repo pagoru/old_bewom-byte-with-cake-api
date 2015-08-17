@@ -114,6 +114,12 @@ public class UserEventsHandler {
 			}
 			
 		}
+		CentroPokemon cp = CentroManager.getClosest(player.getLocation());
+
+		if(cp != null) {
+			player.setLocation(cp.getLocation());
+		}
+		
 		if(position_map.containsKey(uuid)){
 			position_map.remove(uuid);
 		}
@@ -122,13 +128,13 @@ public class UserEventsHandler {
 	@EventSuscribe
 	public void onUserRespawn(PlayerRespawnEvent event) {
 		Player player = event.getPlayer();
-		CentroPokemon cp = CentroManager.getClosest(player.getLocation());
+		CentroPokemon cp = CentroManager.centros.get(0);
 
 		playerUpdateGameMode(player);
 		if(cp != null) {
 			player.setLocation(cp.getLocation());
 		}
-		System.out.println("Respawn!" + cp.getLocation().getX());
+		System.out.println("Respawn!");
 	}
 	
 	@EventSuscribe
@@ -149,8 +155,8 @@ public class UserEventsHandler {
 	}
 	
 	private boolean isPixelmonInteraction(PlayerInteractEvent e) {
-		String n = e.getInteractBlock().getUnlocalizedName().substring(5, e.getInteractBlock().getUnlocalizedName().length());	
-		if(n.equals("apricorn")
+		String n = e.getInteractBlock().getUnlocalizedName().substring(5, e.getInteractBlock().getUnlocalizedName().length());
+		if(		   n.equals("apricorn")
 				|| n.endsWith("pc")
 				|| n.endsWith("trademachine")
 				|| n.endsWith("mechanicalanvil")
@@ -158,6 +164,7 @@ public class UserEventsHandler {
 				|| n.endsWith("pokechest")
 				|| n.endsWith("ultrachest")
 				|| n.endsWith("masterchest")
+				|| n.endsWith("healer")
 				|| n.endsWith("PokeGift")){
 			return false;
 		}
@@ -171,10 +178,10 @@ public class UserEventsHandler {
 		BewomUser user = BewomUser.getUser(player);
 
 		playerUpdateGameMode(player);
-		if(event.getEntity().getName().contains("entity.pixelmon")&& player.getDimensionID() == Dimensions.INTERIORES){
+		if(event.getEntity().getName().contains("entity.pixelmon") && player.getDimensionID() == Dimensions.INTERIORES){
 			event.setEventCanceled(true);
 		}		
-		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
+		if (!event.getEntity().getName().contains("entity.pixelmon") && !user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
 			event.setEventCanceled(true);
 		}
 		
