@@ -20,6 +20,7 @@ import org.cakepowered.api.event.PlayerQuitEvent;
 import org.cakepowered.api.event.PlayerRespawnEvent;
 import org.cakepowered.api.event.ServerUpdateEvent;
 import org.cakepowered.api.util.PreciseLocation;
+import org.cakepowered.api.util.Vector3d;
 import org.cakepowered.api.util.text.TextFormating;
 
 import es.bewom.BewomByte;
@@ -46,6 +47,7 @@ public class UserEventsHandler {
 	public void onUserJoin(PlayerJoinEvent event) {
 				
 		Player player = event.getPlayer();
+		player.setLocation(new PreciseLocation(0, new Vector3d(0, 0, 0), 0, 0));
 		
 		BewomUser user = new BewomUser(player);
 		BewomUser.addUser(user);

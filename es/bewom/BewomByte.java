@@ -1,15 +1,14 @@
 package es.bewom;
 
+import java.util.Random;
+
 import org.cakepowered.api.base.CakePlugin;
 import org.cakepowered.api.base.Game;
 import org.cakepowered.api.base.Log;
 import org.cakepowered.api.event.EventSuscribe;
 import org.cakepowered.api.event.InitializationEvent;
+import org.cakepowered.api.event.ServerStatingEvent;
 import org.cakepowered.api.event.ServerStoppingEvent;
-import org.cakepowered.api.world.ApiWorldManager;
-import org.cakepowered.api.world.World;
-import org.cakepowered.api.world.WorldManager;
-import org.cakepowered.api.world.WorldTypes;
 
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.commands.Commands;
@@ -59,6 +58,11 @@ public class BewomByte {
 		P.init(this);
 		
 		game.getEventRegistry().registerEventListener(new UserEventsHandler(game));
+		game.getWorldManager().createFlatWorld(2);
+	}
+	
+	@EventSuscribe
+	public void onServerOpen(ServerStatingEvent event){
 		
 	}
 	
@@ -69,6 +73,7 @@ public class BewomByte {
 	@EventSuscribe
 	public void onServerClosing(ServerStoppingEvent e) {
 		CentroManager.save();
+		
 	}
 	
 	/**

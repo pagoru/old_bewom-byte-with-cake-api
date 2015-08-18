@@ -10,13 +10,13 @@ import java.util.List;
 
 import org.cakepowered.api.base.Game;
 import org.cakepowered.api.base.Player;
+import org.cakepowered.api.block.Block;
+import org.cakepowered.api.block.Blocks;
 import org.cakepowered.api.event.BlockBreakEvent;
 import org.cakepowered.api.event.PlayerInteractEvent;
 import org.cakepowered.api.util.DirectionYaw;
 import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.world.World;
-import org.cakepowered.api.world.block.Block;
-import org.cakepowered.api.world.block.Blocks;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
