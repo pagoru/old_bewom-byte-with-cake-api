@@ -147,9 +147,9 @@ public class UserEventsHandler {
 		playerUpdateGameMode(player);
 		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
 			
-			System.out.println(player.getItemInHand());
+			System.out.println(player.getCurrentItem().getUnlocalizedName());
 			if(isPixelmonInteraction(event)){
-				System.out.println(player.getItemInHand() + "____");
+				System.out.println(player.getCurrentItem().getUnlocalizedName() + "____");
 				event.setEventCanceled(true);
 			}
 		}
@@ -160,8 +160,8 @@ public class UserEventsHandler {
 	
 	private boolean isPixelmonInteraction(PlayerInteractEvent e) {
 		String n = e.getInteractBlock().getUnlocalizedName().substring(5, e.getInteractBlock().getUnlocalizedName().length());
-		if(e.getPlayer().getItemInHand() != null){
-			String i = e.getPlayer().getItemInHand().substring(5, e.getPlayer().getItemInHand().length());
+		if(e.getPlayer().getCurrentItem() != null){
+			String i = e.getPlayer().getCurrentItem().getUnlocalizedName().substring(5, e.getPlayer().getCurrentItem().getUnlocalizedName().length());
 			if(		  !i.equals("potion")
 					|| i.equals("minebike")){
 				return false;

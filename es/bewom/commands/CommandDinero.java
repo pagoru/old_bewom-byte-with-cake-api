@@ -30,7 +30,8 @@ public class CommandDinero extends CommandBase {
 		Player player = commandSender.getPlayer();
 		BewomUser user = BewomUser.getUser(player);
 		
-		String message = "Tienes " + BewomUser.getMoney(player.getUniqueID()) + " woms.";		
+		String message = "Tienes " + BewomUser.getMoney(player.getUniqueID()) + " woms.";	
+		player.sendMessage(message);
 	}
 
 }

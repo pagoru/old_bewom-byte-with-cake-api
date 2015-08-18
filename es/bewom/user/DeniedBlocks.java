@@ -1,9 +1,9 @@
 package es.bewom.user;
 
 import org.cakepowered.api.base.Game;
+import org.cakepowered.api.block.Block;
+import org.cakepowered.api.block.Blocks;
 import org.cakepowered.api.event.BlockPlaceEvent;
-import org.cakepowered.api.world.block.Block;
-import org.cakepowered.api.world.block.Blocks;
 
 public class DeniedBlocks {
 	

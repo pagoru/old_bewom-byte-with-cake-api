@@ -10,13 +10,15 @@ import java.util.List;
 
 import org.cakepowered.api.base.Game;
 import org.cakepowered.api.base.Player;
+import org.cakepowered.api.block.Block;
+import org.cakepowered.api.block.Blocks;
 import org.cakepowered.api.event.BlockBreakEvent;
 import org.cakepowered.api.event.PlayerInteractEvent;
 import org.cakepowered.api.util.DirectionYaw;
 import org.cakepowered.api.util.PreciseLocation;
+import org.cakepowered.api.util.Vector3d;
+import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.world.World;
-import org.cakepowered.api.world.block.Block;
-import org.cakepowered.api.world.block.Blocks;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -25,11 +27,6 @@ import es.bewom.BewomByte;
 import es.bewom.centrospokemon.CentroPokemon;
 
 public class P {
-	
-	public static Player player;
-	public static boolean first = false;
-	public static boolean second = false;
-	public static int lastDoor = 0;
 	
 	public static List<Door> doors = new ArrayList<Door>();
 	
@@ -47,8 +44,8 @@ public class P {
 			if(equalsAnyWoodenDoorTypes(b)){
 				
 				if(doors != null){
-					if(!second && !first){
-						for (Door d : doors) {
+					for (Door d : doors) {
+						if(!d.isFirstDoor() && !d.isSecondDoor()){
 							if(d.setDoorPos(0).isSelected(x, y, z, world.getDimension())){
 								PreciseLocation loc = d.setDoorPos(1).getPreciseLocation();
 								p.setLocation(loc);
@@ -59,35 +56,30 @@ public class P {
 								p.setLocation(loc);
 								event.setEventCanceled(true);
 							}
-						}					
-					}
-				}
-				
-				if(player != null){
-					if(player.equals(p)){
-						if(second){
-							event.setEventCanceled(true);
-							Block doorW = game.getServer().getWorld(p.getDimensionID()).getBlock((int) x, (int) y - 1, (int) z);
-							if(equalsAnyWoodenDoorTypes(doorW)){
-								y -= 1;
-							}
-							PreciseLocation l = new PreciseLocation(p.getDimensionID(), x, y, z, DirectionYaw.getOpossiteYawFromDirection(p.getDirection()), 0);
-							doors.get(lastDoor).setDoorPos(0).setLocation(l);
-							second = false;
-							p.sendMessage("Puertas seleccionadas.");
-							save();
 						}
-						if(first){
-							event.setEventCanceled(true);
-							Block doorW = game.getServer().getWorld(p.getDimensionID()).getBlock((int) x, (int) y - 1, (int) z);
-							if(equalsAnyWoodenDoorTypes(doorW)){
-								y -= 1;
+						
+						if(d.getPlayer() != null){
+							if(d.getPlayer().equals(p)){
+								System.out.println(d.getPlayer().getUserName());
+								Block doorW = game.getServer().getWorld(p.getDimensionID()).getBlock(new Vector3i((int) x, (int) y - 1, (int) z));
+								PreciseLocation l = new PreciseLocation(p.getDimensionID(), x, y, z, DirectionYaw.getOpossiteYawFromDirection(p.getDirection()), 0);
+								if(equalsAnyWoodenDoorTypes(doorW)){
+									y -= 1;
+								}
+								if(d.isFirstDoor()){
+									d.setDoorPos(1).setLocation(l);
+									d.setFirstDoor(false);
+									d.setSecondDoor(true);
+									p.sendMessage("Selecciona la segunda puerta.");
+									event.setEventCanceled(true);
+								} else if(d.isSecondDoor()){
+									d.setDoorPos(0).setLocation(l);
+									d.setSecondDoor(false);
+									d.setPlayer(null);
+									p.sendMessage("Puertas seleccionadas.");
+									event.setEventCanceled(true);
+								}
 							}
-							PreciseLocation l = new PreciseLocation(p.getDimensionID(), x, y, z, DirectionYaw.getOpossiteYawFromDirection(p.getDirection()), 0);
-							doors.get(lastDoor).setDoorPos(1).setLocation(l);
-							first = false;
-							second = true;
-							p.sendMessage("Selecciona la segunda puerta.");
 						}
 					}
 				}
@@ -105,7 +97,7 @@ public class P {
 		double y = event.getPosition().getY();
 		double z = event.getPosition().getZ();
 		
-		Block b = game.getServer().getWorld(p.getDimensionID()).getBlock((int) x, (int) y + 1, (int) z);
+		Block b = game.getServer().getWorld(p.getDimensionID()).getBlock(new Vector3i((int) x, (int) y + 1, (int) z));
 		
 		if(b != null){
 			

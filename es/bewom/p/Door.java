@@ -1,5 +1,6 @@
 package es.bewom.p;
 
+import org.cakepowered.api.base.Player;
 import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.util.Vector3d;
 import org.cakepowered.api.world.World;
@@ -23,6 +24,40 @@ public class Door {
 	
 	private int pos;
 	
+	private boolean firstDoor;
+	private boolean secondDoor;
+	private Player player;
+	
+	public Door(Player player) {
+		this.player = player;
+		this.firstDoor = true;
+		this.secondDoor = false;
+	}
+	
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+	
+	public boolean isFirstDoor() {
+		return firstDoor;
+	}
+
+	public void setFirstDoor(boolean firstDoor) {
+		this.firstDoor = firstDoor;
+	}
+
+	public boolean isSecondDoor() {
+		return secondDoor;
+	}
+
+	public void setSecondDoor(boolean secondDoor) {
+		this.secondDoor = secondDoor;
+	}
+
 	public boolean isSameWorld(){
 		
 		if(dimension[0] == dimension[1]){

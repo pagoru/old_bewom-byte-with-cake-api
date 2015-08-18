@@ -438,14 +438,20 @@ public class BewomUser {
 		m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
 	}
 	
-	public boolean substractMoney(int a){
+	public boolean canSubstractMoney(int a){
+		if(getMoney() >= a){
+			int money = Math.abs(a - getMoney());
+			return true;
+		}
+		return false;
+	}
+	
+	public void substractMoney(int a){
 		if(getMoney() >= a){
 			int money = Math.abs(a - getMoney());
 			System.out.println(money);
 			m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
-			return true;
 		}
-		return false;
 	}
 	
 	public static List<String> getPlayersUUIDRegistered(){
