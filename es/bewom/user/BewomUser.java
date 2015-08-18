@@ -416,7 +416,36 @@ public class BewomUser {
 	
 	public static void addMoney(UUID uuid, int a){
 		int money = a + getMoney(uuid);
-		m.executeQuery("INSERT INTO `users` (`money`) VALUES ('" + money + "') WHERE `uuid`='" + uuid + "'", null);
+		m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
+	}
+	
+	public static boolean substractMoney(UUID uuid, int a){
+		if(getMoney(uuid) >= a){
+			int money = Math.abs(a - getMoney(uuid));
+			m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
+			return true;
+		}
+		return false;
+		
+	}
+	
+	public int getMoney(){
+		return Integer.parseInt(m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "money").get(0));
+	}
+	
+	public void addMoney(int a){
+		int money = a + getMoney();
+		m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
+	}
+	
+	public boolean substractMoney(int a){
+		if(getMoney() >= a){
+			int money = Math.abs(a - getMoney());
+			System.out.println(money);
+			m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
+			return true;
+		}
+		return false;
 	}
 	
 	public static List<String> getPlayersUUIDRegistered(){

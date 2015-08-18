@@ -64,6 +64,8 @@ public class BewomByte {
 	@EventSuscribe
 	public void onServerOpen(ServerStatingEvent event){
 		
+		game.getWorldManager().createFlatWorld(2);
+		
 	}
 	
 	/**

@@ -27,6 +27,7 @@ import es.bewom.BewomByte;
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.chat.Chat;
+import es.bewom.economy.Shops;
 import es.bewom.p.P;
 import es.bewom.util.Dimensions;
 
@@ -116,6 +117,12 @@ public class UserEventsHandler {
 			}
 			
 		}
+		CentroPokemon cp = CentroManager.getClosest(player.getLocation());
+
+		if(cp != null) {
+			player.setLocation(cp.getLocation());
+		}
+		
 		if(position_map.containsKey(uuid)){
 			position_map.remove(uuid);
 		}
@@ -124,13 +131,13 @@ public class UserEventsHandler {
 	@EventSuscribe
 	public void onUserRespawn(PlayerRespawnEvent event) {
 		Player player = event.getPlayer();
-		CentroPokemon cp = CentroManager.getClosest(player.getLocation());
+		CentroPokemon cp = CentroManager.centros.get(0);
 
 		playerUpdateGameMode(player);
 		if(cp != null) {
 			player.setLocation(cp.getLocation());
 		}
-		System.out.println("Respawn!" + cp.getLocation().getX());
+		System.out.println("Respawn!");
 	}
 	
 	@EventSuscribe
@@ -138,21 +145,31 @@ public class UserEventsHandler {
 		
 		Player player = event.getPlayer();
 		BewomUser user = BewomUser.getUser(player);
-
+		
 		playerUpdateGameMode(player);
 		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
 			
+			System.out.println(player.getItemInHand());
 			if(isPixelmonInteraction(event)){
+				System.out.println(player.getItemInHand() + "____");
 				event.setEventCanceled(true);
 			}
 		}
 		
+		Shops.on(game, event);
 		P.on(game, event);
 	}
 	
 	private boolean isPixelmonInteraction(PlayerInteractEvent e) {
-		String n = e.getInteractBlock().getUnlocalizedName().substring(5, e.getInteractBlock().getUnlocalizedName().length());	
-		if(n.equals("apricorn")
+		String n = e.getInteractBlock().getUnlocalizedName().substring(5, e.getInteractBlock().getUnlocalizedName().length());
+		if(e.getPlayer().getItemInHand() != null){
+			String i = e.getPlayer().getItemInHand().substring(5, e.getPlayer().getItemInHand().length());
+			if(		  !i.equals("potion")
+					|| i.equals("minebike")){
+				return false;
+			}
+		}
+		if(		   n.equals("apricorn")
 				|| n.endsWith("pc")
 				|| n.endsWith("trademachine")
 				|| n.endsWith("mechanicalanvil")
@@ -160,7 +177,9 @@ public class UserEventsHandler {
 				|| n.endsWith("pokechest")
 				|| n.endsWith("ultrachest")
 				|| n.endsWith("masterchest")
-				|| n.endsWith("PokeGift")){
+				|| n.endsWith("healer")
+				|| n.endsWith("PokeGift")
+				|| n.endsWith("minebike")){
 			return false;
 		}
 		return true;
@@ -171,12 +190,14 @@ public class UserEventsHandler {
 		
 		Player player = event.getPlayer();
 		BewomUser user = BewomUser.getUser(player);
-
+		
+		String name = event.getEntity().getName();
+		
 		playerUpdateGameMode(player);
-		if(event.getEntity().getName().contains("entity.pixelmon")&& player.getDimensionID() == Dimensions.INTERIORES){
+		if((name.equals("entity.pixelmon.Pixelmon.name") || name.equals("entity.minebikes.Bike.name")) && player.getDimensionID() == Dimensions.INTERIORES){
 			event.setEventCanceled(true);
 		}		
-		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
+		if (!name.equals("entity.pixelmon.Pixelmon.name") && !name.equals("entity.minebikes.Bike.name") && !user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
 			event.setEventCanceled(true);
 		}
 		
@@ -192,6 +213,7 @@ public class UserEventsHandler {
 		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
 			event.setEventCanceled(true);
 		}
+		
 	}
 	
 	@EventSuscribe

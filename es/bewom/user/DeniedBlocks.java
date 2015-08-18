@@ -14,13 +14,15 @@ public class DeniedBlocks {
 			Blocks.STICKY_PISTON,
 			Blocks.DISPENSER,
 			Blocks.DROPPER,
-			Blocks.TNT
+			Blocks.TNT,
+			Blocks.SAPLING
 			
 	};
 	
 	public static void on(Game game, BlockPlaceEvent event){
 		
 		Block b = event.getBlock();
+		System.out.println(b.getUnlocalizedName());
 		
 		if(b != null){
 			

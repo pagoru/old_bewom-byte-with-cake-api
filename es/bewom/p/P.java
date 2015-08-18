@@ -26,6 +26,7 @@ import es.bewom.centrospokemon.CentroPokemon;
 
 public class P {
 	
+	public static Player player;
 	public static boolean first = false;
 	public static boolean second = false;
 	public static int lastDoor = 0;
@@ -62,29 +63,33 @@ public class P {
 					}
 				}
 				
-				if(second){
-					event.setEventCanceled(true);
-					Block doorW = game.getServer().getWorld(p.getDimensionID()).getBlock((int) x, (int) y - 1, (int) z);
-					if(equalsAnyWoodenDoorTypes(doorW)){
-						y -= 1;
+				if(player != null){
+					if(player.equals(p)){
+						if(second){
+							event.setEventCanceled(true);
+							Block doorW = game.getServer().getWorld(p.getDimensionID()).getBlock((int) x, (int) y - 1, (int) z);
+							if(equalsAnyWoodenDoorTypes(doorW)){
+								y -= 1;
+							}
+							PreciseLocation l = new PreciseLocation(p.getDimensionID(), x, y, z, DirectionYaw.getOpossiteYawFromDirection(p.getDirection()), 0);
+							doors.get(lastDoor).setDoorPos(0).setLocation(l);
+							second = false;
+							p.sendMessage("Puertas seleccionadas.");
+							save();
+						}
+						if(first){
+							event.setEventCanceled(true);
+							Block doorW = game.getServer().getWorld(p.getDimensionID()).getBlock((int) x, (int) y - 1, (int) z);
+							if(equalsAnyWoodenDoorTypes(doorW)){
+								y -= 1;
+							}
+							PreciseLocation l = new PreciseLocation(p.getDimensionID(), x, y, z, DirectionYaw.getOpossiteYawFromDirection(p.getDirection()), 0);
+							doors.get(lastDoor).setDoorPos(1).setLocation(l);
+							first = false;
+							second = true;
+							p.sendMessage("Selecciona la segunda puerta.");
+						}
 					}
-					PreciseLocation l = new PreciseLocation(p.getDimensionID(), x, y, z, DirectionYaw.getOpossiteYawFromDirection(p.getDirection()), 0);
-					doors.get(lastDoor).setDoorPos(0).setLocation(l);
-					second = false;
-					p.sendMessage("Puertas seleccionadas.");
-					save();
-				}
-				if(first){
-					event.setEventCanceled(true);
-					Block doorW = game.getServer().getWorld(p.getDimensionID()).getBlock((int) x, (int) y - 1, (int) z);
-					if(equalsAnyWoodenDoorTypes(doorW)){
-						y -= 1;
-					}
-					PreciseLocation l = new PreciseLocation(p.getDimensionID(), x, y, z, DirectionYaw.getOpossiteYawFromDirection(p.getDirection()), 0);
-					doors.get(lastDoor).setDoorPos(1).setLocation(l);
-					first = false;
-					second = true;
-					p.sendMessage("Selecciona la segunda puerta.");
 				}
 				
 			}
