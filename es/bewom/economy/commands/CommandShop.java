@@ -1,18 +1,19 @@
-package es.bewom.p.commands;
+package es.bewom.economy.commands;
 
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
 
+import es.bewom.economy.Shops;
 import es.bewom.p.Door;
 import es.bewom.p.P;
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
-public class CommandP extends CommandBase {
+public class CommandShop extends CommandBase {
 	
-	public CommandP() {
-		super("p");
+	public CommandShop() {
+		super("shop", "tienda");
 	}
 	
 	@Override
@@ -25,11 +26,9 @@ public class CommandP extends CommandBase {
 		
 		if(user.isAdmin()){
 			
-			player.sendMessage("Selecciona la primera puerta.");
-			P.player = player;
-			P.first = true;
-			P.lastDoor = P.doors.size();
-			P.doors.add(new Door());
+			player.sendMessage("Selecciona la tienda.");
+			Shops.selection = true;
+			Shops.player = player;
 			
 		} else {
 			

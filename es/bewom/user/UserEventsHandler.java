@@ -26,6 +26,7 @@ import es.bewom.BewomByte;
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.chat.Chat;
+import es.bewom.economy.Shops;
 import es.bewom.p.P;
 import es.bewom.util.Dimensions;
 
@@ -142,20 +143,30 @@ public class UserEventsHandler {
 		
 		Player player = event.getPlayer();
 		BewomUser user = BewomUser.getUser(player);
-
+		
 		playerUpdateGameMode(player);
 		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
 			
+			System.out.println(player.getItemInHand());
 			if(isPixelmonInteraction(event)){
+				System.out.println(player.getItemInHand() + "____");
 				event.setEventCanceled(true);
 			}
 		}
 		
+		Shops.on(game, event);
 		P.on(game, event);
 	}
 	
 	private boolean isPixelmonInteraction(PlayerInteractEvent e) {
 		String n = e.getInteractBlock().getUnlocalizedName().substring(5, e.getInteractBlock().getUnlocalizedName().length());
+		if(e.getPlayer().getItemInHand() != null){
+			String i = e.getPlayer().getItemInHand().substring(5, e.getPlayer().getItemInHand().length());
+			if(		  !i.equals("potion")
+					|| i.equals("minebike")){
+				return false;
+			}
+		}
 		if(		   n.equals("apricorn")
 				|| n.endsWith("pc")
 				|| n.endsWith("trademachine")
@@ -165,7 +176,8 @@ public class UserEventsHandler {
 				|| n.endsWith("ultrachest")
 				|| n.endsWith("masterchest")
 				|| n.endsWith("healer")
-				|| n.endsWith("PokeGift")){
+				|| n.endsWith("PokeGift")
+				|| n.endsWith("minebike")){
 			return false;
 		}
 		return true;
@@ -176,12 +188,14 @@ public class UserEventsHandler {
 		
 		Player player = event.getPlayer();
 		BewomUser user = BewomUser.getUser(player);
-
+		
+		String name = event.getEntity().getName();
+		
 		playerUpdateGameMode(player);
-		if(event.getEntity().getName().contains("entity.pixelmon") && player.getDimensionID() == Dimensions.INTERIORES){
+		if((name.equals("entity.pixelmon.Pixelmon.name") || name.equals("entity.minebikes.Bike.name")) && player.getDimensionID() == Dimensions.INTERIORES){
 			event.setEventCanceled(true);
 		}		
-		if (!event.getEntity().getName().contains("entity.pixelmon") && !user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
+		if (!name.equals("entity.pixelmon.Pixelmon.name") && !name.equals("entity.minebikes.Bike.name") && !user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
 			event.setEventCanceled(true);
 		}
 		
@@ -197,6 +211,7 @@ public class UserEventsHandler {
 		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
 			event.setEventCanceled(true);
 		}
+		
 	}
 	
 	@EventSuscribe
