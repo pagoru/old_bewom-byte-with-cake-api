@@ -50,7 +50,7 @@ public class Shops {
 							if(it == 0){
 								p.sendMessage(TextFormating.RED + "No tienes suficiente " + s.getShopName() + " para vender!");
 							} else {
-								p.sendMessage(TextFormating.AQUA + "Has vendido " + s.getShopName() + " por " + s.getSellPrice() + " Woms.");
+								p.sendMessage(TextFormating.AQUA + "Has vendido " + s.getQuantity() + " " + s.getShopName() + " por " + s.getSellPrice() + " Woms.");
 							}
 							
 						} else {
@@ -69,7 +69,7 @@ public class Shops {
 								ItemStack stackItem = it.createStack(s.getQuantity(), 0);
 								p.getPlayerInventory().addItemStackToInventory(stackItem);
 								u.substractMoney(s.getBuyPrice());
-								p.sendMessage(TextFormating.AQUA + "Has comprado " + s.getShopName() + " por " + s.getBuyPrice() + " Woms.");
+								p.sendMessage(TextFormating.AQUA + "Has comprado " + s.getQuantity() + " " + s.getShopName() + " por " + s.getBuyPrice() + " Woms.");
 								
 							} else {
 								p.sendMessage(TextFormating.RED + "No tienes suficiente dinero! :(");

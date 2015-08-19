@@ -106,7 +106,7 @@ public class BewomUser {
 			} else if(perm.equals(BewomUser.PERM_USER)){
 				setPermissionLevel(1);
 			}
-			
+			BewomByte.game.getCommandDispacher().executeCommand(BewomByte.game.getServer().getCommandSender(), "/deop " + player.getName());
 			player.setGameMode(2);
 			switch(permissionLevel) {
 			case PERM_LEVEL_ADMIN:
@@ -449,7 +449,6 @@ public class BewomUser {
 	public void substractMoney(int a){
 		if(getMoney() >= a){
 			int money = Math.abs(a - getMoney());
-			System.out.println(money);
 			m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
 		}
 	}

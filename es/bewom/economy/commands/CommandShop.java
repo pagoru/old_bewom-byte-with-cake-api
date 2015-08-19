@@ -40,10 +40,10 @@ public class CommandShop extends CommandBase {
 						player.sendMessage(TextFormating.RED + "No tienes ningun item en la mano.");
 					}
 					} else {
-					player.sendMessage(TextFormating.RED + "/tienda <precio venta> <precio compra> <nombre con _, no espacios> <cantidad>");
+					player.sendMessage(TextFormating.RED + "/tienda <vender> <comprar> <nombre(_)> <cantidad>");
 				}
 			} else {
-				player.sendMessage(TextFormating.RED + "/tienda <precio venta> <precio compra> <nombre con _, no espacios> <cantidad>");
+				player.sendMessage(TextFormating.RED + "/tienda <vender> <comprar> <nombre(_)> <cantidad>");
 			}
 			
 			

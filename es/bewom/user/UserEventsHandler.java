@@ -26,6 +26,8 @@ import es.bewom.BewomByte;
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.chat.Chat;
+import es.bewom.economy.House;
+import es.bewom.economy.Houses;
 import es.bewom.economy.Shops;
 import es.bewom.p.P;
 import es.bewom.util.Dimensions;
@@ -147,13 +149,12 @@ public class UserEventsHandler {
 		playerUpdateGameMode(player);
 		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
 			
-			System.out.println(player.getCurrentItem().getUnlocalizedName());
 			if(isPixelmonInteraction(event)){
-				System.out.println(player.getCurrentItem().getUnlocalizedName() + "____");
 				event.setEventCanceled(true);
 			}
 		}
 		
+		Houses.on(game, event);
 		Shops.on(game, event);
 		P.on(game, event);
 	}
@@ -167,7 +168,7 @@ public class UserEventsHandler {
 				return false;
 			}
 		}
-		if(		   n.equals("apricorn")
+		if(		   n.equals("apricorn tree")
 				|| n.endsWith("pc")
 				|| n.endsWith("trademachine")
 				|| n.endsWith("mechanicalanvil")

@@ -7,6 +7,7 @@ import es.bewom.centrospokemon.commands.CommandCentro;
 import es.bewom.centrospokemon.commands.CommandPonerCentro;
 import es.bewom.centrospokemon.commands.CommandQuitarCentro;
 import es.bewom.economy.commands.CommandShop;
+import es.bewom.p.commands.CommandH;
 import es.bewom.p.commands.CommandP;
 
 public class Commands {
@@ -40,6 +41,8 @@ public class Commands {
 		reg.registerCommand(new CommandTpx());
 		
 		reg.registerCommand(new CommandShop());
+		
+		reg.registerCommand(new CommandH());
 		
 	}
 }
