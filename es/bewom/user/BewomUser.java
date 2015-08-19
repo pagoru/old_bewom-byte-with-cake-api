@@ -47,11 +47,13 @@ public class BewomUser {
 	
 	private int permissionLevel;
 	
+	public int updateState = 15;
+	
 	private String registerLink = "http://bewom.es/crear/";
 	private boolean getRegisterLink = false;
 	public int registration = -1;
 	public boolean registerLinkSended = false;
-	public long registerDateVariable = 15;
+	public long registerDateVariable = 5;
 	public long loginDate;
 	
 	public boolean registerPandY = true;
@@ -97,63 +99,65 @@ public class BewomUser {
 		
 		if(perm != null){
 			
-			m.executeQuery("UPDATE `users` SET `user`='" + player.getUserName() + "' WHERE `uuid`='" + uuid + "'", null);
-			
-			if(perm.equals(BewomUser.PERM_ADMIN)){
-				setPermissionLevel(3);		
-			} else if (perm.equals(BewomUser.PERM_VIP)){
-				setPermissionLevel(2);
-			} else if(perm.equals(BewomUser.PERM_USER)){
-				setPermissionLevel(1);
-			}
-			BewomByte.game.getCommandDispacher().executeCommand(BewomByte.game.getServer().getCommandSender(), "/deop " + player.getName());
-			player.setGameMode(2);
-			switch(permissionLevel) {
-			case PERM_LEVEL_ADMIN:
-				Team team = player.getWorld().getScoreboard().getTeam(PERM_ADMIN);
-				if(team == null) {
-					Scoreboard score = player.getWorld().getScoreboard();
-					score.addTeam(PERM_ADMIN).setColor(TextFormating.DARK_RED);
-					team = player.getWorld().getScoreboard().getTeam(PERM_ADMIN);
-				}
-				
-				if(!team.getPlayers().contains(player)){
-					for(Team t : player.getWorld().getScoreboard().getTeams()) {
-						t.removePlayer(player);
+			switch(perm) {
+			case PERM_ADMIN:
+				if(permissionLevel != PERM_LEVEL_ADMIN){
+					setPermissionLevel(3);
+					Team team = player.getWorld().getScoreboard().getTeam(PERM_ADMIN);
+					if(team == null) {
+						Scoreboard score = player.getWorld().getScoreboard();
+						score.addTeam(PERM_ADMIN).setColor(TextFormating.DARK_RED);
+						team = player.getWorld().getScoreboard().getTeam(PERM_ADMIN);
 					}
-					team.addPlayer(player);
-				}
-				BewomByte.game.getCommandDispacher().executeCommand(BewomByte.game.getServer().getCommandSender(), "/op " + player.getName());
-				player.setGameMode(1);
-				break;
-			case PERM_LEVEL_VIP:
-				Team teamVip = player.getWorld().getScoreboard().getTeam(PERM_VIP);
-				if(teamVip == null) {
-					Scoreboard score = player.getWorld().getScoreboard();
-					score.addTeam(PERM_VIP).setColor(TextFormating.DARK_AQUA);
-					teamVip = player.getWorld().getScoreboard().getTeam(PERM_VIP);
-				}
-				
-				if(!teamVip.getPlayers().contains(player)){
-					for(Team t : player.getWorld().getScoreboard().getTeams()) {
-						t.removePlayer(player);
+					
+					if(!team.getPlayers().contains(player)){
+						for(Team t : player.getWorld().getScoreboard().getTeams()) {
+							t.removePlayer(player);
+						}
+						team.addPlayer(player);
 					}
-					teamVip.addPlayer(player);
+					BewomByte.game.getCommandDispacher().executeCommand(BewomByte.game.getServer().getCommandSender(), "/op " + player.getName());
+					player.setGameMode(1);
 				}
 				break;
-			case PERM_LEVEL_USER:
-				Team teamUser = player.getWorld().getScoreboard().getTeam(PERM_USER);
-				if(teamUser == null) {
-					Scoreboard score = player.getWorld().getScoreboard();
-					score.addTeam(PERM_USER).setColor(TextFormating.GRAY);
-					teamUser = player.getWorld().getScoreboard().getTeam(PERM_USER);
-				}
-				
-				if(!teamUser.getPlayers().contains(player)){
-					for(Team t : player.getWorld().getScoreboard().getTeams()) {
-						t.removePlayer(player);
+			case PERM_VIP:
+				if(permissionLevel != PERM_LEVEL_VIP){
+					setPermissionLevel(2);
+					Team teamVip = player.getWorld().getScoreboard().getTeam(PERM_VIP);
+					if(teamVip == null) {
+						Scoreboard score = player.getWorld().getScoreboard();
+						score.addTeam(PERM_VIP).setColor(TextFormating.DARK_AQUA);
+						teamVip = player.getWorld().getScoreboard().getTeam(PERM_VIP);
 					}
-					teamUser.addPlayer(player);
+					
+					if(!teamVip.getPlayers().contains(player)){
+						for(Team t : player.getWorld().getScoreboard().getTeams()) {
+							t.removePlayer(player);
+						}
+						teamVip.addPlayer(player);
+					}
+					BewomByte.game.getCommandDispacher().executeCommand(BewomByte.game.getServer().getCommandSender(), "/deop " + player.getName());
+					player.setGameMode(2);
+				}
+				break;
+			case PERM_USER:
+				if(permissionLevel != PERM_LEVEL_USER){
+					setPermissionLevel(1);
+					Team teamUser = player.getWorld().getScoreboard().getTeam(PERM_USER);
+					if(teamUser == null) {
+						Scoreboard score = player.getWorld().getScoreboard();
+						score.addTeam(PERM_USER).setColor(TextFormating.GRAY);
+						teamUser = player.getWorld().getScoreboard().getTeam(PERM_USER);
+					}
+					
+					if(!teamUser.getPlayers().contains(player)){
+						for(Team t : player.getWorld().getScoreboard().getTeams()) {
+							t.removePlayer(player);
+						}
+						teamUser.addPlayer(player);
+					}
+					BewomByte.game.getCommandDispacher().executeCommand(BewomByte.game.getServer().getCommandSender(), "/deop " + player.getName());
+					player.setGameMode(2);
 				}
 				break;
 			}
@@ -383,14 +387,14 @@ public class BewomUser {
 			updatePermissions();
 			
 		} else if (getRegistration() == WebRegistration.NOT_VALID) {
-			player.sendTitle(new Title(TextFormating.DARK_RED+"Verifica tu correo!", TextFormating.WHITE+"Si no encuentras el correo, busca en spam...", 900, 0, 60));
+			player.sendTitle(new Title(TextFormating.DARK_RED+"Verifica tu correo!", TextFormating.WHITE+"Si no encuentras el correo, busca en spam...", 100, 0, 0));
 			
 			leaveAllTeams();
 			player.setGameMode(3);
 			
 		} else if (getRegistration() == WebRegistration.NOT_REGISTERED) {
 			createHashFirstTime();
-			player.sendTitle(new Title(TextFormating.DARK_RED+"Porfavor, registrate!", TextFormating.WHITE+"Haz click en el link del chat...", 900, 0, 60));
+			player.sendTitle(new Title(TextFormating.DARK_RED+"Porfavor, registrate!", TextFormating.WHITE+"Haz click en el link del chat...", 100, 0, 0));
 			if(!registerLinkSended){
 				player.sendLink(TextFormating.DARK_AQUA + getRegisterLink());
 				registerLinkSended = true;

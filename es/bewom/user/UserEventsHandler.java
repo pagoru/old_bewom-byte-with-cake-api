@@ -268,10 +268,17 @@ public class UserEventsHandler {
 		Collection<Player> players = event.getServer().getOnlinePlayers();
 		for(Player p : players){
 			BewomUser user = BewomUser.getUser(p);
+			Date date = new Date();
+			long d = ((date.getTime()/1000) - (user.loginDate/1000));
+			
+			if (user.getRegistration() == WebRegistration.VALID) {
+				if(d == (user.updateState + user.registerDateVariable)){
+					user.updateState += 15;
+					user.updatePermissions();
+				}
+			}
 			if (user.getRegistration() != WebRegistration.VALID) {
 				onPlayerMove(user);
-				Date date = new Date();
-				long d = ((date.getTime()/1000) - (user.loginDate/1000));
 				
 				if(user.registerPitch >= 19.0f && user.registerPitch <= 21.0f){
 					user.registerPandY = true;
@@ -293,7 +300,7 @@ public class UserEventsHandler {
 				if(d == user.registerDateVariable){
 					user.registration = user.checkWebsiteRegistration();
 					user.updateRegistration();
-					user.registerDateVariable += 15;
+					user.registerDateVariable += 5;
 					if(d > 180){
 						p.kick(TextFormating.RED + "Has sido kickeado por inactividad durante el registro.");
 					}

@@ -13,6 +13,7 @@ import org.cakepowered.api.world.WorldTypes;
 
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.commands.Commands;
+import es.bewom.economy.Houses;
 import es.bewom.p.P;
 import es.bewom.teleport.TPManager;
 import es.bewom.user.BewomUser;
@@ -57,6 +58,7 @@ public class BewomByte {
 		TPManager.init(this);
 		CentroManager.init(this);
 		P.init(this);
+		Houses.init(this);
 		
 		game.getEventRegistry().registerEventListener(new UserEventsHandler(game));
 		
