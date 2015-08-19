@@ -11,8 +11,6 @@ import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
 
 import es.bewom.BewomByte;
-import es.bewom.centrospokemon.CentroManager;
-import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 

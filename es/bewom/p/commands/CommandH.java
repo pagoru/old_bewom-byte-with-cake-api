@@ -1,19 +1,20 @@
-package es.bewom.commands;
+package es.bewom.p.commands;
 
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
 
-import es.bewom.chat.Chat;
+import es.bewom.economy.House;
+import es.bewom.economy.Houses;
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
-public class CommandSay extends CommandBase {
-	
-	public CommandSay() {
-		super("say", "s");
+public class CommandH extends CommandBase {
+
+	public CommandH() {
+		super("h");
 	}
-	
+
 	@Override
 	public void execute(CommandSender commandSender, String[] args) {
 		
@@ -23,26 +24,9 @@ public class CommandSay extends CommandBase {
 		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
 		
 		if(user.isAdmin()){
-			if(args.length > 0){
-				
-				String text = "";
-				
-				for (int i = 0; i < args.length; i++) {
-					if(i == 0){
-						text += args[0]; 
-					} else {
-						text += " " + args[i];
-					}
-					
-				}
-				
-				Chat.sendMessage(player, TextMessages.BROADCAST + text + ".", "/say " + text);	
-				
-			} else {
-				
-				player.sendMessage(TextMessages.ERROR);
-				
-			}
+			
+			player.sendMessage("Selecciona una puerta valida.");
+			Houses.houses.add(new House(player));
 			
 		} else {
 			

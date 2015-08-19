@@ -12,8 +12,6 @@ import org.cakepowered.api.util.text.TextFormating;
 
 import es.bewom.BewomByte;
 import es.bewom.chat.Chat;
-import es.bewom.p.Door;
-import es.bewom.p.P;
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
@@ -74,7 +72,7 @@ public class CommandKick extends CommandBase {
 			}
 			
 			BewomByte.game.getServer().getPlayer(args[0]).kick(kick);
-			user.m.executeQuery("INSERT INTO `users_kicks`(`uuid`, `uuidAdmin`, `motivo`) VALUES ('" + 
+			BewomUser.m.executeQuery("INSERT INTO `users_kicks`(`uuid`, `uuidAdmin`, `motivo`) VALUES ('" + 
 					BewomByte.game.getServer().getPlayer(args[0]).getUniqueID() + "', '" + player.getUniqueID() + "', '" + kickArgs + "')", null);
 			
 			Chat.sendMessage(player, 

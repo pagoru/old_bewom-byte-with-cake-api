@@ -1,15 +1,12 @@
 package es.bewom.commands;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
-import org.cakepowered.api.command.CommandExecutor;
 import org.cakepowered.api.command.CommandSender;
 import org.cakepowered.api.util.Vector3i;
 
-import es.bewom.BewomByte;
 import es.bewom.user.BewomUser;
 
 public class CommandDinero extends CommandBase {
@@ -30,7 +27,8 @@ public class CommandDinero extends CommandBase {
 		Player player = commandSender.getPlayer();
 		BewomUser user = BewomUser.getUser(player);
 		
-		String message = "Tienes " + BewomUser.getMoney(player.getUniqueID()) + " woms.";		
+		String message = "Tienes " + BewomUser.getMoney(player.getUniqueID()) + " woms.";	
+		player.sendMessage(message);
 	}
 
 }

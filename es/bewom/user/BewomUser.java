@@ -106,7 +106,7 @@ public class BewomUser {
 			} else if(perm.equals(BewomUser.PERM_USER)){
 				setPermissionLevel(1);
 			}
-			
+			BewomByte.game.getCommandDispacher().executeCommand(BewomByte.game.getServer().getCommandSender(), "/deop " + player.getName());
 			player.setGameMode(2);
 			switch(permissionLevel) {
 			case PERM_LEVEL_ADMIN:
@@ -242,9 +242,9 @@ public class BewomUser {
 	public int checkWebsiteRegistration() {
 		//TODO: Check Registration in the database.
 				
-		String perm = (String) m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueID() + "'", "valid").get(0);
+		String perm = m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueID() + "'", "valid").get(0);
 		if(perm.equals("0")){
-			String perm2 = (String) m.executeQuery("SELECT * FROM `users_info` WHERE `uuid`='" + player.getUniqueID() + "'", "active").get(0);
+			String perm2 = m.executeQuery("SELECT * FROM `users_info` WHERE `uuid`='" + player.getUniqueID() + "'", "active").get(0);
 			if(perm2.equals("1")){
 				return WebRegistration.VALID;
 			} else {
@@ -438,14 +438,19 @@ public class BewomUser {
 		m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
 	}
 	
-	public boolean substractMoney(int a){
+	public boolean canSubstractMoney(int a){
 		if(getMoney() >= a){
 			int money = Math.abs(a - getMoney());
-			System.out.println(money);
-			m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
 			return true;
 		}
 		return false;
+	}
+	
+	public void substractMoney(int a){
+		if(getMoney() >= a){
+			int money = Math.abs(a - getMoney());
+			m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
+		}
 	}
 	
 	public static List<String> getPlayersUUIDRegistered(){

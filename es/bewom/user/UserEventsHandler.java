@@ -10,7 +10,6 @@ import org.cakepowered.api.base.Player;
 import org.cakepowered.api.event.BlockBreakEvent;
 import org.cakepowered.api.event.BlockPlaceEvent;
 import org.cakepowered.api.event.EntityAttackedEvent;
-import org.cakepowered.api.event.EntitySpawnEvent;
 import org.cakepowered.api.event.EventSuscribe;
 import org.cakepowered.api.event.PlayerChatEvent;
 import org.cakepowered.api.event.PlayerInteractEntityEvent;
@@ -20,13 +19,12 @@ import org.cakepowered.api.event.PlayerQuitEvent;
 import org.cakepowered.api.event.PlayerRespawnEvent;
 import org.cakepowered.api.event.ServerUpdateEvent;
 import org.cakepowered.api.util.PreciseLocation;
-import org.cakepowered.api.util.Vector3d;
 import org.cakepowered.api.util.text.TextFormating;
 
-import es.bewom.BewomByte;
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.chat.Chat;
+import es.bewom.economy.Houses;
 import es.bewom.economy.Shops;
 import es.bewom.p.P;
 import es.bewom.util.Dimensions;
@@ -48,7 +46,6 @@ public class UserEventsHandler {
 	public void onUserJoin(PlayerJoinEvent event) {
 				
 		Player player = event.getPlayer();
-		player.setLocation(new PreciseLocation(0, new Vector3d(0, 0, 0), 0, 0));
 		
 		BewomUser user = new BewomUser(player);
 		BewomUser.addUser(user);
@@ -149,27 +146,28 @@ public class UserEventsHandler {
 		playerUpdateGameMode(player);
 		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
 			
-//			System.out.println(player.getItemInHand());
-//			if(isPixelmonInteraction(event)){
-//				System.out.println(player.getItemInHand() + "____");
-//				event.setEventCanceled(true);
-//			}
+
+			if(isPixelmonInteraction(event)){
+				event.setEventCanceled(true);
+			}
 		}
 		
+		Houses.on(game, event);
 		Shops.on(game, event);
 		P.on(game, event);
 	}
 	
 	private boolean isPixelmonInteraction(PlayerInteractEvent e) {
 		String n = e.getInteractBlock().getUnlocalizedName().substring(5, e.getInteractBlock().getUnlocalizedName().length());
-//		if(e.getPlayer().getItemInHand() != null){
-//			String i = e.getPlayer().getItemInHand().substring(5, e.getPlayer().getItemInHand().length());
-//			if(		  !i.equals("potion")
-//					|| i.equals("minebike")){
-//				return false;
-//			}
-//		}
-		if(		   n.equals("apricorn")
+
+		if(e.getPlayer().getCurrentItem() != null){
+			String i = e.getPlayer().getCurrentItem().getUnlocalizedName().substring(5, e.getPlayer().getCurrentItem().getUnlocalizedName().length());
+			if(		  !i.equals("potion")
+					|| i.equals("minebike")){
+				return false;
+			}
+		}
+		if(		   n.equals("apricorn tree")
 				|| n.endsWith("pc")
 				|| n.endsWith("trademachine")
 				|| n.endsWith("mechanicalanvil")
@@ -249,7 +247,7 @@ public class UserEventsHandler {
 	
 	public void playerUpdateGameMode(Player player){
 		BewomUser u = BewomUser.getUser(player);
-		if(u.getPermissionLevel() != u.PERM_LEVEL_ADMIN){
+		if(u.getPermissionLevel() != BewomUser.PERM_LEVEL_ADMIN){
 			if(player.getGameMode() != 3){
 				if(player.getDimensionID() == Dimensions.EXTERIORES){
 					if(player.getGameMode() != 2)

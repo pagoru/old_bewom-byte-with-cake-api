@@ -1,7 +1,5 @@
 package es.bewom;
 
-import java.util.Random;
-
 import org.cakepowered.api.base.CakePlugin;
 import org.cakepowered.api.base.Game;
 import org.cakepowered.api.base.Log;
@@ -12,6 +10,7 @@ import org.cakepowered.api.event.ServerStoppingEvent;
 
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.commands.Commands;
+import es.bewom.imc.BewomMessageListener;
 import es.bewom.p.P;
 import es.bewom.teleport.TPManager;
 import es.bewom.user.BewomUser;
@@ -31,6 +30,7 @@ public class BewomByte {
 	
 	public static Log log;
 	
+	public static BewomByte INSTANCE;
 	/**
 	 * Runs when the plugin is initializing.
 	 * @param e the {@link InitializationEvent}.
@@ -43,7 +43,7 @@ public class BewomByte {
 		
 		log.debug("BewomByte Loading.");
 		
-		
+		INSTANCE = this;
 		
 		log.debug("Loading BewomByte commands."); 
 		
@@ -59,6 +59,7 @@ public class BewomByte {
 		
 		game.getEventRegistry().registerEventListener(new UserEventsHandler(game));
 		game.getWorldManager().createFlatWorld(2);
+		game.getMessageDispatcher().register(BewomMessageListener.INSTANCE, this);
 	}
 	
 	@EventSuscribe

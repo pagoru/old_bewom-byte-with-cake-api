@@ -1,32 +1,60 @@
 package es.bewom.economy;
 
+import org.cakepowered.api.base.Player;
 import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.util.Vector3d;
-import org.cakepowered.api.util.Vector3i;
+
+import com.google.gson.annotations.Expose;
 
 public class Shop {
 	
-	public int sellPrice;
-	public int buyPrice;
-	public String unlocalizedName;
-	public String shopName;
-	public int quantity;
-	public double x;
-	public double y;
-	public double z;
-	public int dimension;
+	@Expose
+	private int sellPrice;
+	@Expose
+	private int buyPrice;
+	@Expose
+	private String itemName;
+	@Expose
+	private String shopName;
+	@Expose
+	private int quantity;
+	@Expose
+	private double x;
+	@Expose
+	private double y;
+	@Expose
+	private double z;
+	@Expose
+	private int dimension;
 	
-	public Shop(int sellPrice, int buyPrice, String unlocalizedName, String shopName, int quantity, PreciseLocation pl) {
+	private boolean building;
+	private Player player;
+	
+	public Shop(Player player, int sellPrice, int buyPrice, String itemName, String shopName, int quantity) {
 		super();
+		this.player = player;
+		this.building = true;
 		this.sellPrice = sellPrice;
 		this.buyPrice = buyPrice;
-		this.unlocalizedName = unlocalizedName;
+		this.itemName = itemName;
 		this.shopName = shopName;
 		this.quantity = quantity;
-		this.x = pl.getX();
-		this.y = pl.getY();
-		this.z = pl.getZ();
-		this.dimension = pl.getDimension();
+	}
+
+	public boolean isBuilding() {
+		return building;
+	}
+
+	public void setBuilding(boolean building) {
+		this.building = building;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 
 	public int getQuantity() {
@@ -49,11 +77,11 @@ public class Shop {
 	public void setBuyPrice(int buyPrice) {
 		this.buyPrice = buyPrice;
 	}
-	public String getUnlocalizedName() {
-		return unlocalizedName;
+	public String getItemName() {
+		return itemName;
 	}
-	public void setUnlocalizedName(String unlocalizedName) {
-		this.unlocalizedName = unlocalizedName;
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
 	}
 	public String getShopName() {
 		return shopName;
@@ -64,10 +92,10 @@ public class Shop {
 	public PreciseLocation getPreciseLocation() {
 		return new PreciseLocation(dimension, x, y, z, 0, 0);
 	}
-	public void setPrciseLocation(PreciseLocation pl) {
-		this.x = (int) pl.getX();
-		this.y = (int) pl.getY();
-		this.z = (int) pl.getZ();
+	public void setPreciseLocation(PreciseLocation pl) {
+		this.x = pl.getX();
+		this.y = pl.getY();
+		this.z = pl.getZ();
 		this.dimension = pl.getDimension();
 	}
 

@@ -26,10 +26,7 @@ public class CommandP extends CommandBase {
 		if(user.isAdmin()){
 			
 			player.sendMessage("Selecciona la primera puerta.");
-			P.player = player;
-			P.first = true;
-			P.lastDoor = P.doors.size();
-			P.doors.add(new Door());
+			P.doors.add(new Door(player));
 			
 		} else {
 			

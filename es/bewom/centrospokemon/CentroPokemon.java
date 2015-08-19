@@ -6,8 +6,6 @@ import org.cakepowered.api.util.Vector3i;
 
 import com.google.gson.annotations.Expose;
 
-import es.bewom.BewomByte;
-
 public class CentroPokemon {
 	
 	@Expose
