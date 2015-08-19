@@ -62,6 +62,7 @@ public class BewomByte {
 		game.getEventRegistry().registerEventListener(new UserEventsHandler(game));
 		game.getWorldManager().createFlatWorld(2);
 		game.getMessageDispatcher().register(BewomMessageListener.INSTANCE, this);
+		//bugs with git
 	}
 	
 	@EventSuscribe
