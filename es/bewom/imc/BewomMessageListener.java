@@ -16,7 +16,7 @@ public class BewomMessageListener implements MessageListener{
 	
 	@Override
 	public PluginMessage handleMessage(String sender, PluginMessage msg) {
-		BewomByte.log.debug("sender: "+sender+", message: "+msg);
+		
 		if("getMoney".equals(msg.getTitle())){
 			
 			NBTCompund nbt = msg.getNBTCompound();
@@ -40,8 +40,9 @@ public class BewomMessageListener implements MessageListener{
 			int extract = nbt.getInteger("amount");
 			
 			if(u.canSubstractMoney(extract)){
-				u.substractMoney(extract);
-				tag.setInteger("money", extract);
+				if(!tag.getBoolean("simulated"))
+					u.substractMoney(applyCommissions(extract));
+				tag.setInteger("money", applyCommissions(extract));
 			}else{
 				tag.setInteger("money", 0);
 			}
@@ -58,5 +59,10 @@ public class BewomMessageListener implements MessageListener{
 			u.addMoney(nbt.getInteger("amount"));
 		}
 		return null;
+	}
+	
+	public int applyCommissions(int amount){
+		float com = amount * 0.03F;
+		return (int) Math.max(0, amount - 1 - com); 
 	}
 }
