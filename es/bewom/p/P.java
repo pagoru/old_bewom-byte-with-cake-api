@@ -16,6 +16,7 @@ import org.cakepowered.api.event.BlockBreakEvent;
 import org.cakepowered.api.event.PlayerInteractEvent;
 import org.cakepowered.api.util.DirectionYaw;
 import org.cakepowered.api.util.PreciseLocation;
+import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.world.World;
 
 import com.google.gson.Gson;
@@ -67,7 +68,7 @@ public class P {
 					if(player.equals(p)){
 						if(second){
 							event.setEventCanceled(true);
-							Block doorW = game.getServer().getWorld(p.getDimensionID()).getBlock((int) x, (int) y - 1, (int) z);
+							Block doorW = game.getServer().getWorld(p.getDimensionID()).getBlock(new Vector3i((int) x, (int) y - 1, (int) z));
 							if(equalsAnyWoodenDoorTypes(doorW)){
 								y -= 1;
 							}
@@ -79,7 +80,7 @@ public class P {
 						}
 						if(first){
 							event.setEventCanceled(true);
-							Block doorW = game.getServer().getWorld(p.getDimensionID()).getBlock((int) x, (int) y - 1, (int) z);
+							Block doorW = game.getServer().getWorld(p.getDimensionID()).getBlock(new Vector3i((int) x, (int) y - 1, (int) z));
 							if(equalsAnyWoodenDoorTypes(doorW)){
 								y -= 1;
 							}
@@ -105,7 +106,7 @@ public class P {
 		double y = event.getPosition().getY();
 		double z = event.getPosition().getZ();
 		
-		Block b = game.getServer().getWorld(p.getDimensionID()).getBlock((int) x, (int) y + 1, (int) z);
+		Block b = game.getServer().getWorld(p.getDimensionID()).getBlock(new Vector3i((int) x, (int) y + 1, (int) z));
 		
 		if(b != null){
 			

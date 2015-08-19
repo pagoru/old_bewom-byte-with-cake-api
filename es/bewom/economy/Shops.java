@@ -12,6 +12,7 @@ import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.util.text.TextFormating;
 
 import es.bewom.user.BewomUser;
+import es.bewom.util.BewomUtils;
 
 public class Shops {
 	
@@ -38,7 +39,7 @@ public class Shops {
 				} else {
 					if(u.substractMoney(s.buyPrice)){
 						p.sendMessage(TextFormating.AQUA + "Has comprado " + s.shopName + " por " + s.buyPrice + " Woms.");
-						p.addItemStack(s.getUnlocalizedName(), s.getQuantity());
+						BewomUtils.addItemStack(p, s.getUnlocalizedName(), s.getQuantity());
 					} else {
 						p.sendMessage(TextFormating.RED + "No tienes suficiente dinero! :(");
 					}

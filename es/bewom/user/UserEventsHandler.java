@@ -149,11 +149,11 @@ public class UserEventsHandler {
 		playerUpdateGameMode(player);
 		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
 			
-			System.out.println(player.getItemInHand());
-			if(isPixelmonInteraction(event)){
-				System.out.println(player.getItemInHand() + "____");
-				event.setEventCanceled(true);
-			}
+//			System.out.println(player.getItemInHand());
+//			if(isPixelmonInteraction(event)){
+//				System.out.println(player.getItemInHand() + "____");
+//				event.setEventCanceled(true);
+//			}
 		}
 		
 		Shops.on(game, event);
@@ -162,13 +162,13 @@ public class UserEventsHandler {
 	
 	private boolean isPixelmonInteraction(PlayerInteractEvent e) {
 		String n = e.getInteractBlock().getUnlocalizedName().substring(5, e.getInteractBlock().getUnlocalizedName().length());
-		if(e.getPlayer().getItemInHand() != null){
-			String i = e.getPlayer().getItemInHand().substring(5, e.getPlayer().getItemInHand().length());
-			if(		  !i.equals("potion")
-					|| i.equals("minebike")){
-				return false;
-			}
-		}
+//		if(e.getPlayer().getItemInHand() != null){
+//			String i = e.getPlayer().getItemInHand().substring(5, e.getPlayer().getItemInHand().length());
+//			if(		  !i.equals("potion")
+//					|| i.equals("minebike")){
+//				return false;
+//			}
+//		}
 		if(		   n.equals("apricorn")
 				|| n.endsWith("pc")
 				|| n.endsWith("trademachine")
