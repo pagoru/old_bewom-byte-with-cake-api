@@ -31,6 +31,8 @@ import es.bewom.economy.Houses;
 public class P {
 	
 	public static List<Door> doors = new ArrayList<Door>();
+	public static Player eliminar;
+	public static Door doorToDelete;
 	
 	public static void on(Game game, PlayerInteractEvent event){
 		
@@ -44,10 +46,15 @@ public class P {
 		if(b != null){
 			
 			if(equalsAnyWoodenDoorTypes(b)){
-				
+				if(doorToDelete != null){
+					doors.remove(doorToDelete);
+					doorToDelete = null;
+					p.sendMessage(TextFormating.RED + "Puerta eliminada correctamente!");
+					P.save();
+				}
 				if(doors != null){
 					for (Door d : doors) {
-						if(!d.isFirstDoor() && !d.isSecondDoor()){
+						if(!d.isFirstDoor() && !d.isSecondDoor() && eliminar == null){
 							if(selectionDoor(p, d, x, y, z, p.getDimensionID())){
 								event.setEventCanceled(true);
 							}
@@ -67,6 +74,7 @@ public class P {
 									p.sendMessage("Puertas seleccionadas.");
 									P.save();
 									event.setEventCanceled(true);
+									return;
 								}
 								if(d.isFirstDoor()){
 									d.setDoorPos(1).setLocation(l);
@@ -74,6 +82,17 @@ public class P {
 									d.setSecondDoor(true);
 									p.sendMessage("Selecciona la segunda puerta.");
 									event.setEventCanceled(true);
+									return;
+								}
+							}
+						}
+						
+						if(eliminar != null){
+							if(eliminar.equals(p)){
+								if(d.isSelected(x, y, z, p.getDimensionID())){
+									doorToDelete = d;
+									eliminar = null;
+									break;
 								}
 							}
 						}

@@ -1,8 +1,12 @@
 package es.bewom.p.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
+import org.cakepowered.api.util.Vector3i;
 
 import es.bewom.p.Door;
 import es.bewom.p.P;
@@ -16,6 +20,13 @@ public class CommandP extends CommandBase {
 	}
 	
 	@Override
+	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
+		List<String> tab = new ArrayList<String>();
+		tab.add("eliminar");
+		return tab;
+	}
+	
+	@Override
 	public void execute(CommandSender commandSender, String[] args) {
 		
 		Player player = commandSender.getPlayer();
@@ -25,8 +36,17 @@ public class CommandP extends CommandBase {
 		
 		if(user.isAdmin()){
 			
-			player.sendMessage("Selecciona la primera puerta.");
-			P.doors.add(new Door(player));
+			if(args.length == 1){
+				
+				if(args[0].equals("eliminar")){
+					player.sendMessage("Selecciona una de las dos puertas a borrar.");
+					P.eliminar = player;
+				}
+				return;
+			} else {
+				player.sendMessage("Selecciona la primera puerta.");
+				P.doors.add(new Door(player));
+			}
 			
 		} else {
 			
