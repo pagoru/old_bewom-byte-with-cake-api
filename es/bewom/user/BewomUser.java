@@ -13,6 +13,7 @@ import org.cakepowered.api.util.Title;
 import org.cakepowered.api.util.text.TextFormating;
 
 import es.bewom.BewomByte;
+import es.bewom.economy.House;
 import es.bewom.util.Ran;
 import es.bewom.util.mysql.MySQL;
 
@@ -61,6 +62,8 @@ public class BewomUser {
 	public float registerYaw = 0.0f;
 	
 	public String lastMessage;
+	
+	public House houseToBuyConfirm;
 	
 	/**
 	 * Constructor. Creates a {@link BewomUser} from a player.

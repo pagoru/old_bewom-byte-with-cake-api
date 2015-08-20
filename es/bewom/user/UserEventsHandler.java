@@ -19,11 +19,13 @@ import org.cakepowered.api.event.PlayerQuitEvent;
 import org.cakepowered.api.event.PlayerRespawnEvent;
 import org.cakepowered.api.event.ServerUpdateEvent;
 import org.cakepowered.api.util.PreciseLocation;
+import org.cakepowered.api.util.Vector3d;
 import org.cakepowered.api.util.text.TextFormating;
 
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.chat.Chat;
+import es.bewom.economy.House;
 import es.bewom.economy.Houses;
 import es.bewom.economy.Shops;
 import es.bewom.p.P;
@@ -144,9 +146,8 @@ public class UserEventsHandler {
 		BewomUser user = BewomUser.getUser(player);
 		
 		playerUpdateGameMode(player);
+		
 		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
-			
-
 			if(isPixelmonInteraction(event)){
 				event.setEventCanceled(true);
 			}
@@ -168,18 +169,19 @@ public class UserEventsHandler {
 			}
 		}
 		if(		   n.equals("apricorn tree")
-				|| n.endsWith("pc")
-				|| n.endsWith("trademachine")
-				|| n.endsWith("mechanicalanvil")
-				|| n.endsWith("anvil")
-				|| n.endsWith("pokechest")
-				|| n.endsWith("ultrachest")
-				|| n.endsWith("masterchest")
-				|| n.endsWith("healer")
-				|| n.endsWith("PokeGift")
-				|| n.endsWith("minebike")
-				|| n.endsWith("atm")
-				|| n.endsWith("shop")){
+				|| n.equals("pc")
+				|| n.equals("trademachine")
+				|| n.equals("mechanicalanvil")
+				|| n.equals("anvil")
+				|| n.equals("pokechest")
+				|| n.equals("ultrachest")
+				|| n.equals("masterchest")
+				|| n.equals("healer")
+				|| n.equals("PokeGift")
+				|| n.equals("minebike")
+				|| n.equals("atm")
+				|| n.equals("shop")
+				|| n.equals("poste")){
 			return false;
 		}
 		return true;
