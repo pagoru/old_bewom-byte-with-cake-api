@@ -13,6 +13,7 @@ import es.bewom.user.BewomUser;
 public class BewomMessageListener implements MessageListener{
 
 	public static BewomMessageListener INSTANCE = new BewomMessageListener();
+	private static float commissions = 0.03f;
 	
 	@Override
 	public PluginMessage handleMessage(String sender, PluginMessage msg) {
@@ -43,6 +44,7 @@ public class BewomMessageListener implements MessageListener{
 				if(!nbt.getBoolean("simulated")){
 					u.substractMoney(extract);
 				}
+
 				tag.setInteger("money", applyCommissions(extract));
 			}else{
 				tag.setInteger("money", 0);
@@ -61,15 +63,14 @@ public class BewomMessageListener implements MessageListener{
 		}else if("getCommissions".equals(msg.getTitle())){
 			
 			NBTCompund tag = BewomByte.game.getNBTFactory().newNBTCompound();
-			tag.setFloat("value", 0.03f);
+			tag.setFloat("value", commissions);
 			return new PluginMessage("value", tag);
 		}
 		return null;
 	}
 	
 	public int applyCommissions(int amount){
-//		float com = amount * 0.03F;
-//		return (int) Math.max(0, amount - 1 - com);
-		return amount;
+		float a = Math.max(1, amount*commissions);
+		return (int)Math.max(0, amount-a);
 	}
 }
