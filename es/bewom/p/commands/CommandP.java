@@ -8,6 +8,8 @@ import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
 import org.cakepowered.api.util.Vector3i;
 
+import es.bewom.economy.House;
+import es.bewom.economy.Houses;
 import es.bewom.p.Door;
 import es.bewom.p.P;
 import es.bewom.texts.TextMessages;
@@ -41,6 +43,14 @@ public class CommandP extends CommandBase {
 				if(args[0].equals("eliminar")){
 					player.sendMessage("Selecciona una de las dos puertas a borrar.");
 					P.eliminar = player;
+				} else if(args[0].equals("exit")){
+					for (Door d : P.doors) {
+						if(d.getPlayer() != null){
+							if(d.getPlayer().equals(player)){
+								P.doorToDelete = d;
+							}
+						}
+					}
 				}
 				return;
 			} else {

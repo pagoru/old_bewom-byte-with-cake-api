@@ -32,21 +32,18 @@ public class House {
 	private double signZ;
 	@Expose
 	private int signDimension;
+	@Expose
 	
 	private boolean selectDoor;
+	@Expose
 	private boolean selectSign;
+	@Expose
 	private Player player;
 	
-	public House(Player player) {
+	public House(Player player, int sellPrice, int buyPrice) {
 		this.player = player;
 		this.selectDoor = true;
 		this.selectSign = false;
-	}
-	
-	public House(Door door, int sellPrice, int buyPrice) {
-		super();
-		this.open = false;
-		this.door = door;
 		this.sellPrice = sellPrice;
 		this.buyPrice = buyPrice;
 	}
@@ -119,5 +116,12 @@ public class House {
 		this.signY = loc.getY();
 		this.signZ = loc.getZ();
 		this.signDimension = loc.getDimension();
+	}
+	
+	public boolean isSignSelected(double x, double y, double z, int dimension){
+		if(x == signX && y == signY && z == signZ && signDimension == dimension){
+			return true;
+		}
+		return false;
 	}
 }

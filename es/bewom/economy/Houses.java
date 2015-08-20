@@ -26,19 +26,109 @@ import es.bewom.BewomByte;
 import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.p.Door;
 import es.bewom.p.P;
+import es.bewom.user.BewomUser;
 
 public class Houses {
 	
 	public static List<House> houses = new ArrayList<House>();
+	public static House eliminar;
 	
 	public static void on(Game game, PlayerInteractEvent event){
 		
 		Player p = event.getPlayer();
+		BewomUser u = BewomUser.getUser(p);
 		double x = event.getPosition().getX();
 		double y = event.getPosition().getY();
 		double z = event.getPosition().getZ();
 		Block b =  event.getInteractBlock();
 		World world = p.getWorld();
+		String n = event.getInteractBlock().getUnlocalizedName().substring(5, event.getInteractBlock().getUnlocalizedName().length());
+		
+		int k = 0;
+		for(House g : houses){
+			if(g.getPlayer() != null){
+				if(g.getPlayer().equals(p)){
+					k++;
+				}
+			}
+		}
+		
+		if(k == 0){
+			if(n.equals("poste")){
+				int a = 0;
+				for(House h : houses){
+					if(h.isSignSelected(event.getPosition().getX(), event.getPosition().getY(), event.getPosition().getZ(), p.getLocation().getDimension())){
+						a++;
+						break;
+					}
+				}
+				if(a != 0 && !p.isSneaking() && !p.isOP()){
+					event.setEventCanceled(true);
+				}
+				//compra y venta
+				House hou = null;
+				int o = 0;
+				for(House h : houses){
+					if(h.isSignSelected(event.getPosition().getX(), event.getPosition().getY(), event.getPosition().getZ(), p.getLocation().getDimension())){
+						if(h.getOwner() != null){
+							if(h.getOwner().equals(p.getUniqueID())){
+								o++;
+								break;
+							}
+						}
+						if(h.getOwner() == null){
+							hou = h;
+						}
+					}
+				}
+				if(o == 1){
+					p.sendMessage(TextFormating.RED + "Aun no puedes tener mas de una casa!"); //cambiar despues de BETA
+				} else if(o == 0){
+					if(hou != null){
+						if(u.houseToBuyConfirm != null){
+							if(u.houseToBuyConfirm.equals(hou)){
+								if(u.canSubstractMoney(hou.getBuyPrice())){
+									u.substractMoney(hou.getBuyPrice());
+									u.houseToBuyConfirm = null;
+									p.sendMessage("Acabas de comprar esta maravillosa casa!");
+									hou.setUuidPropietario(p.getUniqueID().toString());
+									
+									TileEntity tileEntity = game.getServer().getWorld(p.getDimensionID()).getTileEntity(new Vector3i(x, y, z));
+									NBTCompund nbt = game.getNBTFactory().newNBTCompound();
+									tileEntity.writeToNBT(nbt);
+									System.out.println(nbt.getBoolean("sold"));
+									nbt.setBoolean("sold", true);
+									System.out.println(nbt.getBoolean("sold"));
+									tileEntity.readFromNBT(nbt);
+									System.out.println(nbt.getBoolean("sold"));
+									tileEntity.writeToNBT(nbt);
+									System.out.println(nbt.getBoolean("sold"));
+									tileEntity.syncPlayer(p);
+									
+									Houses.save();
+								} else {
+									p.sendMessage(TextFormating.RED + "No tienes suficiente dinero! :(");
+									u.houseToBuyConfirm = null;
+								}
+								return;
+							}
+						}
+						
+						p.sendMessage(TextFormating.GREEN + "La inmobiliaria de " + TextFormating.GRAY + TextFormating.BOLD + "BANKIA");
+						p.sendMessage(TextFormating.GREEN + "Esta casa cuesta " + hou.getBuyPrice() + " woms.");
+						p.sendMessage(TextFormating.RED + "Si quieres comprar esta casa, haz click de nuevo.");
+						p.sendMessage(TextFormating.GREEN + "Por cierto, es muy luminosa...");
+						u.houseToBuyConfirm = hou;
+						
+					}
+					
+				}
+			}
+		}
+		
+		if(eliminar != null){
+			houses.remove(eliminar);
+		}
 		
 		if(b != null){
 			
@@ -49,33 +139,68 @@ public class Houses {
 					if(h.getPlayer() != null){
 						if(h.getPlayer().equals(p)){
 							if(h.isSelectSign()){
-//								h.setUuidPropietario(p.getUniqueID().toString()); //quitar
-								h.setSignLocation(new PreciseLocation(p.getDimensionID(), x, y, z, 0, 0));
-								TileEntity tileEntity = game.getServer().getWorld(p.getDimensionID()).getTileEntity(new Vector3i(x, y, z));
-								NBTCompund nbt = game.getNBTFactory().newNBTCompound();
-								tileEntity.writeToNBT(nbt);
-								if(nbt.getBoolean("sold")){
-									
+								int a = 0;
+								for(House g : houses){
+									if(g.getPlayer() == null){
+										if(g.isSignSelected(x, y, z, p.getDimensionID())){
+											a++;
+										}
+									}
 								}
-								h.setSelectSign(false);
-								h.setPlayer(null);
-								p.sendMessage("Casa seleccionada.");
-								Houses.save();
+								if(a == 0){
+									if(n.equals("poste")){
+										h.setSignLocation(new PreciseLocation(p.getDimensionID(), x, y, z, 0, 0));
+
+										TileEntity tileEntity = game.getServer().getWorld(p.getDimensionID()).getTileEntity(new Vector3i(x, y, z));
+										NBTCompund nbt = game.getNBTFactory().newNBTCompound();
+										tileEntity.writeToNBT(nbt);
+										System.out.println(nbt.getBoolean("sold"));
+										nbt.setBoolean("sold", false);
+										System.out.println(nbt.getBoolean("sold"));
+										tileEntity.readFromNBT(nbt);
+										System.out.println(nbt.getBoolean("sold"));
+										tileEntity.writeToNBT(nbt);
+										System.out.println(nbt.getBoolean("sold"));
+										tileEntity.readFromNBT(nbt);
+										tileEntity.syncPlayer(p);
+										
+										h.setSelectSign(false);
+										h.setPlayer(null);
+										p.sendMessage("Casa seleccionada.");
+										Houses.save();
+									} else {
+										p.sendMessage(TextFormating.RED + "No se ha seleccionado un cartel valido!");
+									}
+								} else {
+									p.sendMessage(TextFormating.RED + "Este cartel ya esta asignado a otra casa!");
+								}
 							} 
 							if(h.isSelectDoor()){
 								int a = 0;
-								for(Door d : P.doors){
-									if(d.isSelected(x, y, z, p.getDimensionID())){
-										h.setDoor(d);
-										h.setSelectDoor(false);
-										h.setSelectSign(true);
-										p.sendMessage("Selecciona el cartel.");
-										a++;
-										break;
+								for(House g : houses){
+									if(g.getPlayer() == null){
+										if(g.getDoor().setDoorPos(0).isSelected(x, y, z, p.getDimensionID())
+												|| g.getDoor().setDoorPos(1).isSelected(x, y, z, p.getDimensionID())){
+											a = 4;
+										}
+									}
+								}
+								if(a == 0){
+									for(Door d : P.doors){
+										if(d.setDoorPos(0).isSelected(x, y, z, p.getDimensionID())
+												|| d.setDoorPos(1).isSelected(x, y, z, p.getDimensionID())){
+											h.setDoor(d);
+											h.setSelectDoor(false);
+											h.setSelectSign(true);
+											p.sendMessage("Selecciona el cartel.");
+											a++;
+										}
 									}
 								}
 								if(a == 0){
 									p.sendMessage(TextFormating.RED + "No se ha seleccionado una puerta valida!");
+								} else if(a == 4){
+									p.sendMessage(TextFormating.RED + "Esta puerta ya esta asignada a otra casa!");
 								}
 							}
 						}

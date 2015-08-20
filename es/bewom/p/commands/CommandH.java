@@ -3,6 +3,7 @@ package es.bewom.p.commands;
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
+import org.cakepowered.api.util.text.TextFormating;
 
 import es.bewom.economy.House;
 import es.bewom.economy.Houses;
@@ -24,9 +25,25 @@ public class CommandH extends CommandBase {
 		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
 		
 		if(user.isAdmin()){
-			
-			player.sendMessage("Selecciona una puerta valida.");
-			Houses.houses.add(new House(player));
+			if(args.length == 1){
+				if(args[0].equals("exit")){
+					for (House h : Houses.houses) {
+						if(h.getPlayer() != null){
+							if(h.getPlayer().equals(player)){
+								Houses.eliminar = h;
+							}
+						}
+					}
+				}
+				return;
+			} else {
+				if(args.length == 2){
+					player.sendMessage("Selecciona una puerta valida.");
+					Houses.houses.add(new House(player, Integer.parseInt(args[0]), Integer.parseInt(args[1])));
+				} else {
+					player.sendMessage(TextFormating.RED + "/h <$vender> <$comprar>");
+				}
+			}
 			
 		} else {
 			

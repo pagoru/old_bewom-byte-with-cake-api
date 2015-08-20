@@ -54,7 +54,7 @@ public class P {
 				}
 				if(doors != null){
 					for (Door d : doors) {
-						if(!d.isFirstDoor() && !d.isSecondDoor() && eliminar == null){
+						if(!d.isFirstDoor() && !d.isSecondDoor()){
 							if(selectionDoor(p, d, x, y, z, p.getDimensionID())){
 								event.setEventCanceled(true);
 							}
@@ -118,20 +118,27 @@ public class P {
 		return false;
 	}
 	
+	private static boolean isLocationIdentical(PreciseLocation loc, PreciseLocation loc2){
+		if(loc.getX() == loc2.getX() && loc.getY() == loc2.getY() && loc.getZ() == loc2.getZ() && loc.getDimension() == loc2.getDimension()){
+			return true;
+		}
+		return false;
+	}
+	
 	private static boolean selectionHouse(Player p, Door d){
-		for (int i = 0; i < Houses.houses.size(); i++) {
-			House h = Houses.houses.get(i);
+		for (House h : Houses.houses) {
 			String message = "";
-			if(!h.isSelectDoor() && !h.isSelectSign()){
-				if(h.getDoor().equals(d)){
+			if(isLocationIdentical(h.getDoor().setDoorPos(0).getPreciseLocation(), d.getPreciseLocation()) 
+					|| isLocationIdentical(h.getDoor().setDoorPos(1).getPreciseLocation(), d.getPreciseLocation())){
+				if(!h.isSelectDoor() && !h.isSelectSign()){
 					if(h.isOpen() || p.isOP()){
 						return true;
 					}
+					String uuid = p.getUniqueID().toString();
+					if(uuid.equals(h.getOwner())){
+						return true;
+					}
 					for (int j = 0; j < h.getFriends().size(); j++) {
-						String uuid = p.getUniqueID().toString();
-						if(uuid.equals(h.getOwner())){
-							return true;
-						}
 						if(uuid.equals(h.getFriends().get(j))){
 							return true;
 						}
