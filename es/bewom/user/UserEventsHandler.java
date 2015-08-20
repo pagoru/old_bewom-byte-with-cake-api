@@ -159,11 +159,11 @@ public class UserEventsHandler {
 	
 	private boolean isPixelmonInteraction(PlayerInteractEvent e) {
 		String n = e.getInteractBlock().getUnlocalizedName().substring(5, e.getInteractBlock().getUnlocalizedName().length());
-
 		if(e.getPlayer().getCurrentItem() != null){
 			String i = e.getPlayer().getCurrentItem().getUnlocalizedName().substring(5, e.getPlayer().getCurrentItem().getUnlocalizedName().length());
 			if(		  !i.equals("potion")
-					|| i.equals("minebike")){
+					|| i.equals("minebike")
+					|| i.equals("wallet")){
 				return false;
 			}
 		}
@@ -177,7 +177,9 @@ public class UserEventsHandler {
 				|| n.endsWith("masterchest")
 				|| n.endsWith("healer")
 				|| n.endsWith("PokeGift")
-				|| n.endsWith("minebike")){
+				|| n.endsWith("minebike")
+				|| n.endsWith("atm")
+				|| n.endsWith("shop")){
 			return false;
 		}
 		return true;

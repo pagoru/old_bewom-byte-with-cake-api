@@ -40,7 +40,7 @@ public class BewomMessageListener implements MessageListener{
 			int extract = nbt.getInteger("amount");
 			
 			if(u.canSubstractMoney(extract)){
-				if(!tag.getBoolean("simulated"))
+				if(!nbt.getBoolean("simulated"))
 					u.substractMoney(applyCommissions(extract));
 				tag.setInteger("money", applyCommissions(extract));
 			}else{
@@ -62,7 +62,8 @@ public class BewomMessageListener implements MessageListener{
 	}
 	
 	public int applyCommissions(int amount){
-		float com = amount * 0.03F;
-		return (int) Math.max(0, amount - 1 - com); 
+//		float com = amount * 0.03F;
+//		return (int) Math.max(0, amount - 1 - com); 
+		return amount;
 	}
 }

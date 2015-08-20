@@ -444,17 +444,17 @@ public class BewomUser {
 	
 	public boolean canSubstractMoney(int a){
 		if(getMoney() >= a){
-			int money = Math.abs(a - getMoney());
 			return true;
 		}
 		return false;
 	}
 	
 	public void substractMoney(int a){
+		int money = 0;
 		if(getMoney() >= a){
-			int money = Math.abs(a - getMoney());
-			m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
-		}
+			money = getMoney() - a;
+		}		
+		m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
 	}
 	
 	public static List<String> getPlayersUUIDRegistered(){

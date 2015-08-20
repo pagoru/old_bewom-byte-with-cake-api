@@ -11,8 +11,11 @@ import java.util.List;
 import org.cakepowered.api.base.Game;
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.block.Block;
-import org.cakepowered.api.event.PlayerInteractEvent;
+import org.cakepowered.api.event.PlayerInteractEvent;import org.cakepowered.api.nbt.NBTBase;
+import org.cakepowered.api.nbt.NBTCompund;
+import org.cakepowered.api.tileentity.TileEntity;
 import org.cakepowered.api.util.PreciseLocation;
+import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
 import org.cakepowered.api.world.World;
 
@@ -48,6 +51,12 @@ public class Houses {
 							if(h.isSelectSign()){
 //								h.setUuidPropietario(p.getUniqueID().toString()); //quitar
 								h.setSignLocation(new PreciseLocation(p.getDimensionID(), x, y, z, 0, 0));
+								TileEntity tileEntity = game.getServer().getWorld(p.getDimensionID()).getTileEntity(new Vector3i(x, y, z));
+								NBTCompund nbt = game.getNBTFactory().newNBTCompound();
+								tileEntity.writeToNBT(nbt);
+								if(nbt.getBoolean("sold")){
+									
+								}
 								h.setSelectSign(false);
 								h.setPlayer(null);
 								p.sendMessage("Casa seleccionada.");
