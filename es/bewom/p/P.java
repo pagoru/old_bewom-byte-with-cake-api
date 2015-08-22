@@ -128,6 +128,9 @@ public class P {
 	private static boolean selectionHouse(Player p, Door d){
 		for (House h : Houses.houses) {
 			String message = "";
+			if(h.isSelectDoor() || h.isSelectSign()){
+				return false;
+			}
 			if(isLocationIdentical(h.getDoor().setDoorPos(0).getPreciseLocation(), d.getPreciseLocation()) 
 					|| isLocationIdentical(h.getDoor().setDoorPos(1).getPreciseLocation(), d.getPreciseLocation())){
 				if(!h.isSelectDoor() && !h.isSelectSign()){
@@ -146,8 +149,6 @@ public class P {
 					p.sendMessage(TextFormating.RED + "La puerta esta cerrada!");
 					return false;
 				}
-			} else {
-				return false;
 			}
 		}
 		

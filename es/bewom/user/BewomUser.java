@@ -477,4 +477,9 @@ public class BewomUser {
 		return m.executeQuery("SELECT * FROM `users`", "user");
 	}
 	
+	public static String getUUIDName(String name){
+		List<String> uuid = m.executeQuery("SELECT * FROM `users` WHERE `user`='" + name + "'", "uuid");
+		return uuid.get(0);
+	}
+	
 }

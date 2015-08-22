@@ -147,7 +147,9 @@ public class UserEventsHandler {
 		
 		playerUpdateGameMode(player);
 		
-		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
+		DeniedBlocks.onAdminsToo(game, event);
+		if (!user.isAdmin() && (player.getDimensionID() == Dimensions.EXTERIORES
+				|| (player.getDimensionID() == Dimensions.INTERIORES && player.getLocation().getX() >= Dimensions.LIMITE_INTERIORES))) {
 			if(isPixelmonInteraction(event)){
 				event.setEventCanceled(true);
 			}
@@ -212,7 +214,8 @@ public class UserEventsHandler {
 		BewomUser user = BewomUser.getUser(player);
 
 		playerUpdateGameMode(player);
-		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
+		if (!user.isAdmin() && (player.getDimensionID() == Dimensions.EXTERIORES
+				|| (player.getDimensionID() == Dimensions.INTERIORES && player.getLocation().getX() >= Dimensions.LIMITE_INTERIORES))) {
 			event.setEventCanceled(true);
 		}
 		
@@ -223,11 +226,12 @@ public class UserEventsHandler {
 		
 		Player player = event.getPlayer();
 		BewomUser user = BewomUser.getUser(player);
-
+		
 		playerUpdateGameMode(player);
 		if(!user.isAdmin()){
 			DeniedBlocks.on(game, event);
-			if (player.getDimensionID() == Dimensions.EXTERIORES) {
+			if (!user.isAdmin() && (player.getDimensionID() == Dimensions.EXTERIORES
+					|| (player.getDimensionID() == Dimensions.INTERIORES && player.getLocation().getX() >= Dimensions.LIMITE_INTERIORES))) {
 				event.setEventCanceled(true);
 			}
 		}
@@ -241,7 +245,8 @@ public class UserEventsHandler {
 		BewomUser user = BewomUser.getUser(player);
 		
 		playerUpdateGameMode(player);		
-		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
+		if (!user.isAdmin() && (player.getDimensionID() == Dimensions.EXTERIORES
+				|| (player.getDimensionID() == Dimensions.INTERIORES && player.getLocation().getX() >= Dimensions.LIMITE_INTERIORES))) {
 			event.setEventCanceled(true);
 		}
 		
@@ -253,12 +258,15 @@ public class UserEventsHandler {
 		BewomUser u = BewomUser.getUser(player);
 		if(u.getPermissionLevel() != BewomUser.PERM_LEVEL_ADMIN){
 			if(player.getGameMode() != 3){
-				if(player.getDimensionID() == Dimensions.EXTERIORES){
-					if(player.getGameMode() != 2)
-					player.setGameMode(2);
+				if (!u.isAdmin() && (player.getDimensionID() == Dimensions.EXTERIORES
+						|| (player.getDimensionID() == Dimensions.INTERIORES && player.getLocation().getX() >= Dimensions.LIMITE_INTERIORES))) {
+					if(player.getGameMode() != 2){
+						player.setGameMode(2);
+					}
 				} else {
-					if(player.getGameMode() != 0)
-					player.setGameMode(0);
+					if(player.getGameMode() != 0){
+						player.setGameMode(0);
+					}
 				}
 			}
 		}
