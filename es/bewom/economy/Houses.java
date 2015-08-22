@@ -11,7 +11,7 @@ import java.util.List;
 import org.cakepowered.api.base.Game;
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.block.Block;
-import org.cakepowered.api.event.PlayerInteractEvent;import org.cakepowered.api.nbt.NBTBase;
+import org.cakepowered.api.event.PlayerInteractEvent;
 import org.cakepowered.api.nbt.NBTCompund;
 import org.cakepowered.api.tileentity.TileEntity;
 import org.cakepowered.api.util.PreciseLocation;
@@ -92,17 +92,13 @@ public class Houses {
 									u.houseToBuyConfirm = null;
 									p.sendMessage("Acabas de comprar esta maravillosa casa!");
 									hou.setUuidPropietario(p.getUniqueID().toString());
-									
+//									
 									TileEntity tileEntity = game.getServer().getWorld(p.getDimensionID()).getTileEntity(new Vector3i(x, y, z));
 									NBTCompund nbt = game.getNBTFactory().newNBTCompound();
 									tileEntity.writeToNBT(nbt);
-									System.out.println(nbt.getBoolean("sold"));
-									nbt.setBoolean("sold", true);
-									System.out.println(nbt.getBoolean("sold"));
+									nbt.setBoolean("sold", false);
 									tileEntity.readFromNBT(nbt);
-									System.out.println(nbt.getBoolean("sold"));
 									tileEntity.writeToNBT(nbt);
-									System.out.println(nbt.getBoolean("sold"));
 									tileEntity.syncPlayer(p);
 									
 									Houses.save();
