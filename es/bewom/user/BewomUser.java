@@ -48,7 +48,7 @@ public class BewomUser {
 	
 	private int permissionLevel;
 	
-	public int updateState = 15;
+	public int updateState = 5;
 	
 	private String registerLink = "http://bewom.es/crear/";
 	private boolean getRegisterLink = false;

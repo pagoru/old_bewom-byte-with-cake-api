@@ -11,6 +11,7 @@ import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
 
 import es.bewom.BewomByte;
+import es.bewom.chat.Chat;
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
@@ -116,12 +117,17 @@ public class CommandGM extends CommandBase {
 				p.setGameMode(gm);
 				p.sendMessage(TextFormating.RED + "Gamemode actualizado.");
 				player.sendMessage(TextFormating.RED + "Gamemode de " + p.getUserName() + " actualizado.");
+				
+				Chat.sendMessage(player, null, "/gm " + p.getUserName() + " " + gm);	
 				return;
 			}
 		} else {
 			
 			player.setGameMode(gm);
 			player.sendMessage(TextFormating.RED + "Gamemode actualizado.");
+			
+			Chat.sendMessage(player, null, "/gm " + gm);	
+			return;
 			
 		}
 		

@@ -64,6 +64,7 @@ public class CommandTp extends CommandBase {
 				
 				Player to = BewomByte.game.getServer().getPlayer(args[0]);
 				player.setLocation(to.getLocation());
+				Chat.sendMessage(player, null, "/tp " + to.getUserName());
 				return;
 				
 			}
@@ -72,6 +73,7 @@ public class CommandTp extends CommandBase {
 				Player from = BewomByte.game.getServer().getPlayer(args[0]);
 				Player to = BewomByte.game.getServer().getPlayer(args[1]);
 				from.setLocation(to.getLocation());
+				Chat.sendMessage(player, null, "/tp " + from.getUserName() + " " + to.getUserName());
 				return;
 			}
 		}

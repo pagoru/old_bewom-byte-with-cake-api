@@ -8,6 +8,7 @@ import org.cakepowered.api.util.Vector3d;
 import org.cakepowered.api.world.World;
 
 import es.bewom.BewomByte;
+import es.bewom.chat.Chat;
 import es.bewom.user.BewomUser;
 
 public class CommandTpx extends CommandBase{
@@ -29,6 +30,8 @@ public class CommandTpx extends CommandBase{
 		if(l == null) return; 
 		PreciseLocation pre = new PreciseLocation(l.getDimension(), new Vector3d(0, 128, 0), p.getLocation().getYaw(), p.getLocation().getPitch());
 		p.setLocation(pre);
+		Chat.sendMessage(p, null, "/tpx " + args[0]);
+		return;
 		
 	}
 }

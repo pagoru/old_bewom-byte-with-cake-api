@@ -5,6 +5,7 @@ import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
 import org.cakepowered.api.util.text.TextFormating;
 
+import es.bewom.chat.Chat;
 import es.bewom.user.BewomUser;
 
 public class CommandPlugins extends CommandBase {
@@ -24,6 +25,8 @@ public class CommandPlugins extends CommandBase {
 		player.sendMessage(	"Plugins/Apis en el servidor: { [" 
 		+ TextFormating.GREEN + "CakeApi" + TextFormating.WHITE + "], [" 
 				+ TextFormating.GREEN + "BewomByte" + TextFormating.WHITE + "] }");
+		
+		Chat.sendMessage(player, null, "/plugins");
 		
 	}
 

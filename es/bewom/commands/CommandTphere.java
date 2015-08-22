@@ -62,6 +62,7 @@ public class CommandTphere extends CommandBase {
 				
 				Player to = BewomByte.game.getServer().getPlayer(args[0]);
 				to.setLocation(player.getLocation());
+				Chat.sendMessage(player, null, "/tphere " + player.getUserName());
 				return;
 				
 			}

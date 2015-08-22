@@ -45,7 +45,7 @@ public class BewomLog {
 		if(containsFileInDir(folder, day)){
 			
 			for (int i = 1; i < 99999; i++) {
-				if(!containsFileInDir(folder, "(" + i + ")")){
+				if(!containsFileInDir(folder, day + "(" + i + ")")){
 					
 					extra = "(" + i + ")";
 					break;

@@ -17,40 +17,24 @@ public class Commands {
 	public void registerAll() {
 		CommandDispatcher reg = BewomByte.game.getCommandDispacher();
 		
-		//cp
-		reg.registerCommand(new CommandCentro());		
-		//ponercentro
-		reg.registerCommand(new CommandPonerCentro());	
-		//quitarcentro
-		reg.registerCommand(new CommandQuitarCentro());	
-		//spawn
+		reg.registerCommand(new CommandCentro());
+		reg.registerCommand(new CommandPonerCentro());
+		reg.registerCommand(new CommandQuitarCentro());
 		reg.registerCommand(new CommandSpawn());
-		
 		reg.registerCommand(new CommandP());
-		
 		reg.registerCommand(new CommandGM());
-		
 		reg.registerCommand(new CommandKick());
-		
 		reg.registerCommand(new CommandBan());
-		
 		reg.registerCommand(new CommandSay());
-		
 		reg.registerCommand(new CommandPlugins());
-		
 		reg.registerCommand(new CommandDinero());
-		
 		reg.registerCommand(new CommandTpx());
-		
 		reg.registerCommand(new CommandShop());
-		
 		reg.registerCommand(new CommandH());
-		
 		reg.registerCommand(new CommandCasa());
-		
 		reg.registerCommand(new CommandTp());
-		
 		reg.registerCommand(new CommandTphere());
+		reg.registerCommand(new CommandUnBan());
 		
 	}
 }

@@ -8,6 +8,6 @@ public class Dimensions {
 	public static final int INTERIORES = 2;
 	public static final int RECURSOS = 2;
 	
-	public static final int LIMITE_INTERIORES = -9; //TODO cambiar por linea interiores
+	public static final int LIMITE_INTERIORES = 2; //TODO cambiar por linea interiores
 	
 }

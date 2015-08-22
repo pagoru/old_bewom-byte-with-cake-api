@@ -71,15 +71,15 @@ public class CommandKick extends CommandBase {
 					TextFormating.BOLD + kickArgs + ".";				
 			}
 			
-			BewomByte.game.getServer().getPlayer(args[0]).kick(kick);
 			BewomUser.m.executeQuery("INSERT INTO `users_kicks`(`uuid`, `uuidAdmin`, `motivo`) VALUES ('" + 
 					BewomByte.game.getServer().getPlayer(args[0]).getUniqueID() + "', '" + player.getUniqueID() + "', '" + kickArgs + "')", null);
+			BewomByte.game.getServer().getPlayer(args[0]).kick(kick);
 			
 			Chat.sendMessage(player, 
 					TextMessages.BROADCAST + 
 					TextFormating.DARK_RED + TextFormating.BOLD + args[0] + 
 					TextFormating.RESET + TextFormating.DARK_RED + " ha sido advertid@ por " + 
-					TextFormating.BOLD + player.getUserName() + ".", "/kick " + args[0] + " " + kick);	
+					TextFormating.BOLD + player.getUserName() + ".", "/kick " + args[0] + " " + kick);
 			
 		} else {
 			
