@@ -70,7 +70,7 @@ public class Houses {
 				int o = 0;
 				for(House h : houses){
 					if(h.getOwner() != null){
-						if(h.getOwner().equals(p.getUniqueID())){
+						if(h.getOwner().equals(p.getUniqueID().toString())){
 							o++;
 						}
 					}

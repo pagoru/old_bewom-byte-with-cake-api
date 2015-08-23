@@ -129,6 +129,8 @@ public class UserEventsHandler {
 		if(cp != null) {
 			player.setLocation(cp.getLocation());
 		}
+		System.out.println("RESPAWN!");
+		return;
 	}
 	
 	@EventSuscribe

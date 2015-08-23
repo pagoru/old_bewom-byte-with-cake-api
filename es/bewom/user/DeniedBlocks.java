@@ -10,6 +10,7 @@ import org.cakepowered.api.event.EntityAttackedEvent;
 import org.cakepowered.api.event.PlayerInteractEntityEvent;
 import org.cakepowered.api.event.PlayerInteractEvent;
 
+import es.bewom.BewomByte;
 import es.bewom.util.Dimensions;
 
 public class DeniedBlocks {
@@ -70,8 +71,10 @@ public class DeniedBlocks {
 		Player p = e.getPlayer();
 		BewomUser u = BewomUser.getUser(p);
 		int d = p.getDimensionID();
-		if(p.getCurrentItem() != null){
-			System.out.println("BlockPlace: " + p.getCurrentItem().getUnlocalizedName());
+		if(BewomByte.DEBUG){
+			if(p.getCurrentItem() != null){
+				System.out.println("BlockPlace: " + p.getCurrentItem().getUnlocalizedName());
+			}
 		}
 		
 		if(d == Dimensions.EXTERIORES){
@@ -129,9 +132,11 @@ public class DeniedBlocks {
 		Player p = e.getPlayer();
 		BewomUser u = BewomUser.getUser(p);
 		int d = p.getDimensionID();
-		System.out.println("PlayerInteractEvent: " + e.getInteractBlock().getUnlocalizedName());
-		if(p.getCurrentItem() != null){
-			System.out.println("PlayerInteractEvent: " + p.getCurrentItem().getUnlocalizedName());
+		if(BewomByte.DEBUG){
+			System.out.println("PlayerInteractEvent: " + e.getInteractBlock().getUnlocalizedName());
+			if(p.getCurrentItem() != null){
+				System.out.println("PlayerInteractEvent: " + p.getCurrentItem().getUnlocalizedName());
+			}
 		}
 		
 		if(d == Dimensions.EXTERIORES){
@@ -201,7 +206,9 @@ public class DeniedBlocks {
 		Player p = e.getPlayer();
 		BewomUser u = BewomUser.getUser(p);
 		int d = p.getDimensionID();
-		System.out.println("PlayerInteractEntityEvent: " + e.getEntity().getName());
+		if(BewomByte.DEBUG){
+			System.out.println("PlayerInteractEntityEvent: " + e.getEntity().getName());
+		}
 		
 		if(d == Dimensions.EXTERIORES){
 			
@@ -263,7 +270,9 @@ public class DeniedBlocks {
 		Player p = e.getPlayer();
 		BewomUser u = BewomUser.getUser(p);
 		int d = p.getDimensionID();
-		System.out.println("PlayerAttackedEvent: " + e.getEntity().getName());
+		if(BewomByte.DEBUG){
+			System.out.println("PlayerAttackedEvent: " + e.getEntity().getName());
+		}
 		
 		if(d == Dimensions.EXTERIORES){
 			

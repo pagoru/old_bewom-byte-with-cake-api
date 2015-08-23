@@ -27,6 +27,8 @@ import es.bewom.user.UserEventsHandler;
 
 public class BewomByte {
 	
+	public static final boolean DEBUG = false;
+
 	public static Game game;
 	
 	public static Log log;
@@ -61,8 +63,9 @@ public class BewomByte {
 		
 		game.getEventRegistry().registerEventListener(new UserEventsHandler(game));
 		game.getWorldManager().createFlatWorld(2);
+		game.getWorldManager().createNormalWorld(3, 343822243);
 		game.getMessageDispatcher().register(BewomMessageListener.INSTANCE, this);
-		//bugs with git
+		
 	}
 	
 	@EventSuscribe
@@ -70,20 +73,12 @@ public class BewomByte {
 		
 	}
 	
-	/**
-	 * Runs when the server is stopping.
-	 * @param e the event triggered.
-	 */
 	@EventSuscribe
 	public void onServerClosing(ServerStoppingEvent e) {
 		CentroManager.save();
 		
 	}
 	
-	/**
-	 * Returns the current {@link Game}.
-	 * @return The current {@link Game}.
-	 */
 	public Game getGame() {
 		return game;
 	}

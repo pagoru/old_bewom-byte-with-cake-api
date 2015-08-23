@@ -35,6 +35,7 @@ public class Commands {
 		reg.registerCommand(new CommandTp());
 		reg.registerCommand(new CommandTphere());
 		reg.registerCommand(new CommandUnBan());
+		reg.registerCommand(new CommandPerms());
 		
 	}
 }
