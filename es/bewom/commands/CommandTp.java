@@ -7,6 +7,7 @@ import java.util.List;
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
+import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
 
@@ -76,6 +77,12 @@ public class CommandTp extends CommandBase {
 				Chat.sendMessage(player, null, "/tp " + from.getUserName() + " " + to.getUserName());
 				return;
 			}
+		} else if(args.length == 3){
+			
+			player.setLocation(new PreciseLocation(player.getDimensionID(), 
+					Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]), 
+							player.getLocation().getYaw(), player.getLocation().getPitch()));
+			
 		}
 		
 		player.sendMessage(TextMessages.ERROR);

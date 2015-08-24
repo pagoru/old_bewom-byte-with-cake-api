@@ -1,4 +1,4 @@
-package es.bewom.user;
+package es.bewom;
 
 import java.util.Collection;
 import java.util.Date;
@@ -30,13 +30,16 @@ import es.bewom.economy.House;
 import es.bewom.economy.Houses;
 import es.bewom.economy.Shops;
 import es.bewom.p.P;
+import es.bewom.user.BewomUser;
+import es.bewom.user.DeniedBlocks;
+import es.bewom.user.WebRegistration;
 import es.bewom.util.Dimensions;
 
-public class UserEventsHandler {
+public class EventsHandler {
 	
 	private Game game;
 	
-	public UserEventsHandler(Game game) {
+	public EventsHandler(Game game) {
 		this.game = game;
 	}
 
@@ -227,7 +230,7 @@ public class UserEventsHandler {
 	public HashMap<UUID, PreciseLocation> position_map = new HashMap<UUID, PreciseLocation>();
 	
 	@EventSuscribe
-	public void tick(ServerUpdateEvent event){
+	public void tick(ServerUpdateEvent event){		
 		Collection<Player> players = event.getServer().getOnlinePlayers();
 		for(Player p : players){
 			BewomUser user = BewomUser.getUser(p);
