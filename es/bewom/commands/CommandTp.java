@@ -24,6 +24,8 @@ public class CommandTp extends CommandBase {
 	
 	@Override
 	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
+		Player player = sender.getPlayer();
+		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return null;	
 		if(args.length == 1){
 			return getTab(args, 0);
 		} else if(args.length == 2){
@@ -65,6 +67,7 @@ public class CommandTp extends CommandBase {
 				
 				Player to = BewomByte.game.getServer().getPlayer(args[0]);
 				player.setLocation(to.getLocation());
+				player.sendMessage(TextFormating.RED + "Acabas de teletransportarte a " + args[0] + ".");
 				Chat.sendMessage(player, null, "/tp " + to.getUserName());
 				return;
 				
@@ -74,6 +77,7 @@ public class CommandTp extends CommandBase {
 				Player from = BewomByte.game.getServer().getPlayer(args[0]);
 				Player to = BewomByte.game.getServer().getPlayer(args[1]);
 				from.setLocation(to.getLocation());
+				player.sendMessage(TextFormating.RED + "Acabas de teletransportar a " + args[0] + " a " + args[1] + ".");
 				Chat.sendMessage(player, null, "/tp " + from.getUserName() + " " + to.getUserName());
 				return;
 			}
@@ -82,6 +86,8 @@ public class CommandTp extends CommandBase {
 			player.setLocation(new PreciseLocation(player.getDimensionID(), 
 					Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]), 
 							player.getLocation().getYaw(), player.getLocation().getPitch()));
+			player.sendMessage(TextFormating.RED + "Acabas de teletransportar a " + args[0] + " " + args[1] + " " + args[2] + ".");
+			Chat.sendMessage(player, null, "/tp " + args[0] + " " + args[1] + " " + args[2]);
 			
 		}
 		

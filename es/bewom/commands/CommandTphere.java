@@ -23,6 +23,8 @@ public class CommandTphere extends CommandBase {
 	
 	@Override
 	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
+		Player player = sender.getPlayer();
+		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return null;	
 		if(args.length == 1){
 			return getTab(args, 0);
 		}
@@ -62,6 +64,7 @@ public class CommandTphere extends CommandBase {
 				
 				Player to = BewomByte.game.getServer().getPlayer(args[0]);
 				to.setLocation(player.getLocation());
+				player.sendMessage(TextFormating.RED + "Acabas de teletransportar a " + args[0] + " tu posición.");
 				Chat.sendMessage(player, null, "/tphere " + player.getUserName());
 				return;
 				

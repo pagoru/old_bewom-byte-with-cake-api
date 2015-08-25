@@ -24,6 +24,8 @@ public class CommandPerms extends CommandBase {
 	
 	@Override
 	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
+		Player player = sender.getPlayer();
+		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return null;
 		List<String> tab = new ArrayList<String>();
 		if(args.length == 1){
 			tab = BewomUser.getPlayersUsernameRegistered();
@@ -75,6 +77,8 @@ public class CommandPerms extends CommandBase {
 			if(p != null){
 				user.m.executeQuery("UPDATE `users` SET `type`='" + args[1] + "',`date_type`='" + timestamp.toString() + "',`days_type`='" + tiempo + "' WHERE `uuid`='" + p + "'", null);
 			}
+			player.sendMessage(TextFormating.RED + "Le has cambiado los permisos de " + args[0] + " a " + args[1] + ".");
+			Chat.sendMessage(player, null, "/perms " + args[0] + " " + args[1]);
 			
 		} else {
 			player.sendMessage(TextFormating.RED + "/perms <player> <type> {tiempo}");
