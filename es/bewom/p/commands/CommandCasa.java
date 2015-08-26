@@ -52,9 +52,11 @@ public class CommandCasa extends CommandBase {
 		
 		House house = null;
 		for(House h : Houses.houses){
-			if(h.getOwner().equals(player.getUniqueID().toString())){
-				house = h;
-				break;
+			if(h.getOwner() != null){
+				if(h.getOwner().equals(player.getUniqueID().toString())){
+					house = h;
+					break;
+				}
 			}
 		}
 		
@@ -64,8 +66,10 @@ public class CommandCasa extends CommandBase {
 				System.out.println(uuid);
 				if(args[0].equals("añadir")){
 					house.addFriend(uuid);
+					player.sendMessage(TextFormating.RED + "Has añadido correctamente a " + args[1] + ".");
 				} else if(args[0].equals("eliminar")){
 					house.removeFriend(uuid);
+					player.sendMessage(TextFormating.RED + "Has eliminado correctamente a " + args[1] + ".");
 				}
 			} else {
 				player.sendMessage(TextFormating.RED + "/casa <añadir|eliminar> <usuario>");

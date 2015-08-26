@@ -40,12 +40,12 @@ public class BewomMessageListener implements MessageListener{
                         NBTCompund tag = BewomByte.game.getNBTFactory().newNBTCompound();
                         int extract = nbt.getInteger("amount");
                        
-                        if(u.canSubstractMoney(extract)){
+                        if(u.canSubstractMoney(applyCommissions(extract))){
                                 if(!nbt.getBoolean("simulated")){
-                                        u.substractMoney(extract);
+                                        u.substractMoney(applyCommissions(extract));
                                 }
  
-                                tag.setInteger("money", applyCommissions(extract));
+                                tag.setInteger("money", extract);
                         }else{
                                 tag.setInteger("money", 0);
                         }

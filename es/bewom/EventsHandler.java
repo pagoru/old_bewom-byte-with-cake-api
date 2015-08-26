@@ -32,6 +32,7 @@ import es.bewom.economy.Shops;
 import es.bewom.p.P;
 import es.bewom.user.BewomUser;
 import es.bewom.user.DeniedBlocks;
+import es.bewom.user.PokemonCatcher;
 import es.bewom.user.WebRegistration;
 import es.bewom.util.Dimensions;
 
@@ -52,6 +53,8 @@ public class EventsHandler {
 			player.kick("");
 		}
 		BewomUser.addUser(user);
+		
+		PokemonCatcher.catchPokemons(player.getUniqueID().toString());
 		
 		Chat.sendMessage(player, null, "//login");
 		
@@ -101,6 +104,8 @@ public class EventsHandler {
 		Player player = event.getPlayer();
 		UUID uuid = player.getUniqueID();
 		BewomUser u = BewomUser.getUser(uuid);
+		PokemonCatcher.catchPokemons(player.getUniqueID().toString());
+		
 		if(u != null){
 			
 			if(!u.isLogout()){
@@ -213,14 +218,16 @@ public class EventsHandler {
 		BewomUser u = BewomUser.getUser(player);
 		if(u.getPermissionLevel() != BewomUser.PERM_LEVEL_ADMIN){
 			if(player.getGameMode() != 3){
-				if (!u.isAdmin() && (player.getDimensionID() == Dimensions.EXTERIORES
-						|| (player.getDimensionID() == Dimensions.INTERIORES && player.getLocation().getZ() > Dimensions.LIMITE_INTERIORES))) {
-					if(player.getGameMode() != 2){
-						player.setGameMode(2);
-					}
-				} else {
-					if(player.getGameMode() != 0){
-						player.setGameMode(0);
+				if(!u.isAdmin()){
+					if ((player.getDimensionID() == Dimensions.EXTERIORES
+							|| (player.getDimensionID() == Dimensions.INTERIORES && player.getLocation().getZ() > Dimensions.LIMITE_INTERIORES))) {
+						if(player.getGameMode() != 2){
+							player.setGameMode(2);
+						}
+					} else {
+						if(player.getGameMode() != 0){
+							player.setGameMode(0);
+						}
 					}
 				}
 			}
@@ -239,8 +246,9 @@ public class EventsHandler {
 			
 			if (user.getRegistration() == WebRegistration.VALID) {
 				if(d == (user.updateState + user.registerDateVariable)){
-					user.updateState += 5;
+					user.updateState += 300;
 					user.updatePermissions();
+					PokemonCatcher.catchPokemons(p.getUniqueID().toString());
 				}
 			}
 			if (user.getRegistration() != WebRegistration.VALID) {
