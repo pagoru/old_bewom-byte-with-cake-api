@@ -45,5 +45,28 @@ public class MySQL {
 		}
 		return o;
 	}
+	
+	public boolean isBanned(String uuid){
+		
+		String urls = DB + "public/" + uuid;
+		urls = urls.replace(" ", "%20");
+		
+		URL url;
+		try {
+			url = new URL(urls);
+			URLConnection con = url.openConnection();
+			InputStream in = con.getInputStream();
+			String encoding = con.getContentEncoding();
+			encoding = encoding == null ? "UTF-8" : encoding;
+			String body = IOUtils.toString(in, encoding);
+			if(body.equals("1")){
+				return true;
+			}
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return false;
+	}
 
 }

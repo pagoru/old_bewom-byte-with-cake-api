@@ -22,7 +22,9 @@ public class CommandKick extends CommandBase {
 	}
 	
 	@Override
-	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
+	public List<String> addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
+		Player player = sender.getPlayer();
+		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return null;
 		List<String> tab = new ArrayList<String>();
 		if(args.length == 1){
 			Collection<Player> col = BewomByte.game.getServer().getOnlinePlayers();
@@ -49,7 +51,6 @@ public class CommandKick extends CommandBase {
 	public void execute(CommandSender commandSender, String[] args) {
 		
 		Player player = commandSender.getPlayer();
-		BewomUser user = BewomUser.getUser(player);
 		
 		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
 		
@@ -71,15 +72,15 @@ public class CommandKick extends CommandBase {
 					TextFormating.BOLD + kickArgs + ".";				
 			}
 			
-			BewomByte.game.getServer().getPlayer(args[0]).kick(kick);
 			BewomUser.m.executeQuery("INSERT INTO `users_kicks`(`uuid`, `uuidAdmin`, `motivo`) VALUES ('" + 
 					BewomByte.game.getServer().getPlayer(args[0]).getUniqueID() + "', '" + player.getUniqueID() + "', '" + kickArgs + "')", null);
+			BewomByte.game.getServer().getPlayer(args[0]).kick(kick);
 			
 			Chat.sendMessage(player, 
 					TextMessages.BROADCAST + 
 					TextFormating.DARK_RED + TextFormating.BOLD + args[0] + 
 					TextFormating.RESET + TextFormating.DARK_RED + " ha sido advertid@ por " + 
-					TextFormating.BOLD + player.getUserName() + ".", "/kick " + args[0] + " " + kick);	
+					TextFormating.BOLD + player.getUserName() + ".", "/kick " + args[0] + " " + kick);
 			
 		} else {
 			

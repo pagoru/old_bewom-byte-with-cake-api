@@ -1,8 +1,9 @@
-package es.bewom.user;
+package es.bewom;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import org.cakepowered.api.base.Game;
@@ -29,28 +30,31 @@ import es.bewom.economy.House;
 import es.bewom.economy.Houses;
 import es.bewom.economy.Shops;
 import es.bewom.p.P;
+import es.bewom.user.BewomUser;
+import es.bewom.user.DeniedBlocks;
+import es.bewom.user.PokemonCatcher;
+import es.bewom.user.WebRegistration;
 import es.bewom.util.Dimensions;
 
-public class UserEventsHandler {
+public class EventsHandler {
 	
 	private Game game;
 	
-	public UserEventsHandler(Game game) {
+	public EventsHandler(Game game) {
 		this.game = game;
 	}
 
-	/**
-	 * Event triggered when a player joins the server.
-	 * 
-	 * @param event
-	 */
 	@EventSuscribe
 	public void onUserJoin(PlayerJoinEvent event) {
 				
-		Player player = event.getPlayer();
-		
-		BewomUser user = new BewomUser(player);
+		Player player = event.getPlayer();		
+		BewomUser user = new BewomUser(player);	
+		if(user.m.isBanned(player.getUniqueID().toString())){
+			player.kick("");
+		}
 		BewomUser.addUser(user);
+		
+//		PokemonCatcher.catchPokemons(player.getUniqueID().toString());
 		
 		Chat.sendMessage(player, null, "//login");
 		
@@ -73,7 +77,7 @@ public class UserEventsHandler {
 			String postName = Chat.getCleanText(event.getMessage());
 			String name = event.getUsername();
 			
-			if(!postName.equals(b.lastMessage)){
+			if(!postName.equals(b.lastMessage) || b.getPermissionLevel() == b.PERM_LEVEL_ADMIN){
 				
 				switch(b.getPermissionLevel()) {
 				case BewomUser.PERM_LEVEL_USER:
@@ -95,16 +99,13 @@ public class UserEventsHandler {
 		event.setEventCanceled(true);
 	}
 
-	/**
-	 * Event triggered when a player leaves the server.
-	 * 
-	 * @param event
-	 */
 	@EventSuscribe
 	public void onUserQuit(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
 		UUID uuid = player.getUniqueID();
 		BewomUser u = BewomUser.getUser(uuid);
+//		PokemonCatcher.catchPokemons(player.getUniqueID().toString());
+		
 		if(u != null){
 			
 			if(!u.isLogout()){
@@ -136,7 +137,8 @@ public class UserEventsHandler {
 		if(cp != null) {
 			player.setLocation(cp.getLocation());
 		}
-		System.out.println("Respawn!");
+		System.out.println("RESPAWN!");
+		return;
 	}
 	
 	@EventSuscribe
@@ -147,44 +149,13 @@ public class UserEventsHandler {
 		
 		playerUpdateGameMode(player);
 		
-		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
-			if(isPixelmonInteraction(event)){
-				event.setEventCanceled(true);
-			}
+		if(!player.isOP()){
+			DeniedBlocks.on(game, event);
 		}
 		
+		
 		Houses.on(game, event);
-		Shops.on(game, event);
 		P.on(game, event);
-	}
-	
-	private boolean isPixelmonInteraction(PlayerInteractEvent e) {
-		String n = e.getInteractBlock().getUnlocalizedName().substring(5, e.getInteractBlock().getUnlocalizedName().length());
-		if(e.getPlayer().getCurrentItem() != null){
-			String i = e.getPlayer().getCurrentItem().getUnlocalizedName().substring(5, e.getPlayer().getCurrentItem().getUnlocalizedName().length());
-			if(		  !i.equals("potion")
-					|| i.equals("minebike")
-					|| i.equals("wallet")){
-				return false;
-			}
-		}
-		if(		   n.equals("apricorn tree")
-				|| n.equals("pc")
-				|| n.equals("trademachine")
-				|| n.equals("mechanicalanvil")
-				|| n.equals("anvil")
-				|| n.equals("pokechest")
-				|| n.equals("ultrachest")
-				|| n.equals("masterchest")
-				|| n.equals("healer")
-				|| n.equals("PokeGift")
-				|| n.equals("minebike")
-				|| n.equals("atm")
-				|| n.equals("shop")
-				|| n.equals("poste")){
-			return false;
-		}
-		return true;
 	}
 
 	@EventSuscribe //click derecho
@@ -193,14 +164,10 @@ public class UserEventsHandler {
 		Player player = event.getPlayer();
 		BewomUser user = BewomUser.getUser(player);
 		
-		String name = event.getEntity().getName();
-		
 		playerUpdateGameMode(player);
-		if((name.equals("entity.pixelmon.Pixelmon.name") || name.equals("entity.minebikes.Bike.name")) && player.getDimensionID() == Dimensions.INTERIORES){
-			event.setEventCanceled(true);
-		}		
-		if (!name.equals("entity.pixelmon.Pixelmon.name") && !name.equals("entity.minebikes.Bike.name") && !user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
-			event.setEventCanceled(true);
+		
+		if(!player.isOP()){
+			DeniedBlocks.on(game, event);
 		}
 		
 	}
@@ -210,10 +177,9 @@ public class UserEventsHandler {
 				
 		Player player = event.getPlayer();
 		BewomUser user = BewomUser.getUser(player);
-
-		playerUpdateGameMode(player);
-		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
-			event.setEventCanceled(true);
+		
+		if(!player.isOP()){
+			DeniedBlocks.on(game, event);
 		}
 		
 	}
@@ -223,13 +189,11 @@ public class UserEventsHandler {
 		
 		Player player = event.getPlayer();
 		BewomUser user = BewomUser.getUser(player);
-
+		
 		playerUpdateGameMode(player);
-		if(!user.isAdmin()){
+
+		if(!player.isOP()){
 			DeniedBlocks.on(game, event);
-			if (player.getDimensionID() == Dimensions.EXTERIORES) {
-				event.setEventCanceled(true);
-			}
 		}
 		
 	}
@@ -241,8 +205,9 @@ public class UserEventsHandler {
 		BewomUser user = BewomUser.getUser(player);
 		
 		playerUpdateGameMode(player);		
-		if (!user.isAdmin() && player.getDimensionID() == Dimensions.EXTERIORES) {
-			event.setEventCanceled(true);
+		
+		if(!player.isOP()){
+			DeniedBlocks.on(game, event);
 		}
 		
 		P.on(game, event);
@@ -253,12 +218,17 @@ public class UserEventsHandler {
 		BewomUser u = BewomUser.getUser(player);
 		if(u.getPermissionLevel() != BewomUser.PERM_LEVEL_ADMIN){
 			if(player.getGameMode() != 3){
-				if(player.getDimensionID() == Dimensions.EXTERIORES){
-					if(player.getGameMode() != 2)
-					player.setGameMode(2);
-				} else {
-					if(player.getGameMode() != 0)
-					player.setGameMode(0);
+				if(!u.isAdmin()){
+					if ((player.getDimensionID() == Dimensions.EXTERIORES
+							|| (player.getDimensionID() == Dimensions.INTERIORES && player.getLocation().getZ() > Dimensions.LIMITE_INTERIORES))) {
+						if(player.getGameMode() != 2){
+							player.setGameMode(2);
+						}
+					} else {
+						if(player.getGameMode() != 0){
+							player.setGameMode(0);
+						}
+					}
 				}
 			}
 		}
@@ -267,7 +237,7 @@ public class UserEventsHandler {
 	public HashMap<UUID, PreciseLocation> position_map = new HashMap<UUID, PreciseLocation>();
 	
 	@EventSuscribe
-	public void tick(ServerUpdateEvent event){
+	public void tick(ServerUpdateEvent event){		
 		Collection<Player> players = event.getServer().getOnlinePlayers();
 		for(Player p : players){
 			BewomUser user = BewomUser.getUser(p);
@@ -276,8 +246,9 @@ public class UserEventsHandler {
 			
 			if (user.getRegistration() == WebRegistration.VALID) {
 				if(d == (user.updateState + user.registerDateVariable)){
-					user.updateState += 15;
+					user.updateState += 300;
 					user.updatePermissions();
+//					PokemonCatcher.catchPokemons(p.getUniqueID().toString());
 				}
 			}
 			if (user.getRegistration() != WebRegistration.VALID) {

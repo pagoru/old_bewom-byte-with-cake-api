@@ -11,6 +11,7 @@ import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
 
 import es.bewom.BewomByte;
+import es.bewom.chat.Chat;
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
@@ -27,6 +28,8 @@ public class CommandGM extends CommandBase {
 	
 	@Override
 	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
+		Player player = sender.getPlayer();
+		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return null;
 		List<String> tab = new ArrayList<String>();
 		if(args.length == 2){
 			tab.add("0");
@@ -109,20 +112,29 @@ public class CommandGM extends CommandBase {
 			break;
 		}
 		
-		if(args[1] != null){
-			Player p = BewomByte.game.getServer().getPlayer(args[1]);
-			
-			if(p != null){
-				p.setGameMode(gm);
-				p.sendMessage(TextFormating.RED + "Gamemode actualizado.");
-				player.sendMessage(TextFormating.RED + "Gamemode de " + p.getUserName() + " actualizado.");
-				return;
+		if(args.length == 2){
+			if(args[1] != null){
+				Player p = BewomByte.game.getServer().getPlayer(args[1]);
+				
+				if(p != null){
+					p.setGameMode(gm);
+					p.sendMessage(TextFormating.RED + "Gamemode actualizado.");
+					player.sendMessage(TextFormating.RED + "Gamemode de " + p.getUserName() + " actualizado.");
+					
+					Chat.sendMessage(player, null, "/gm " + p.getUserName() + " " + gm);	
+					return;
+				}
 			}
-		} else {
-			
-			player.setGameMode(gm);
-			player.sendMessage(TextFormating.RED + "Gamemode actualizado.");
-			
+		} else if(args.length == 1){
+			if (args[0] != null){
+				
+				player.setGameMode(gm);
+				player.sendMessage(TextFormating.RED + "Gamemode actualizado.");
+				
+				Chat.sendMessage(player, null, "/gm " + gm);	
+				return;
+				
+			}
 		}
 		
 	}

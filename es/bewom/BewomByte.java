@@ -15,7 +15,6 @@ import es.bewom.imc.BewomMessageListener;
 import es.bewom.p.P;
 import es.bewom.teleport.TPManager;
 import es.bewom.user.BewomUser;
-import es.bewom.user.UserEventsHandler;
 /**
  * 
  * Main plugin class. Here is where the magic happens.
@@ -27,6 +26,8 @@ import es.bewom.user.UserEventsHandler;
 
 public class BewomByte {
 	
+	public static final boolean DEBUG = false;
+
 	public static Game game;
 	
 	public static Log log;
@@ -59,10 +60,11 @@ public class BewomByte {
 		P.init(this);
 		Houses.init(this);
 		
-		game.getEventRegistry().registerEventListener(new UserEventsHandler(game));
+		game.getEventRegistry().registerEventListener(new EventsHandler(game));
 		game.getWorldManager().createFlatWorld(2);
+		game.getWorldManager().createNormalWorld(3, 343822243);
 		game.getMessageDispatcher().register(BewomMessageListener.INSTANCE, this);
-		//bugs with git
+		
 	}
 	
 	@EventSuscribe
@@ -70,22 +72,13 @@ public class BewomByte {
 		
 	}
 	
-	/**
-	 * Runs when the server is stopping.
-	 * @param e the event triggered.
-	 */
 	@EventSuscribe
 	public void onServerClosing(ServerStoppingEvent e) {
 		CentroManager.save();
 		
 	}
 	
-	/**
-	 * Returns the current {@link Game}.
-	 * @return The current {@link Game}.
-	 */
 	public Game getGame() {
 		return game;
 	}
-
 }

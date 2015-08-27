@@ -23,7 +23,7 @@ public class House {
 	@Expose
 	private int buyPrice;
 	@Expose
-	private List<String> friends = new ArrayList<String>();
+	private List<String> friends = new ArrayList<String>();;
 	@Expose
 	private double signX;
 	@Expose
@@ -46,6 +46,20 @@ public class House {
 		this.selectSign = false;
 		this.sellPrice = sellPrice;
 		this.buyPrice = buyPrice;
+	}
+	
+	public void addFriend(String uuid){
+		if(!friends.contains(uuid)){
+			if(this.friends == null){
+				friends = new ArrayList<String>();
+			}
+			this.friends.add(uuid);
+			Houses.save();
+		}
+	}
+	public void removeFriend(String uuid){
+		this.friends.remove(uuid);
+		Houses.save();
 	}
 	
 	public Player getPlayer() {
@@ -81,6 +95,7 @@ public class House {
 	}
 	public void setOpen(boolean open) {
 		this.open = open;
+		Houses.save();
 	}
 	public void setSellPrice(int sellPrice) {
 		this.sellPrice = sellPrice;

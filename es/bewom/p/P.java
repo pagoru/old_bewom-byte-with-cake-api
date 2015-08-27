@@ -31,7 +31,7 @@ import es.bewom.economy.Houses;
 public class P {
 	
 	public static List<Door> doors = new ArrayList<Door>();
-	public static Player eliminar;
+	public static List<Player> eliminar = new ArrayList<Player>();
 	public static Door doorToDelete;
 	
 	public static void on(Game game, PlayerInteractEvent event){
@@ -50,16 +50,27 @@ public class P {
 					doors.remove(doorToDelete);
 					doorToDelete = null;
 					p.sendMessage(TextFormating.RED + "Puerta eliminada correctamente!");
+					event.setEventCanceled(true);
 					P.save();
 				}
 				if(doors != null){
 					for (Door d : doors) {
+						if(eliminar.indexOf(p) != -1){
+							if(eliminar.get(eliminar.indexOf(p)) != null){
+								if(selectionDoor(p, d, x, y, z, p.getLocation().getDimension())){
+									doorToDelete = d;
+									eliminar.remove(p);
+									event.setEventCanceled(true);
+									break;
+								}
+							}
+						}
+						
 						if(!d.isFirstDoor() && !d.isSecondDoor()){
 							if(selectionDoor(p, d, x, y, z, p.getDimensionID())){
 								event.setEventCanceled(true);
 							}
 						}
-						
 						if(d.getPlayer() != null){
 							if(d.getPlayer().equals(p)){
 								Block doorW = game.getServer().getWorld(p.getDimensionID()).getBlock(new Vector3i((int) x, (int) y - 1, (int) z));
@@ -83,16 +94,6 @@ public class P {
 									p.sendMessage("Selecciona la segunda puerta.");
 									event.setEventCanceled(true);
 									return;
-								}
-							}
-						}
-						
-						if(eliminar != null){
-							if(eliminar.equals(p)){
-								if(d.isSelected(x, y, z, p.getDimensionID())){
-									doorToDelete = d;
-									eliminar = null;
-									break;
 								}
 							}
 						}
@@ -128,6 +129,9 @@ public class P {
 	private static boolean selectionHouse(Player p, Door d){
 		for (House h : Houses.houses) {
 			String message = "";
+			if(h.isSelectDoor() || h.isSelectSign()){
+				return false;
+			}
 			if(isLocationIdentical(h.getDoor().setDoorPos(0).getPreciseLocation(), d.getPreciseLocation()) 
 					|| isLocationIdentical(h.getDoor().setDoorPos(1).getPreciseLocation(), d.getPreciseLocation())){
 				if(!h.isSelectDoor() && !h.isSelectSign()){
@@ -146,8 +150,6 @@ public class P {
 					p.sendMessage(TextFormating.RED + "La puerta esta cerrada!");
 					return false;
 				}
-			} else {
-				return false;
 			}
 		}
 		

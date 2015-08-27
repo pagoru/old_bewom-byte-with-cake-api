@@ -17,7 +17,6 @@ import org.cakepowered.api.tileentity.TileEntity;
 import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
-import org.cakepowered.api.world.World;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -41,7 +40,6 @@ public class Houses {
 		double y = event.getPosition().getY();
 		double z = event.getPosition().getZ();
 		Block b =  event.getInteractBlock();
-		World world = p.getWorld();
 		String n = event.getInteractBlock().getUnlocalizedName().substring(5, event.getInteractBlock().getUnlocalizedName().length());
 		
 		int k = 0;
@@ -62,20 +60,19 @@ public class Houses {
 						break;
 					}
 				}
-				if(a != 0 && !p.isSneaking() && !p.isOP()){
+				if(a != 0 && !p.isSneaking()){
 					event.setEventCanceled(true);
 				}
 				//compra y venta
 				House hou = null;
 				int o = 0;
 				for(House h : houses){
-					if(h.isSignSelected(event.getPosition().getX(), event.getPosition().getY(), event.getPosition().getZ(), p.getLocation().getDimension())){
-						if(h.getOwner() != null){
-							if(h.getOwner().equals(p.getUniqueID())){
-								o++;
-								break;
-							}
+					if(h.getOwner() != null){
+						if(h.getOwner().equals(p.getUniqueID().toString())){
+							o++;
 						}
+					}
+					if(h.isSignSelected(event.getPosition().getX(), event.getPosition().getY(), event.getPosition().getZ(), p.getLocation().getDimension())){
 						if(h.getOwner() == null){
 							hou = h;
 						}
@@ -92,14 +89,18 @@ public class Houses {
 									u.houseToBuyConfirm = null;
 									p.sendMessage("Acabas de comprar esta maravillosa casa!");
 									hou.setUuidPropietario(p.getUniqueID().toString());
-//									
+									
 									TileEntity tileEntity = game.getServer().getWorld(p.getDimensionID()).getTileEntity(new Vector3i(x, y, z));
 									NBTCompund nbt = game.getNBTFactory().newNBTCompound();
 									tileEntity.writeToNBT(nbt);
-									nbt.setBoolean("sold", false);
+
+									nbt.setBoolean("sold", true);
 									tileEntity.readFromNBT(nbt);
 									tileEntity.writeToNBT(nbt);
-									tileEntity.syncPlayer(p);
+									
+									for(Player p2 : game.getServer().getOnlinePlayers()){
+										tileEntity.syncPlayer(p2);
+									}
 									
 									Houses.save();
 								} else {
@@ -150,15 +151,14 @@ public class Houses {
 										TileEntity tileEntity = game.getServer().getWorld(p.getDimensionID()).getTileEntity(new Vector3i(x, y, z));
 										NBTCompund nbt = game.getNBTFactory().newNBTCompound();
 										tileEntity.writeToNBT(nbt);
-										System.out.println(nbt.getBoolean("sold"));
 										nbt.setBoolean("sold", false);
-										System.out.println(nbt.getBoolean("sold"));
 										tileEntity.readFromNBT(nbt);
-										System.out.println(nbt.getBoolean("sold"));
 										tileEntity.writeToNBT(nbt);
-										System.out.println(nbt.getBoolean("sold"));
 										tileEntity.readFromNBT(nbt);
-										tileEntity.syncPlayer(p);
+										
+										for(Player p2 : game.getServer().getOnlinePlayers()){
+											tileEntity.syncPlayer(p2);
+										}
 										
 										h.setSelectSign(false);
 										h.setPlayer(null);

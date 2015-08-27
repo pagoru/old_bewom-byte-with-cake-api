@@ -25,6 +25,7 @@ public class CommandP extends CommandBase {
 	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
 		List<String> tab = new ArrayList<String>();
 		tab.add("eliminar");
+		tab.add("exit");
 		return tab;
 	}
 	
@@ -42,7 +43,7 @@ public class CommandP extends CommandBase {
 				
 				if(args[0].equals("eliminar")){
 					player.sendMessage("Selecciona una de las dos puertas a borrar.");
-					P.eliminar = player;
+					P.eliminar.add(player);
 				} else if(args[0].equals("exit")){
 					for (Door d : P.doors) {
 						if(d.getPlayer() != null){

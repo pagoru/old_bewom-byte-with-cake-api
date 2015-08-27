@@ -1,4 +1,4 @@
-package es.bewom.commands;
+package es.bewom.economy.commands;
 
 import java.util.List;
 

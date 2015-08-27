@@ -5,8 +5,11 @@ import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
 import org.cakepowered.api.util.text.TextFormating;
 
+import es.bewom.BewomByte;
 import es.bewom.centrospokemon.CentroManager;
+import es.bewom.chat.Chat;
 import es.bewom.texts.TextMessages;
+import es.bewom.user.BewomUser;
 
 public class CommandSpawn extends CommandBase {
 	
@@ -16,7 +19,7 @@ public class CommandSpawn extends CommandBase {
 
 	@Override
 	public void execute(CommandSender commandSender, String[] args) {
-		Player player;
+		Player player = commandSender.getPlayer();
 
 		if(commandSender.getPlayer() != null) {
 			player = commandSender.getPlayer();
@@ -27,6 +30,8 @@ public class CommandSpawn extends CommandBase {
 
 		player.setLocation(CentroManager.centros.get(0).getLocation());		
 		player.sendMessage(TextFormating.RED + "Has sido teletransportado al spawn.");
+		
+		Chat.sendMessage(player, null, "/spawn");
 		
 	}
 

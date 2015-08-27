@@ -1,5 +1,6 @@
 package es.bewom.user;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ public class BewomUser {
 	
 	private int permissionLevel;
 	
-	public int updateState = 15;
+	public int updateState = 300;
 	
 	private String registerLink = "http://bewom.es/crear/";
 	private boolean getRegisterLink = false;
@@ -99,8 +100,34 @@ public class BewomUser {
 	public void updatePermissions(){
 		
 		String perm = m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "type").get(0);
+		String date = m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "date_type").get(0);
+		String days = m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "days_type").get(0);
 		
-		if(perm != null){
+		if(!perm.equals("")){
+			
+			if(!days.equals("0")){
+				
+				Date d = new Date();
+				Timestamp timestamp = new Timestamp(d.getTime());
+				
+				int day = Integer.parseInt(days) * 86400;
+				
+				Timestamp time = Timestamp.valueOf(date);
+				
+				long a1 = timestamp.getTime()/1000;
+				long a2 = time.getTime()/1000;
+				
+				long f = a1 - a2;
+				long ff = day - f;
+				
+				if(ff <= 0){
+					m.executeQuery("UPDATE `users` SET `type`='miembro',`date_type`='" + timestamp.toString() + "',`days_type`='0' WHERE `uuid`='" + player.getUniqueID().toString() + "'", null);
+					System.out.println(perm);
+					if(perm.equals(PERM_VIP)){
+						player.sendTitle(new Title(TextFormating.DARK_AQUA+"Se te ha acabado el vip!", TextFormating.WHITE+"Siempre puedes volver a donar... :)", 120, 0, 60));
+					}
+				}
+			}
 			
 			switch(perm) {
 			case PERM_ADMIN:
@@ -166,7 +193,7 @@ public class BewomUser {
 			}
 
 		} else {
-
+			
 			setPermissionLevel(1);
 			Team teamUser = player.getWorld().getScoreboard().getTeam(PERM_USER);
 			if(teamUser != null){			
@@ -253,6 +280,7 @@ public class BewomUser {
 		if(perm.equals("0")){
 			String perm2 = m.executeQuery("SELECT * FROM `users_info` WHERE `uuid`='" + player.getUniqueID() + "'", "active").get(0);
 			if(perm2.equals("1")){
+				player.setGameMode(2);
 				return WebRegistration.VALID;
 			} else {
 				return WebRegistration.NOT_VALID;
@@ -475,6 +503,11 @@ public class BewomUser {
 	
 	public static List<String> getPlayersUsernameRegistered(){
 		return m.executeQuery("SELECT * FROM `users`", "user");
+	}
+	
+	public static String getUUIDName(String name){
+		List<String> uuid = m.executeQuery("SELECT * FROM `users` WHERE `user`='" + name + "'", "uuid");
+		return uuid.get(0);
 	}
 	
 }
