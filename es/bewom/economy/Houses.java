@@ -11,13 +11,12 @@ import java.util.List;
 import org.cakepowered.api.base.Game;
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.block.Block;
-import org.cakepowered.api.event.PlayerInteractEvent;import org.cakepowered.api.nbt.NBTBase;
+import org.cakepowered.api.event.PlayerInteractEvent;
 import org.cakepowered.api.nbt.NBTCompund;
 import org.cakepowered.api.tileentity.TileEntity;
 import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
-import org.cakepowered.api.world.World;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -41,7 +40,6 @@ public class Houses {
 		double y = event.getPosition().getY();
 		double z = event.getPosition().getZ();
 		Block b =  event.getInteractBlock();
-		World world = p.getWorld();
 		String n = event.getInteractBlock().getUnlocalizedName().substring(5, event.getInteractBlock().getUnlocalizedName().length());
 		
 		int k = 0;
@@ -95,6 +93,7 @@ public class Houses {
 									TileEntity tileEntity = game.getServer().getWorld(p.getDimensionID()).getTileEntity(new Vector3i(x, y, z));
 									NBTCompund nbt = game.getNBTFactory().newNBTCompound();
 									tileEntity.writeToNBT(nbt);
+
 									nbt.setBoolean("sold", true);
 									tileEntity.readFromNBT(nbt);
 									tileEntity.writeToNBT(nbt);

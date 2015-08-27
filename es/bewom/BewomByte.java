@@ -81,5 +81,4 @@ public class BewomByte {
 	public Game getGame() {
 		return game;
 	}
-
 }

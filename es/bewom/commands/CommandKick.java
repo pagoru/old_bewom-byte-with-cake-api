@@ -22,7 +22,7 @@ public class CommandKick extends CommandBase {
 	}
 	
 	@Override
-	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
+	public List<String> addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
 		Player player = sender.getPlayer();
 		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return null;
 		List<String> tab = new ArrayList<String>();
@@ -51,7 +51,6 @@ public class CommandKick extends CommandBase {
 	public void execute(CommandSender commandSender, String[] args) {
 		
 		Player player = commandSender.getPlayer();
-		BewomUser user = BewomUser.getUser(player);
 		
 		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
 		

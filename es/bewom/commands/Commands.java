@@ -37,6 +37,8 @@ public class Commands {
 		reg.registerCommand(new CommandUnBan());
 		reg.registerCommand(new CommandPerms());
 		reg.registerCommand(new CommandReload());
+		reg.registerCommand(new CommandEnderChest());
+		reg.registerCommand(new CommandPlayerInventory());
 		
 	}
 }

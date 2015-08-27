@@ -28,7 +28,10 @@ public class CommandTpx extends CommandBase{
 		if(p == null)return;
 		int i = Integer.parseInt(args[0]);
 		World l = BewomByte.game.getServer().getWorld(i);
-		if(l == null) return; 
+		if(l == null){
+			p.sendMessage("La dimension "+i+" no existe");
+			return; 
+		}
 		PreciseLocation pre = new PreciseLocation(l.getDimension(), new Vector3d(0, 128, 0), p.getLocation().getYaw(), p.getLocation().getPitch());
 		p.setLocation(pre);
 		p.sendMessage(TextFormating.RED + "Te has teletransportado a la dimensión " + args[0] + ".");
