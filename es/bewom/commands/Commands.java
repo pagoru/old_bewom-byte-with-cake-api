@@ -39,6 +39,7 @@ public class Commands {
 		reg.registerCommand(new CommandReload());
 		reg.registerCommand(new CommandEnderChest());
 		reg.registerCommand(new CommandPlayerInventory());
+		reg.registerCommand(new CommandVanished());
 		
 	}
 }

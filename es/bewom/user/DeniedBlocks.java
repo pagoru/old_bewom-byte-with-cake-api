@@ -1,5 +1,7 @@
 package es.bewom.user;
 
+import java.util.List;
+
 import org.cakepowered.api.base.Game;
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.block.Block;
@@ -9,6 +11,8 @@ import org.cakepowered.api.event.BlockPlaceEvent;
 import org.cakepowered.api.event.EntityAttackedEvent;
 import org.cakepowered.api.event.PlayerInteractEntityEvent;
 import org.cakepowered.api.event.PlayerInteractEvent;
+import org.cakepowered.api.inventory.ItemStack;
+import org.cakepowered.api.inventory.PlayerInventory;
 
 import es.bewom.BewomByte;
 import es.bewom.util.Dimensions;
@@ -126,6 +130,8 @@ public class DeniedBlocks {
 			}
 		}
 		
+		onNoItemInHand(p);
+		
 	}
 	
 	public static void on(Game game, PlayerInteractEvent e) {
@@ -200,6 +206,8 @@ public class DeniedBlocks {
 			}
 		}
 		
+		onNoItemInHand(p);
+		
 	}
 
 	public static void on(Game game, PlayerInteractEntityEvent e) {
@@ -264,6 +272,8 @@ public class DeniedBlocks {
 			
 		}
 		
+		onNoItemInHand(p);
+		
 	}
 
 	public static void on(Game game, EntityAttackedEvent e) {
@@ -307,6 +317,8 @@ public class DeniedBlocks {
 			
 		}
 		
+		onNoItemInHand(p);
+		
 	}
 
 	public static void on(Game game, BlockBreakEvent e) {
@@ -323,6 +335,19 @@ public class DeniedBlocks {
 			
 		}
 		
+		onNoItemInHand(p);
+		
+	}
+	
+	public static void onNoItemInHand(Player p){
+		PlayerInventory i = p.getPlayerInventory();
+		for (int j = 0; j < i.getSize(); j++) {
+			if(i.getStackInSlot(j) != null){
+				if(i.getStackInSlot(j).getStackSize() <= 0){
+					i.setStackInSlot(j, null);
+				}
+			}
+		}
 	}
 
 }
