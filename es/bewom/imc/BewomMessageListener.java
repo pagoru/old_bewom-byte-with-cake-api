@@ -71,6 +71,6 @@ public class BewomMessageListener implements MessageListener{
        
         public int applyCommissions(int amount){
                 float a = Math.max(1, amount*commissions);
-                return (int)Math.max(0, amount-a);
+                return (int)(amount+a);
         }
 }

@@ -77,7 +77,7 @@ public class EventsHandler {
 			String postName = Chat.getCleanText(event.getMessage());
 			String name = event.getUsername();
 			
-			if(!postName.equals(b.lastMessage)){
+			if(!postName.equals(b.lastMessage) || b.getPermissionLevel() == b.PERM_LEVEL_ADMIN){
 				
 				switch(b.getPermissionLevel()) {
 				case BewomUser.PERM_LEVEL_USER:

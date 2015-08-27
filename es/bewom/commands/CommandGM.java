@@ -112,25 +112,29 @@ public class CommandGM extends CommandBase {
 			break;
 		}
 		
-		if(args[1] != null){
-			Player p = BewomByte.game.getServer().getPlayer(args[1]);
-			
-			if(p != null){
-				p.setGameMode(gm);
-				p.sendMessage(TextFormating.RED + "Gamemode actualizado.");
-				player.sendMessage(TextFormating.RED + "Gamemode de " + p.getUserName() + " actualizado.");
+		if(args.length == 2){
+			if(args[1] != null){
+				Player p = BewomByte.game.getServer().getPlayer(args[1]);
 				
-				Chat.sendMessage(player, null, "/gm " + p.getUserName() + " " + gm);	
-				return;
+				if(p != null){
+					p.setGameMode(gm);
+					p.sendMessage(TextFormating.RED + "Gamemode actualizado.");
+					player.sendMessage(TextFormating.RED + "Gamemode de " + p.getUserName() + " actualizado.");
+					
+					Chat.sendMessage(player, null, "/gm " + p.getUserName() + " " + gm);	
+					return;
+				}
 			}
-		} else {
-			
-			player.setGameMode(gm);
-			player.sendMessage(TextFormating.RED + "Gamemode actualizado.");
-			
-			Chat.sendMessage(player, null, "/gm " + gm);	
-			return;
-			
+		} else if(args.length == 1){
+			if (args[0] != null){
+				
+				player.setGameMode(gm);
+				player.sendMessage(TextFormating.RED + "Gamemode actualizado.");
+				
+				Chat.sendMessage(player, null, "/gm " + gm);	
+				return;
+				
+			}
 		}
 		
 	}
