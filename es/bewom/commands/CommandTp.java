@@ -68,7 +68,6 @@ public class CommandTp extends CommandBase {
 				Player to = BewomByte.game.getServer().getPlayer(args[0]);
 				player.setLocation(to.getLocation());
 				player.sendMessage(TextFormating.RED + "Acabas de teletransportarte a " + args[0] + ".");
-				Chat.sendMessage(player, null, "/tp " + to.getUserName());
 				return;
 				
 			}
@@ -87,7 +86,6 @@ public class CommandTp extends CommandBase {
 					Double.parseDouble(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]), 
 							player.getLocation().getYaw(), player.getLocation().getPitch()));
 			player.sendMessage(TextFormating.RED + "Acabas de teletransportar a " + args[0] + " " + args[1] + " " + args[2] + ".");
-			Chat.sendMessage(player, null, "/tp " + args[0] + " " + args[1] + " " + args[2]);
 			
 		}
 		

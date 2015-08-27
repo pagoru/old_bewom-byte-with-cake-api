@@ -18,7 +18,7 @@ public class DeniedBlocks {
 	public static final String[] DENIED_PLACE = {
 			"piston",
 			"dispenser",
-			"dorpper",
+			"dropper",
 			"tnt",
 			"sapling",
 			"elevator"

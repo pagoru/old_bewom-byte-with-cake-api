@@ -47,6 +47,8 @@ public class CommandP extends CommandBase {
 				} else if(args[0].equals("exit")){
 					for (Door d : P.doors) {
 						if(d.getPlayer() != null){
+							P.eliminar.remove(player);
+							P.doors.remove(new Door(player));
 							if(d.getPlayer().equals(player)){
 								P.doorToDelete = d;
 							}

@@ -32,7 +32,6 @@ public class CommandTpx extends CommandBase{
 		PreciseLocation pre = new PreciseLocation(l.getDimension(), new Vector3d(0, 128, 0), p.getLocation().getYaw(), p.getLocation().getPitch());
 		p.setLocation(pre);
 		p.sendMessage(TextFormating.RED + "Te has teletransportado a la dimensión " + args[0] + ".");
-		Chat.sendMessage(p, null, "/tpx " + args[0]);
 		return;
 		
 	}

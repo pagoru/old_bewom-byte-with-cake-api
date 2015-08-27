@@ -65,6 +65,7 @@ public class BewomUser {
 	public String lastMessage;
 	
 	public House houseToBuyConfirm;
+	private boolean invisible = false;
 	
 	/**
 	 * Constructor. Creates a {@link BewomUser} from a player.
@@ -329,6 +330,13 @@ public class BewomUser {
 		
 		return null;
 		
+	}
+	
+	public void setInvisible(boolean invisible) {
+		this.invisible = invisible;
+	}
+	public boolean isInvisible() {
+		return invisible;
 	}
 	
 	public int getPermissionLevel() {
