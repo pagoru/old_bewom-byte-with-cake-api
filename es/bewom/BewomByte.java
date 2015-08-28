@@ -14,6 +14,7 @@ import es.bewom.commands.Commands;
 import es.bewom.economy.Houses;
 import es.bewom.imc.BewomMessageListener;
 import es.bewom.p.P;
+import es.bewom.teleport.Homes;
 import es.bewom.teleport.TPManager;
 import es.bewom.user.BewomUser;
 /**
@@ -60,6 +61,7 @@ public class BewomByte {
 		CentroManager.init(this);
 		P.init(this);
 		Houses.init(this);
+		Homes.init();
 		
 		game.getEventRegistry().registerEventListener(new EventsHandler(game));
 		game.getWorldManager().createFlatWorld(2);

@@ -239,9 +239,6 @@ public class Houses {
 		
 	}
 	
-	/**
-	 * Loads all {@link CentroPokemon} from a Json file.
-	 */
 	public static void load() {
 		
 		try {

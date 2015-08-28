@@ -11,6 +11,8 @@ import es.bewom.economy.commands.CommandShop;
 import es.bewom.p.commands.CommandCasa;
 import es.bewom.p.commands.CommandH;
 import es.bewom.p.commands.CommandP;
+import es.bewom.teleport.commands.CommandHome;
+import es.bewom.teleport.commands.CommandSetHome;
 import es.bewom.teleport.commands.CommandTPA;
 
 public class Commands {
@@ -42,6 +44,8 @@ public class Commands {
 		reg.registerCommand(new CommandPlayerInventory());
 		reg.registerCommand(new CommandVanished());
 		reg.registerCommand(new CommandTPA());
+		reg.registerCommand(new CommandHome());
+		reg.registerCommand(new CommandSetHome());
 		
 	}
 }
