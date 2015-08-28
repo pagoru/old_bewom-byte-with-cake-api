@@ -41,6 +41,8 @@ public class CommandSetHome extends CommandBase {
 			} else {
 				p.sendMessage(TextFormating.RED + "No se puede establecer una casa en este mundo.");
 			}
+		} else {
+			p.sendMessage(TextFormating.RED + "No se puede establecer una casa en este mundo.");
 		}
 		
 	}

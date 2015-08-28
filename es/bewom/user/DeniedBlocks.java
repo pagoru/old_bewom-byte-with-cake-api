@@ -30,7 +30,9 @@ public class DeniedBlocks {
 	};
 	
 	public static final String[] DENIED_INTERACT = {
-			"potion"
+			"potion",
+			"Sunstone",
+			"Leafstone"
 	};
 	
 	public static final String[] DENIED_INTERACT_INTERIOR = {
@@ -39,8 +41,7 @@ public class DeniedBlocks {
 	};
 	
 	public static final String[] DENIED_PLACE_INTERIOR = {
-			"bike",
-			"SunstoneShovel"
+			"bike"
 	};
 	
 	public static final String[] ALLOWED_INTERACT_EXTERIOR = {

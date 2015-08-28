@@ -40,12 +40,13 @@ public class Commands {
 		reg.registerCommand(new CommandUnBan());
 		reg.registerCommand(new CommandPerms());
 		reg.registerCommand(new CommandReload());
-		reg.registerCommand(new CommandEnderChest());
+		reg.registerCommand(new CommandEnderSee());
 		reg.registerCommand(new CommandPlayerInventory());
 		reg.registerCommand(new CommandVanished());
 		reg.registerCommand(new CommandTPA());
 		reg.registerCommand(new CommandHome());
 		reg.registerCommand(new CommandSetHome());
+		reg.registerCommand(new CommandEnderChest());
 		
 	}
 }

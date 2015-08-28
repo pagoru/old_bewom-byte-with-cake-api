@@ -16,7 +16,7 @@ import es.bewom.user.BewomUser;
 public class CommandEnderChest extends CommandBase{
 
 	public CommandEnderChest() {
-		super("enderchest", "endersee");
+		super("enderchest");
 	}
 	
 	@Override
@@ -26,22 +26,11 @@ public class CommandEnderChest extends CommandBase{
 
 	@Override
 	public void execute(CommandSender commandSender, String[] args) {
-		Player player = commandSender.getPlayer();
-		if(player == null) {
-			commandSender.sendMessage("Este comando solo lo pueden usar jugadores");
-			return;
-		}
-		BewomUser user = BewomUser.getUser(player);
-		if(user.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
-			commandSender.sendMessage("Insuficientes permisos para usar este comando");
-			return;
-		}
-		if(CommandUtil.checkArguments(args, new ArgumentType[]{ArgumentType.PLAYER}, commandSender.getWorld())){
-			Player p = BewomByte.game.getServer().getPlayer(args[0]);
-			Inventory inv = p.getPlayerEnderChest();
-			player.openGui(inv);
-		}else{
-			commandSender.sendMessage("Argumentos invalidos: Uso /enderchest <player>");
-		}
+		Player p = commandSender.getPlayer();
+		BewomUser user = BewomUser.getUser(p);
+		
+		if(BewomUser.getUser(p).getPermissionLevel() < BewomUser.PERM_LEVEL_VIP) return;
+
+		p.openGui(p.getPlayerEnderChest());
 	}
 }

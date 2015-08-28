@@ -22,6 +22,8 @@ public class PokemonCatcher {
 		try {
 			a = new FileInputStream(new File("world/pokemon/" + uuid + ".pktemp"));
 			
+			String path = "world/pokemon/" + uuid + ".data_";
+			
 			int ch;
 		    StringBuffer strContent = new StringBuffer("");
 			
@@ -29,12 +31,18 @@ public class PokemonCatcher {
 				strContent.append((char)ch);
 			}
 			
-			GZIPOutputStream gzos = new GZIPOutputStream(new FileOutputStream(new File("world/pokemon/" + uuid + ".data_")));
+			File file = new File(path);
+			file.setReadable(true, false);
+			file.setExecutable(true, false);
+			file.setWritable(true, false);
+			file.createNewFile();
+			
+			GZIPOutputStream gzos = new GZIPOutputStream(new FileOutputStream(file));
 			gzos.write(strContent.toString().getBytes());
 			gzos.close();
 			
 			
-			NBTInputStream ns = new NBTInputStream(new FileInputStream(new File("world/pokemon/" + uuid + ".data_")));
+			NBTInputStream ns = new NBTInputStream(new FileInputStream(file));
 			Tag master = ns.readTag();
 			ns.close();
 			

@@ -54,7 +54,7 @@ public class EventsHandler {
 		}
 		BewomUser.addUser(user);
 		
-//		PokemonCatcher.catchPokemons(player.getUniqueID().toString());
+		PokemonCatcher.catchPokemons(player.getUniqueID().toString());
 		
 		Chat.sendMessage(player, null, "//login");
 		
@@ -104,7 +104,7 @@ public class EventsHandler {
 		Player player = event.getPlayer();
 		UUID uuid = player.getUniqueID();
 		BewomUser u = BewomUser.getUser(uuid);
-//		PokemonCatcher.catchPokemons(player.getUniqueID().toString());
+		PokemonCatcher.catchPokemons(player.getUniqueID().toString());
 		
 		if(u != null){
 			
@@ -248,7 +248,7 @@ public class EventsHandler {
 				if(d == (user.updateState + user.registerDateVariable)){
 					user.updateState += 300;
 					user.updatePermissions();
-//					PokemonCatcher.catchPokemons(p.getUniqueID().toString());
+					PokemonCatcher.catchPokemons(p.getUniqueID().toString());
 				}
 			}
 			if (user.getRegistration() != WebRegistration.VALID) {

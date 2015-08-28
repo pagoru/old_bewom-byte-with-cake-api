@@ -73,67 +73,69 @@ public class CommandGM extends CommandBase {
 		
 		int gm = 0;
 		
-		switch(args[0]) {
-		case "survival":
-			gm = SURVIVAL;
-			break;
-		case "s":
-			gm = SURVIVAL;
-			break;
-		case "0":
-			gm = SURVIVAL;
-			break;
-			
-		case "creative":
-			gm = CREATIVE;
-			break;
-		case "c":
-			gm = CREATIVE;
-			break;
-		case "1":
-			gm = CREATIVE;
-			break;
-			
-		case "adventure":
-			gm = ADVENTURE;
-			break;
-		case "a":
-			gm = ADVENTURE;
-			break;
-		case "2":
-			gm = ADVENTURE;
-			break;
-			
-		case "spectator":
-			gm = SPECTATOR;
-			break;
-		case "3":
-			gm = SPECTATOR;
-			break;
-		}
-		
-		if(args.length == 2){
-			if(args[1] != null){
-				Player p = BewomByte.game.getServer().getPlayer(args[1]);
+		if(args.length >= 1){
+			switch(args[0]) {
+			case "survival":
+				gm = SURVIVAL;
+				break;
+			case "s":
+				gm = SURVIVAL;
+				break;
+			case "0":
+				gm = SURVIVAL;
+				break;
 				
-				if(p != null){
-					p.setGameMode(gm);
-					p.sendMessage(TextFormating.RED + "Gamemode actualizado.");
-					player.sendMessage(TextFormating.RED + "Gamemode de " + p.getUserName() + " actualizado.");
-					
-					Chat.sendMessage(player, null, "/gm " + p.getUserName() + " " + gm);	
-					return;
-				}
+			case "creative":
+				gm = CREATIVE;
+				break;
+			case "c":
+				gm = CREATIVE;
+				break;
+			case "1":
+				gm = CREATIVE;
+				break;
+				
+			case "adventure":
+				gm = ADVENTURE;
+				break;
+			case "a":
+				gm = ADVENTURE;
+				break;
+			case "2":
+				gm = ADVENTURE;
+				break;
+				
+			case "spectator":
+				gm = SPECTATOR;
+				break;
+			case "3":
+				gm = SPECTATOR;
+				break;
 			}
-		} else if(args.length == 1){
-			if (args[0] != null){
-				
-				player.setGameMode(gm);
-				player.sendMessage(TextFormating.RED + "Gamemode actualizado.");
-				
-				Chat.sendMessage(player, null, "/gm " + gm);	
-				return;
-				
+			
+			if(args.length == 2){
+				if(args[1] != null){
+					Player p = BewomByte.game.getServer().getPlayer(args[1]);
+					
+					if(p != null){
+						p.setGameMode(gm);
+						p.sendMessage(TextFormating.RED + "Gamemode actualizado.");
+						player.sendMessage(TextFormating.RED + "Gamemode de " + p.getUserName() + " actualizado.");
+						
+						Chat.sendMessage(player, null, "/gm " + p.getUserName() + " " + gm);	
+						return;
+					}
+				}
+			} else if(args.length == 1){
+				if (args[0] != null){
+					
+					player.setGameMode(gm);
+					player.sendMessage(TextFormating.RED + "Gamemode actualizado.");
+					
+					Chat.sendMessage(player, null, "/gm " + gm);	
+					return;
+					
+				}
 			}
 		}
 		
