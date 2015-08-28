@@ -9,6 +9,7 @@ import org.cakepowered.api.event.ServerStatingEvent;
 import org.cakepowered.api.event.ServerStoppingEvent;
 
 import es.bewom.centrospokemon.CentroManager;
+import es.bewom.chat.Chat;
 import es.bewom.commands.Commands;
 import es.bewom.economy.Houses;
 import es.bewom.imc.BewomMessageListener;
@@ -69,7 +70,7 @@ public class BewomByte {
 	
 	@EventSuscribe
 	public void onServerOpen(ServerStatingEvent event){
-		
+		Chat.sendMessage(null, null, "Server opened!");
 	}
 	
 	@EventSuscribe

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
+import org.cakepowered.api.base.Player;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
@@ -67,7 +69,7 @@ public class BewomLog {
 	    return false;
 	}
 	
-	public void add(UUID uuid, String m){
+	public void add(Player p, String m){
 		Date d = new Date();
 		if(!this.day.equals(df.format(d))){
 			
@@ -77,7 +79,19 @@ public class BewomLog {
 			
 		}
 		this.day = df.format(d);
-		messages.add(new Message().builder().user(BewomByte.game.getServer().getPlayer(uuid).getUserName()).uuid(uuid).message(m).hour(df2.format(d)));
+		
+		String player = "server";
+		UUID uuid = null;
+		if(p != null){
+			uuid = p.getUniqueID();
+			player = p.getUserName();
+		}
+		
+		messages.add(new Message().builder()
+				.user(player)
+				.uuid(uuid)
+				.message(m)
+				.hour(df2.format(d)));
 		String outLog = g.toJson(this);
 		
 		try {

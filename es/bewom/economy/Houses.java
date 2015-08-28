@@ -40,7 +40,10 @@ public class Houses {
 		double y = event.getPosition().getY();
 		double z = event.getPosition().getZ();
 		Block b =  event.getInteractBlock();
-		String n = event.getInteractBlock().getUnlocalizedName().substring(5, event.getInteractBlock().getUnlocalizedName().length());
+		String n = "";
+		if(event.getInteractBlock().getUnlocalizedName().length() > 5){
+			n = event.getInteractBlock().getUnlocalizedName().substring(5, event.getInteractBlock().getUnlocalizedName().length());
+		}
 		
 		int k = 0;
 		for(House g : houses){

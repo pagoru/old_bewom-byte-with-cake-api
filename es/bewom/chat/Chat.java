@@ -31,7 +31,7 @@ public class Chat {
 			
 		}
 		
-		l.add(p.getUniqueID(), msg);
+		l.add(p, msg);
 	}
 	
 	public static String getCleanText(String t){

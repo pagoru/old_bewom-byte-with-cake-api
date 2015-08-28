@@ -33,38 +33,39 @@ public class TPManager{
 		}
 	}
 	
-	public static void newRequest(Player player1, Player player2, int objective) {
-		
-		if(requests.size() != 0) {
-		
-			for(int i = 0; i < requests.size(); i++) {
-				
-				TPRequest request = requests.get(i);
-				
-				if(request.getPlayer1().equals(player1))
-					requests.remove(request);
-				if(request.getPlayer2().equals(player2))
-					requests.remove(request);
-			}
-		
-		}
+	public static void newRequest(Player player1, Player player2, int Objective) {
 		
 		TPRequest request = new TPRequest();
 		request.setPlayer1(player1);
 		request.setPlayer2(player2);
-		request.setObjective(objective);
+		request.setObjective(Objective);
+		
+		if(requests.size() != 0) {
+			
+			for(int i = 0; i < requests.size(); i++) {
+				
+				TPRequest request2 = requests.get(i);
+				
+				if(request2.getPlayer1().equals(player1))
+					requests.remove(request2);
+				if(request2.getPlayer2().equals(player2))
+					requests.remove(request2);
+			}
+		
+		}
 		requests.add(request);
 		
 	}
 	
 	public static boolean validateRequest(TPRequest request) {
 		
-		if(request.isStillVaild()) {
-			return true;
-		} else {
-			requests.remove(request);
+		if(request != null){
+			if(request.isStillVaild()) {
+				return true;
+			} else {
+				requests.remove(request);
+			}
 		}
-		
 		return false;
 		
 	}

@@ -23,7 +23,7 @@ public class Message {
 	@Expose
 	private double z;
 	@Expose
-	private String world;
+	private int dimension;
 	@Expose
 	private String message;
 	
@@ -43,11 +43,13 @@ public class Message {
 	}
 	public Message uuid(UUID u){
 		this.uuid = u;
-		Player p = BewomByte.game.getServer().getPlayer(u);
-		this.x = p.getLocation().getX();
-		this.y = p.getLocation().getY();
-		this.z = p.getLocation().getZ();
-		this.world = p.getWorld().getName();
+		if(u != null){
+			Player p = BewomByte.game.getServer().getPlayer(u);
+			this.x = p.getLocation().getX();
+			this.y = p.getLocation().getY();
+			this.z = p.getLocation().getZ();
+			this.dimension = p.getDimensionID();
+		}
 		return this;
 	}
 	public Message message(String m){

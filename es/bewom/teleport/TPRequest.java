@@ -51,4 +51,7 @@ public class TPRequest {
 		
 	}
 	
+	public void delete(){
+		TPManager.deleteRequest(this);
+	}
 }
