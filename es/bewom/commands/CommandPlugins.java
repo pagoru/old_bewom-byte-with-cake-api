@@ -18,7 +18,6 @@ public class CommandPlugins extends CommandBase {
 	public void execute(CommandSender commandSender, String[] args) {
 		
 		Player player = commandSender.getPlayer();
-		BewomUser user = BewomUser.getUser(player);
 		
 		if(new BewomUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
 		

@@ -22,7 +22,7 @@ public class CommandTPA extends CommandBase {
 	}
 	
 	@Override
-	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
+	public List<String> addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
 		Player player = sender.getPlayer();
 		List<String> tab = new ArrayList<String>();
 		if(args.length == 1){

@@ -11,7 +11,6 @@ import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
 
 import es.bewom.BewomByte;
-import es.bewom.chat.Chat;
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
@@ -22,7 +21,7 @@ public class CommandTphere extends CommandBase {
 	}
 	
 	@Override
-	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
+	public List<String> addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
 		Player player = sender.getPlayer();
 		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return null;	
 		if(args.length == 1){
@@ -32,7 +31,7 @@ public class CommandTphere extends CommandBase {
 		return null;
 	}
 	
-	public List getTab(String[] args, int pos){
+	public List<String> getTab(String[] args, int pos){
 		List<String> tab = new ArrayList<String>();
 		Collection<Player> col = BewomByte.game.getServer().getOnlinePlayers();
 		for (Player p : col) {
@@ -55,7 +54,6 @@ public class CommandTphere extends CommandBase {
 	public void execute(CommandSender commandSender, String[] args) {
 		
 		Player player = commandSender.getPlayer();
-		BewomUser user = BewomUser.getUser(player);
 		
 		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
 		

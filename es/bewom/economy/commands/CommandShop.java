@@ -11,7 +11,6 @@ import es.bewom.economy.Shops;
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
-@SuppressWarnings("unchecked")
 public class CommandShop extends CommandBase {
 	
 	public CommandShop() {

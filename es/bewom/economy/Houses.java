@@ -22,7 +22,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import es.bewom.BewomByte;
-import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.p.Door;
 import es.bewom.p.P;
 import es.bewom.user.BewomUser;

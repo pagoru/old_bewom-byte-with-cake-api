@@ -3,7 +3,6 @@ package es.bewom;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 import org.cakepowered.api.base.Game;
@@ -20,15 +19,12 @@ import org.cakepowered.api.event.PlayerQuitEvent;
 import org.cakepowered.api.event.PlayerRespawnEvent;
 import org.cakepowered.api.event.ServerUpdateEvent;
 import org.cakepowered.api.util.PreciseLocation;
-import org.cakepowered.api.util.Vector3d;
 import org.cakepowered.api.util.text.TextFormating;
 
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.chat.Chat;
-import es.bewom.economy.House;
 import es.bewom.economy.Houses;
-import es.bewom.economy.Shops;
 import es.bewom.p.P;
 import es.bewom.user.BewomUser;
 import es.bewom.user.DeniedBlocks;
@@ -49,7 +45,7 @@ public class EventsHandler {
 				
 		Player player = event.getPlayer();		
 		BewomUser user = new BewomUser(player);	
-		if(user.m.isBanned(player.getUniqueID().toString())){
+		if(BewomUser.m.isBanned(player.getUniqueID().toString())){
 			player.kick("");
 		}
 		BewomUser.addUser(user);
@@ -77,7 +73,7 @@ public class EventsHandler {
 			String postName = Chat.getCleanText(event.getMessage());
 			String name = event.getUsername();
 			
-			if(!postName.equals(b.lastMessage) || b.getPermissionLevel() == b.PERM_LEVEL_ADMIN){
+			if(!postName.equals(b.lastMessage) || b.getPermissionLevel() == BewomUser.PERM_LEVEL_ADMIN){
 				
 				switch(b.getPermissionLevel()) {
 				case BewomUser.PERM_LEVEL_USER:
@@ -145,7 +141,6 @@ public class EventsHandler {
 	public void on(PlayerInteractEvent event){
 		
 		Player player = event.getPlayer();
-		BewomUser user = BewomUser.getUser(player);
 		
 		playerUpdateGameMode(player);
 		
@@ -162,7 +157,6 @@ public class EventsHandler {
 	public void on(PlayerInteractEntityEvent event){
 		
 		Player player = event.getPlayer();
-		BewomUser user = BewomUser.getUser(player);
 		
 		playerUpdateGameMode(player);
 		
@@ -176,7 +170,6 @@ public class EventsHandler {
 	public void on(EntityAttackedEvent event){
 				
 		Player player = event.getPlayer();
-		BewomUser user = BewomUser.getUser(player);
 		
 		if(!player.isOP()){
 			DeniedBlocks.on(game, event);
@@ -188,7 +181,6 @@ public class EventsHandler {
 	public void on(BlockPlaceEvent event){
 		
 		Player player = event.getPlayer();
-		BewomUser user = BewomUser.getUser(player);
 		
 		playerUpdateGameMode(player);
 
@@ -202,7 +194,6 @@ public class EventsHandler {
 	public void on(BlockBreakEvent event){
 		
 		Player player = event.getPlayer();
-		BewomUser user = BewomUser.getUser(player);
 		
 		playerUpdateGameMode(player);		
 		

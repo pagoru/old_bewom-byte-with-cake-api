@@ -2,7 +2,6 @@ package es.bewom.user;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
@@ -10,8 +9,6 @@ import java.util.zip.GZIPOutputStream;
 import org.jnbt.CompoundTag;
 import org.jnbt.NBTInputStream;
 import org.jnbt.Tag;
-
-import es.bewom.BewomByte;
 
 public class PokemonCatcher {
 	

@@ -21,7 +21,7 @@ public class CommandBan extends CommandBase {
 	}
 	
 	@Override
-	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
+	public List<String> addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
 		Player player = sender.getPlayer();
 		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return null;
 		List<String> tab = new ArrayList<String>();
@@ -54,7 +54,6 @@ public class CommandBan extends CommandBase {
 	public void execute(CommandSender commandSender, String[] args) {
 		
 		Player player = commandSender.getPlayer();
-		BewomUser user = BewomUser.getUser(player);
 		
 		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
 		
@@ -75,10 +74,10 @@ public class CommandBan extends CommandBase {
 				time = Integer.parseInt(args[1]);
 			}
 			
-			String uuidBanned = user.getUUIDName(args[0]);
+			String uuidBanned = BewomUser.getUUIDName(args[0]);
 			
-			user.m.executeQuery("UPDATE `users_ban` SET `active`='false' WHERE `uuid`='" + uuidBanned + "'", null);
-			user.m.executeQuery("INSERT INTO `users_ban`(`uuid`, `uuidAdmin`, `motivo`, `perm`, `exp`) "
+			BewomUser.m.executeQuery("UPDATE `users_ban` SET `active`='false' WHERE `uuid`='" + uuidBanned + "'", null);
+			BewomUser.m.executeQuery("INSERT INTO `users_ban`(`uuid`, `uuidAdmin`, `motivo`, `perm`, `exp`) "
 					+ "VALUES ('" + uuidBanned + "','" + player.getUniqueID().toString() + "','" + motivo + "', '" + perm + "','" + time + "')", null);
 			
 			Chat.sendMessage(player, 

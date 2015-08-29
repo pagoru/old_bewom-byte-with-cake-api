@@ -8,8 +8,6 @@ import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
 import org.cakepowered.api.util.Vector3i;
 
-import es.bewom.economy.House;
-import es.bewom.economy.Houses;
 import es.bewom.p.Door;
 import es.bewom.p.P;
 import es.bewom.texts.TextMessages;
@@ -22,7 +20,7 @@ public class CommandP extends CommandBase {
 	}
 	
 	@Override
-	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
+	public List<String> addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
 		List<String> tab = new ArrayList<String>();
 		tab.add("eliminar");
 		tab.add("exit");

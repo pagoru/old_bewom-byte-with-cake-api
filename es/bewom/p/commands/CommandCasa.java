@@ -9,10 +9,8 @@ import org.cakepowered.api.command.CommandSender;
 import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
 
-import es.bewom.BewomByte;
 import es.bewom.economy.House;
 import es.bewom.economy.Houses;
-import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
 public class CommandCasa extends CommandBase {
@@ -22,7 +20,7 @@ public class CommandCasa extends CommandBase {
 	}
 	
 	@Override
-	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
+	public List<String> addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
 		List<String> tab = new ArrayList<String>();
 		if(args.length == 1){
 			tab.add("añadir");
@@ -48,7 +46,6 @@ public class CommandCasa extends CommandBase {
 	public void execute(CommandSender commandSender, String[] args) {
 		
 		Player player = commandSender.getPlayer();
-		BewomUser user = BewomUser.getUser(player);
 		
 		House house = null;
 		for(House h : Houses.houses){

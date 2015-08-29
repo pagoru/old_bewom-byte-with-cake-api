@@ -1,17 +1,12 @@
 package es.bewom.user;
 
-import java.util.List;
-
 import org.cakepowered.api.base.Game;
 import org.cakepowered.api.base.Player;
-import org.cakepowered.api.block.Block;
-import org.cakepowered.api.block.Blocks;
 import org.cakepowered.api.event.BlockBreakEvent;
 import org.cakepowered.api.event.BlockPlaceEvent;
 import org.cakepowered.api.event.EntityAttackedEvent;
 import org.cakepowered.api.event.PlayerInteractEntityEvent;
 import org.cakepowered.api.event.PlayerInteractEvent;
-import org.cakepowered.api.inventory.ItemStack;
 import org.cakepowered.api.inventory.PlayerInventory;
 
 import es.bewom.BewomByte;
@@ -75,7 +70,6 @@ public class DeniedBlocks {
 	public static void on(Game game, BlockPlaceEvent e){
 		
 		Player p = e.getPlayer();
-		BewomUser u = BewomUser.getUser(p);
 		int d = p.getDimensionID();
 		if(BewomByte.DEBUG){
 			if(p.getCurrentItem() != null){
@@ -138,7 +132,6 @@ public class DeniedBlocks {
 	public static void on(Game game, PlayerInteractEvent e) {
 		
 		Player p = e.getPlayer();
-		BewomUser u = BewomUser.getUser(p);
 		int d = p.getDimensionID();
 		if(BewomByte.DEBUG){
 			System.out.println("PlayerInteractEvent: " + e.getInteractBlock().getUnlocalizedName());
@@ -214,7 +207,6 @@ public class DeniedBlocks {
 	public static void on(Game game, PlayerInteractEntityEvent e) {
 
 		Player p = e.getPlayer();
-		BewomUser u = BewomUser.getUser(p);
 		int d = p.getDimensionID();
 		if(BewomByte.DEBUG){
 			System.out.println("PlayerInteractEntityEvent: " + e.getEntity().getName());
@@ -280,7 +272,6 @@ public class DeniedBlocks {
 	public static void on(Game game, EntityAttackedEvent e) {
 
 		Player p = e.getPlayer();
-		BewomUser u = BewomUser.getUser(p);
 		int d = p.getDimensionID();
 		if(BewomByte.DEBUG){
 			System.out.println("PlayerAttackedEvent: " + e.getEntity().getName());
@@ -325,7 +316,6 @@ public class DeniedBlocks {
 	public static void on(Game game, BlockBreakEvent e) {
 
 		Player p = e.getPlayer();
-		BewomUser u = BewomUser.getUser(p);
 		int d = p.getDimensionID();
 		
 		if(d == Dimensions.EXTERIORES){
