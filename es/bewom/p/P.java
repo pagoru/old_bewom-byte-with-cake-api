@@ -25,8 +25,6 @@ import com.google.gson.GsonBuilder;
 
 import es.bewom.BewomByte;
 import es.bewom.centrospokemon.CentroPokemon;
-import es.bewom.economy.House;
-import es.bewom.economy.Houses;
 
 public class P {
 	
@@ -46,18 +44,11 @@ public class P {
 		if(b != null){
 			
 			if(equalsAnyWoodenDoorTypes(b)){
-				if(doorToDelete != null){
-					doors.remove(doorToDelete);
-					doorToDelete = null;
-					p.sendMessage(TextFormating.RED + "Puerta eliminada correctamente!");
-					event.setEventCanceled(true);
-					P.save();
-				}
 				if(doors != null){
 					for (Door d : doors) {
 						if(eliminar.indexOf(p) != -1){
 							if(eliminar.get(eliminar.indexOf(p)) != null){
-								if(selectionDoor(p, d, x, y, z, p.getLocation().getDimension())){
+								if(isSelectionDoor(p, d, x, y, z, p.getLocation().getDimension())){
 									doorToDelete = d;
 									eliminar.remove(p);
 									event.setEventCanceled(true);
@@ -65,38 +56,46 @@ public class P {
 								}
 							}
 						}
-						
-						if(!d.isFirstDoor() && !d.isSecondDoor()){
-							if(selectionDoor(p, d, x, y, z, p.getDimensionID())){
-								event.setEventCanceled(true);
-							}
-						}
-						if(d.getPlayer() != null){
-							if(d.getPlayer().equals(p)){
-								Block doorW = game.getServer().getWorld(p.getDimensionID()).getBlock(new Vector3i((int) x, (int) y - 1, (int) z));
-								if(equalsAnyWoodenDoorTypes(doorW)){
-									y -= 1;
-								}
-								PreciseLocation l = new PreciseLocation(p.getDimensionID(), x, y, z, DirectionYaw.getOpossiteYawFromDirection(p.getDirection()), 0);
-								if(d.isSecondDoor()){
-									d.setDoorPos(0).setLocation(l);
-									d.setSecondDoor(false);
-									d.setPlayer(null);
-									p.sendMessage("Puertas seleccionadas.");
-									P.save();
+						if(doorToDelete == null){
+							if(!d.isFirstDoor() && !d.isSecondDoor()){
+								if(selectionDoor(p, d, x, y, z, p.getDimensionID())){
 									event.setEventCanceled(true);
-									return;
-								}
-								if(d.isFirstDoor()){
-									d.setDoorPos(1).setLocation(l);
-									d.setFirstDoor(false);
-									d.setSecondDoor(true);
-									p.sendMessage("Selecciona la segunda puerta.");
-									event.setEventCanceled(true);
-									return;
 								}
 							}
+							if(d.getPlayer() != null){
+								if(d.getPlayer().equals(p)){
+									Block doorW = game.getServer().getWorld(p.getDimensionID()).getBlock(new Vector3i((int) x, (int) y - 1, (int) z));
+									if(equalsAnyWoodenDoorTypes(doorW)){
+										y -= 1;
+									}
+									PreciseLocation l = new PreciseLocation(p.getDimensionID(), x, y, z, DirectionYaw.getOpossiteYawFromDirection(p.getDirection()), 0);
+									if(d.isSecondDoor()){
+										d.setDoorPos(0).setLocation(l);
+										d.setSecondDoor(false);
+										d.setPlayer(null);
+										p.sendMessage("Puertas seleccionadas.");
+										P.save();
+										event.setEventCanceled(true);
+										return;
+									}
+									if(d.isFirstDoor()){
+										d.setDoorPos(1).setLocation(l);
+										d.setFirstDoor(false);
+										d.setSecondDoor(true);
+										p.sendMessage("Selecciona la segunda puerta.");
+										event.setEventCanceled(true);
+										return;
+									}
+								}
+							}
 						}
+					}
+					if(doorToDelete != null){
+						doors.remove(doorToDelete);
+						doorToDelete = null;
+						p.sendMessage(TextFormating.RED + "Puerta eliminada correctamente!");
+						event.setEventCanceled(true);
+						P.save();
 					}
 				}
 			}
@@ -114,6 +113,16 @@ public class P {
 			if(selectionHouse(p, d)){
 				p.setLocation(d.setDoorPos(1).getPreciseLocation());
 			}
+			return true;
+		}
+		return false;
+	}
+	
+	private static boolean isSelectionDoor(Player p, Door d, double x, double y, double z, int dimension){
+		if(d.setDoorPos(1).isSelected(x, y, z, dimension)){
+			return true;
+		}
+		if(d.setDoorPos(0).isSelected(x, y, z, dimension)){
 			return true;
 		}
 		return false;

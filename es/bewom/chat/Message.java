@@ -45,10 +45,12 @@ public class Message {
 		this.uuid = u;
 		if(u != null){
 			Player p = BewomByte.game.getServer().getPlayer(u);
-			this.x = p.getLocation().getX();
-			this.y = p.getLocation().getY();
-			this.z = p.getLocation().getZ();
-			this.dimension = p.getDimensionID();
+			if(p != null){
+				this.x = p.getLocation().getX();
+				this.y = p.getLocation().getY();
+				this.z = p.getLocation().getZ();
+				this.dimension = p.getDimensionID();
+			}
 		}
 		return this;
 	}

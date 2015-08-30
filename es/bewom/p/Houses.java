@@ -1,4 +1,4 @@
-package es.bewom.economy;
+package es.bewom.p;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,8 +23,6 @@ import com.google.gson.GsonBuilder;
 
 import es.bewom.BewomByte;
 import es.bewom.centrospokemon.CentroPokemon;
-import es.bewom.p.Door;
-import es.bewom.p.P;
 import es.bewom.user.BewomUser;
 
 public class Houses {
@@ -92,19 +90,7 @@ public class Houses {
 									u.houseToBuyConfirm = null;
 									p.sendMessage("Acabas de comprar esta maravillosa casa!");
 									hou.setUuidPropietario(p.getUniqueID().toString());
-									
-									TileEntity tileEntity = game.getServer().getWorld(p.getDimensionID()).getTileEntity(new Vector3i(x, y, z));
-									NBTCompund nbt = game.getNBTFactory().newNBTCompound();
-									tileEntity.writeToNBT(nbt);
-
-									nbt.setBoolean("sold", true);
-									tileEntity.readFromNBT(nbt);
-									tileEntity.writeToNBT(nbt);
-									
-									for(Player p2 : game.getServer().getOnlinePlayers()){
-										tileEntity.syncPlayer(p2);
-									}
-									
+									hou.setSoldSign(true);
 									Houses.save();
 								} else {
 									p.sendMessage(TextFormating.RED + "No tienes suficiente dinero! :(");
@@ -150,21 +136,9 @@ public class Houses {
 								if(a == 0){
 									if(n.equals("poste")){
 										h.setSignLocation(new PreciseLocation(p.getDimensionID(), x, y, z, 0, 0));
-
-										TileEntity tileEntity = game.getServer().getWorld(p.getDimensionID()).getTileEntity(new Vector3i(x, y, z));
-										NBTCompund nbt = game.getNBTFactory().newNBTCompound();
-										tileEntity.writeToNBT(nbt);
-										nbt.setBoolean("sold", false);
-										tileEntity.readFromNBT(nbt);
-										tileEntity.writeToNBT(nbt);
-										tileEntity.readFromNBT(nbt);
-										
-										for(Player p2 : game.getServer().getOnlinePlayers()){
-											tileEntity.syncPlayer(p2);
-										}
-										
 										h.setSelectSign(false);
 										h.setPlayer(null);
+										h.setSoldSign(false);
 										p.sendMessage("Casa seleccionada.");
 										Houses.save();
 									} else {

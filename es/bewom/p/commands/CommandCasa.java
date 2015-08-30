@@ -10,8 +10,9 @@ import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
 
 import es.bewom.BewomByte;
-import es.bewom.economy.House;
-import es.bewom.economy.Houses;
+import es.bewom.chat.Chat;
+import es.bewom.p.House;
+import es.bewom.p.Houses;
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
@@ -27,6 +28,7 @@ public class CommandCasa extends CommandBase {
 		if(args.length == 1){
 			tab.add("añadir");
 			tab.add("eliminar");
+			tab.add("vender");
 		} else if(args.length == 2){
 			tab = BewomUser.getPlayersUsernameRegistered();
 			
@@ -63,16 +65,24 @@ public class CommandCasa extends CommandBase {
 		if(house != null){
 			if(args.length == 2){
 				String uuid = BewomUser.getUUIDName(args[1]);
-				System.out.println(uuid);
 				if(args[0].equals("añadir")){
 					house.addFriend(uuid);
 					player.sendMessage(TextFormating.RED + "Has añadido correctamente a " + args[1] + ".");
+					Chat.sendMessage(player, null, "/casa añadir " + args[1]);
 				} else if(args[0].equals("eliminar")){
 					house.removeFriend(uuid);
 					player.sendMessage(TextFormating.RED + "Has eliminado correctamente a " + args[1] + ".");
+					Chat.sendMessage(player, null, "/casa eliminar " + args[1]);
 				}
-			} else {
+			} else if(args.length == 1) {
+				if(args[0].equals("vender")){
+					house.sellHouse(player);
+					player.sendMessage(TextFormating.RED + "Has vendido la casa por " + house.getSellPrice() + " woms.");
+					Chat.sendMessage(player, null, "/casa vender");
+				}
+			}else {
 				player.sendMessage(TextFormating.RED + "/casa <añadir|eliminar> <usuario>");
+				player.sendMessage(TextFormating.RED + "/casa <vender>");
 			}
 		} else {
 			player.sendMessage(TextFormating.RED + "No tienes casa...");

@@ -12,9 +12,10 @@ import org.cakepowered.api.scoreboard.Scoreboard;
 import org.cakepowered.api.scoreboard.Team;
 import org.cakepowered.api.util.Title;
 import org.cakepowered.api.util.text.TextFormating;
+import org.cakepowered.api.util.text.TextModifier;
 
 import es.bewom.BewomByte;
-import es.bewom.economy.House;
+import es.bewom.p.House;
 import es.bewom.util.Ran;
 import es.bewom.util.mysql.MySQL;
 
@@ -67,6 +68,10 @@ public class BewomUser {
 	public House houseToBuyConfirm;
 	private boolean invisible = false;
 	
+	private Player mpPlayer = null;
+	
+	private String prefix = "";
+	
 	/**
 	 * Constructor. Creates a {@link BewomUser} from a player.
 	 * @param player to create the {@link BewomUser} from.
@@ -85,6 +90,22 @@ public class BewomUser {
 			registerLink += hash;
 			getRegisterLink = true;
 		}
+	}
+	
+	public void setPrefix(String p) {
+		this.prefix = p;
+	}
+	
+	public String getPrefix() {
+		return this.prefix;
+	}
+	
+	public Player getMpPlayer() {
+		return mpPlayer;
+	}
+
+	public void setMpPlayer(Player mpPlayer) {
+		this.mpPlayer = mpPlayer;
 	}
 	
 	public void leaveAllTeams(){

@@ -11,6 +11,8 @@ import org.cakepowered.api.inventory.Inventory;
 import org.cakepowered.api.util.Vector3i;
 
 import es.bewom.BewomByte;
+import es.bewom.chat.Chat;
+import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
 public class CommandEnderChest extends CommandBase{
@@ -32,5 +34,7 @@ public class CommandEnderChest extends CommandBase{
 		if(BewomUser.getUser(p).getPermissionLevel() < BewomUser.PERM_LEVEL_VIP) return;
 
 		p.openGui(p.getPlayerEnderChest());
+		
+		Chat.sendMessage(p, null, "/enderchest");	
 	}
 }

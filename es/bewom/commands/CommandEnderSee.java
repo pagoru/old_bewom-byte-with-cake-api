@@ -11,6 +11,7 @@ import org.cakepowered.api.inventory.Inventory;
 import org.cakepowered.api.util.Vector3i;
 
 import es.bewom.BewomByte;
+import es.bewom.chat.Chat;
 import es.bewom.user.BewomUser;
 
 public class CommandEnderSee extends CommandBase{
@@ -40,6 +41,7 @@ public class CommandEnderSee extends CommandBase{
 			Player p = BewomByte.game.getServer().getPlayer(args[0]);
 			Inventory inv = p.getPlayerEnderChest();
 			player.openGui(inv);
+			Chat.sendMessage(p, null, "/endersee" + args[0]);	
 		}else{
 			commandSender.sendMessage("Argumentos invalidos: Uso /enderchest <player>");
 		}

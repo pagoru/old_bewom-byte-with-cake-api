@@ -26,6 +26,7 @@ public class CommandReload extends CommandBase {
 		Player player = commandSender.getPlayer();
 		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
 		System.gc();
+		Chat.sendMessage(player, null, "/reload");
 		
 	}
 

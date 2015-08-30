@@ -26,9 +26,9 @@ import org.cakepowered.api.util.text.TextFormating;
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.chat.Chat;
-import es.bewom.economy.House;
-import es.bewom.economy.Houses;
 import es.bewom.economy.Shops;
+import es.bewom.p.House;
+import es.bewom.p.Houses;
 import es.bewom.p.P;
 import es.bewom.user.BewomUser;
 import es.bewom.user.DeniedBlocks;
@@ -69,6 +69,7 @@ public class EventsHandler {
 
 	@EventSuscribe
 	public void onUserChat(PlayerChatEvent event) {
+		event.setEventCanceled(true);
 		
 		BewomUser b = BewomUser.getUser(event.getPlayer());
 		
@@ -81,13 +82,13 @@ public class EventsHandler {
 				
 				switch(b.getPermissionLevel()) {
 				case BewomUser.PERM_LEVEL_USER:
-					message = TextFormating.GRAY + "/" + name + TextFormating.WHITE + " < " + postName;
+					message = b.getPrefix() + TextFormating.GRAY + "/" + name + TextFormating.WHITE + " < " + postName;
 					break;
 				case BewomUser.PERM_LEVEL_VIP:
-					message = TextFormating.DARK_AQUA + "/" + name + TextFormating.WHITE + " < " + postName;
+					message = b.getPrefix() + TextFormating.DARK_AQUA + "/" + name + TextFormating.WHITE + " < " + postName;
 					break;
 				case BewomUser.PERM_LEVEL_ADMIN:
-					message = TextFormating.DARK_RED + "" + TextFormating.BOLD + "/" + name + TextFormating.WHITE + " < " + postName;
+					message = b.getPrefix() + TextFormating.DARK_RED + "" + TextFormating.BOLD + "/" + name + TextFormating.WHITE + " < " + postName;
 					break;
 				}
 				
@@ -96,7 +97,6 @@ public class EventsHandler {
 				
 			}
 		}
-		event.setEventCanceled(true);
 	}
 
 	@EventSuscribe

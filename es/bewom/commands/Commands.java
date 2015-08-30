@@ -6,6 +6,7 @@ import es.bewom.BewomByte;
 import es.bewom.centrospokemon.commands.CommandCentro;
 import es.bewom.centrospokemon.commands.CommandPonerCentro;
 import es.bewom.centrospokemon.commands.CommandQuitarCentro;
+import es.bewom.chat.commands.CommandMp;
 import es.bewom.economy.commands.CommandDinero;
 import es.bewom.economy.commands.CommandShop;
 import es.bewom.p.commands.CommandCasa;
@@ -47,6 +48,7 @@ public class Commands {
 		reg.registerCommand(new CommandHome());
 		reg.registerCommand(new CommandSetHome());
 		reg.registerCommand(new CommandEnderChest());
+		reg.registerCommand(new CommandMp());
 		
 	}
 }

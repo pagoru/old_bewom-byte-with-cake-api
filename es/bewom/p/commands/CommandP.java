@@ -8,9 +8,9 @@ import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
 import org.cakepowered.api.util.Vector3i;
 
-import es.bewom.economy.House;
-import es.bewom.economy.Houses;
 import es.bewom.p.Door;
+import es.bewom.p.House;
+import es.bewom.p.Houses;
 import es.bewom.p.P;
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;

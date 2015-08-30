@@ -1,14 +1,20 @@
-package es.bewom.economy;
+package es.bewom.p;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.cakepowered.api.base.Player;
+import org.cakepowered.api.nbt.NBTCompund;
+import org.cakepowered.api.tileentity.TileEntity;
 import org.cakepowered.api.util.PreciseLocation;
+import org.cakepowered.api.util.Vector3d;
+import org.cakepowered.api.util.Vector3i;
 
 import com.google.gson.annotations.Expose;
 
-import es.bewom.p.Door;
+import es.bewom.BewomByte;
+import es.bewom.user.BewomUser;
+import es.bewom.util.Dimensions;
 
 public class House {
 	
@@ -60,6 +66,26 @@ public class House {
 	public void removeFriend(String uuid){
 		this.friends.remove(uuid);
 		Houses.save();
+	}
+	public void sellHouse(Player p){
+		this.uuidOwner = null;
+		setSoldSign(false);
+		BewomUser.getUser(p).addMoney(sellPrice);
+		p.setLocation(new PreciseLocation(signDimension, new Vector3d(signX, signY, signZ), p.getLocation().getYaw(), p.getLocation().getPitch()));
+	}
+	
+	public void setSoldSign(boolean sold){
+		TileEntity tileEntity = BewomByte.game.getServer().getWorld(signDimension).getTileEntity(new Vector3i(signX, signY, signZ));
+		NBTCompund nbt = BewomByte.game.getNBTFactory().newNBTCompound();
+		tileEntity.writeToNBT(nbt);
+
+		nbt.setBoolean("sold", sold);
+		tileEntity.readFromNBT(nbt);
+		tileEntity.writeToNBT(nbt);
+		
+		for(Player p : BewomByte.game.getServer().getOnlinePlayers()){
+			tileEntity.syncPlayer(p);
+		}
 	}
 	
 	public Player getPlayer() {

@@ -14,7 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import es.bewom.BewomByte;
-import es.bewom.economy.House;
+import es.bewom.p.House;
 
 public class Homes {
 	
