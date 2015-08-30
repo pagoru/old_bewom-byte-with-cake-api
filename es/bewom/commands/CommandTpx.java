@@ -9,7 +9,6 @@ import org.cakepowered.api.util.text.TextFormating;
 import org.cakepowered.api.world.World;
 
 import es.bewom.BewomByte;
-import es.bewom.chat.Chat;
 import es.bewom.user.BewomUser;
 
 public class CommandTpx extends CommandBase{

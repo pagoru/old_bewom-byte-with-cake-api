@@ -1,7 +1,6 @@
 package es.bewom.centrospokemon.commands;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.cakepowered.api.base.Player;
@@ -10,7 +9,6 @@ import org.cakepowered.api.command.CommandSender;
 import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
 
-import es.bewom.BewomByte;
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.texts.TextMessages;
@@ -28,7 +26,7 @@ public class CommandCentro extends CommandBase {
 	}
 	
 	@Override
-	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
+	public List<String> addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
 		List<String> a = new ArrayList<String>();
 		for (int i = 0; i < CentroManager.centros.size(); i++) {
 			a.add(i + "");

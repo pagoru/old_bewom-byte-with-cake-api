@@ -11,9 +11,7 @@ import org.cakepowered.api.command.CommandSender;
 import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
 
-import es.bewom.BewomByte;
 import es.bewom.chat.Chat;
-import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
 public class CommandPerms extends CommandBase {
@@ -23,7 +21,7 @@ public class CommandPerms extends CommandBase {
 	}
 	
 	@Override
-	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
+	public List<String> addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
 		Player player = sender.getPlayer();
 		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return null;
 		List<String> tab = new ArrayList<String>();
@@ -60,7 +58,6 @@ public class CommandPerms extends CommandBase {
 	public void execute(CommandSender commandSender, String[] args) {
 		
 		Player player = commandSender.getPlayer();
-		BewomUser user = BewomUser.getUser(player);
 		
 		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
 		
@@ -70,12 +67,12 @@ public class CommandPerms extends CommandBase {
 			if(args.length >= 3){
 				tiempo = Integer.parseInt(args[2]); 
 			}
-			String p = user.getUUIDName(args[0]);
+			String p = BewomUser.getUUIDName(args[0]);
 			Date d = new Date();
 			Timestamp timestamp = new Timestamp(d.getTime());
 			
 			if(p != null){
-				user.m.executeQuery("UPDATE `users` SET `type`='" + args[1] + "',`date_type`='" + timestamp.toString() + "',`days_type`='" + tiempo + "' WHERE `uuid`='" + p + "'", null);
+				BewomUser.m.executeQuery("UPDATE `users` SET `type`='" + args[1] + "',`date_type`='" + timestamp.toString() + "',`days_type`='" + tiempo + "' WHERE `uuid`='" + p + "'", null);
 			}
 			player.sendMessage(TextFormating.RED + "Le has cambiado los permisos de " + args[0] + " a " + args[1] + ".");
 			Chat.sendMessage(player, null, "/perms " + args[0] + " " + args[1]);

@@ -23,7 +23,7 @@ public class CommandCasa extends CommandBase {
 	}
 	
 	@Override
-	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
+	public List<String> addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
 		List<String> tab = new ArrayList<String>();
 		if(args.length == 1){
 			tab.add("añadir");
@@ -50,7 +50,6 @@ public class CommandCasa extends CommandBase {
 	public void execute(CommandSender commandSender, String[] args) {
 		
 		Player player = commandSender.getPlayer();
-		BewomUser user = BewomUser.getUser(player);
 		
 		House house = null;
 		for(House h : Houses.houses){

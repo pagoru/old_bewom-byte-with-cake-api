@@ -18,7 +18,6 @@ import org.cakepowered.api.util.DirectionYaw;
 import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
-import org.cakepowered.api.world.World;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,7 +38,6 @@ public class P {
 		double y = event.getPosition().getY();
 		double z = event.getPosition().getZ();
 		Block b =  event.getInteractBlock();
-		World world = p.getWorld();
 		
 		if(b != null){
 			
@@ -137,7 +135,6 @@ public class P {
 	
 	private static boolean selectionHouse(Player p, Door d){
 		for (House h : Houses.houses) {
-			String message = "";
 			if(h.isSelectDoor() || h.isSelectSign()){
 				return false;
 			}

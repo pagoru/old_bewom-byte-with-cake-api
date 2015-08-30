@@ -6,8 +6,6 @@ import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
 import org.cakepowered.api.command.CommandUtil;
-import org.cakepowered.api.command.CommandUtil.ArgumentType;
-import org.cakepowered.api.inventory.Inventory;
 import org.cakepowered.api.util.Vector3i;
 
 import es.bewom.BewomByte;
@@ -29,7 +27,6 @@ public class CommandEnderChest extends CommandBase{
 	@Override
 	public void execute(CommandSender commandSender, String[] args) {
 		Player p = commandSender.getPlayer();
-		BewomUser user = BewomUser.getUser(p);
 		
 		if(BewomUser.getUser(p).getPermissionLevel() < BewomUser.PERM_LEVEL_VIP) return;
 

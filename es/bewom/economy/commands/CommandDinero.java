@@ -17,7 +17,7 @@ public class CommandDinero extends CommandBase {
 	}
 	
 	@Override
-	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
+	public List<String> addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
 		return null;
 	}
 	
@@ -25,7 +25,6 @@ public class CommandDinero extends CommandBase {
 	public void execute(CommandSender commandSender, String[] args) {
 		
 		Player player = commandSender.getPlayer();
-		BewomUser user = BewomUser.getUser(player);
 		
 		String message = "Tienes " + BewomUser.getMoney(player.getUniqueID()) + " woms.";	
 		player.sendMessage(message);
