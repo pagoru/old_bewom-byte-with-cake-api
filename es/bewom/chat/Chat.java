@@ -19,31 +19,37 @@ public class Chat {
 	
 	public static void sendMessage(Player p, String formatedMSG, String msg){
 		String[] m = msg.split(" ");
-		for (int i = 0; i < m.length; i++) {
-			for (Player player : game.getServer().getOnlinePlayers()){
-				if(m[i].equals(player.getUserName())){
-					player.playSound("random.pop", 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
-				}
-			}
-		}
-		BewomUser u = BewomUser.getUser(p);
-		if(formatedMSG != null){
-			Collection<Player> src = game.getServer().getOnlinePlayers();			
-			for(Player player : src){
-				BewomUser user = BewomUser.getUser(player);
-				if(u.getMpPlayer() != null){
-					if(u.getMpPlayer().getUserName().equals(player.getUserName()) || user.isAdmin()){
-						sendMessage(player, TextFormating.GRAY + "/" + u.getMpPlayer().getUserName() + formatedMSG);
+		if(!m[0].substring(0, 1).equals("/")){
+			for (int i = 0; i < m.length; i++) {
+				for (Player player : game.getServer().getOnlinePlayers()){
+					if(m[i].equals(player.getUserName())){
+						player.playSound("random.pop", 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
 					}
-				} else {
-					sendMessage(player, formatedMSG);
 				}
 			}
 		}
-		if(u.getMpPlayer() != null){
-			l.add(p, "/mp " + u.getMpPlayer().getUserName()+ "(" + u.getMpPlayer().getUniqueID() + ")" + msg);
+		if(p != null){
+			BewomUser u = BewomUser.getUser(p);
+			if(formatedMSG != null){
+				Collection<Player> src = game.getServer().getOnlinePlayers();			
+				for(Player player : src){
+					BewomUser user = BewomUser.getUser(player);
+					if(u.getMpPlayer() != null){
+						if(u.getMpPlayer().getUserName().equals(player.getUserName()) || user.isAdmin()){
+							sendMessage(player, TextFormating.GRAY + "/" + u.getMpPlayer().getUserName() + formatedMSG);
+						}
+					} else {
+						sendMessage(player, formatedMSG);
+					}
+				}
+			}
+			if(u.getMpPlayer() != null){
+				l.add(p, "/mp " + u.getMpPlayer().getUserName()+ "(" + u.getMpPlayer().getUniqueID() + ")" + msg);
+			} else {
+				l.add(p, msg);
+			}
 		} else {
-			l.add(p, msg);
+			l.add(null, msg);
 		}
 	}
 	

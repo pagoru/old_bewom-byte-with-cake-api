@@ -49,6 +49,7 @@ public class Commands {
 		reg.registerCommand(new CommandSetHome());
 		reg.registerCommand(new CommandEnderChest());
 		reg.registerCommand(new CommandMp());
+		reg.registerCommand(new CommandAmigos());
 		
 	}
 }

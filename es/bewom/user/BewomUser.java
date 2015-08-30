@@ -72,6 +72,9 @@ public class BewomUser {
 	
 	private String prefix = "";
 	
+	private List<UUID> friends = new ArrayList<UUID>();
+	private List<UUID> friendsPetitions = new ArrayList<UUID>();
+
 	/**
 	 * Constructor. Creates a {@link BewomUser} from a player.
 	 * @param player to create the {@link BewomUser} from.
@@ -90,6 +93,34 @@ public class BewomUser {
 			registerLink += hash;
 			getRegisterLink = true;
 		}
+	}
+	
+	public void deleteFriendUUID(UUID p){
+		m.executeQuery("DELETE FROM `users_friends` WHERE `uuid`='" + player.getUniqueID() + "'", null);
+		this.friends.remove(p);
+	}
+	
+	public void acceptFriendUUID(UUID p){
+		m.executeQuery("UPDATE `users_friends` SET `peticion`='1' WHERE `uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p + "'", null);
+	}
+	
+	public void addFriendUUID(UUID p){
+		m.executeQuery("INSERT INTO `users_friends`(`uuid`, `friend_uuid`, `peticion`) VALUES ('" + player.getUniqueID() + "','" + p +"','0')", null);
+		this.friendsPetitions.add(p);
+	}
+	
+	public List<UUID> getFriendsUUID() {
+		List<String> friends = m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + player.getUniqueID() + "' AND `peticion`='1'", "friend_uuid");
+		List<UUID> friendsUUID = new ArrayList<UUID>();
+		for (int i = 0; i < friends.size(); i++) {
+			friendsUUID.add(UUID.fromString(friends.get(i)));
+		}
+		this.friends = friendsUUID;
+		return this.friends;
+	}
+
+	public void setFriends(List<UUID> friends) {
+		this.friends = friends;
 	}
 	
 	public void setPrefix(String p) {
