@@ -27,8 +27,29 @@ public class CommandAmigos extends CommandBase {
 	@Override
 	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
 		List<String> tab = new ArrayList<String>();
-		tab.add("añadir");
-		tab.add("eliminar");
+		if(args.length == 1) {
+			tab.add("añadir");
+			tab.add("eliminar");			
+		} else if(args.length == 2){
+			if(args[0].equals("añadir")){
+				tab = BewomUser.getPlayersUsernameRegistered();
+				
+				for (int i = 0; i < tab.size(); i++) {
+					if(args[1].length() <= tab.get(i).length()){
+						if(args[1].substring(0, args[1].length()).toLowerCase().equals(tab.get(i).substring(0, args[1].length()).toLowerCase())){
+							List<String> p = new ArrayList<String>();
+							p.add(tab.get(i));
+							return p;
+						}
+					}
+				}
+			} else if(args[0].equals("eliminar")){
+				List<UUID> u = BewomUser.getUser(BewomByte.game.getServer().getPlayer(sender.getName())).getFriends();
+				for (int i = 0; i < u.size(); i++) {
+					tab.add(BewomUser.getUserNameFromUUID(u.get(i)));
+				}
+			}
+		}
 		return tab;
 	}
 
@@ -50,11 +71,32 @@ public class CommandAmigos extends CommandBase {
 			if(p != null){
 				UUID pUUID = UUID.fromString(uuidsPlayers.get(args[1]));
 				if(args[0].equals("añadir")){
-					user.addFriendUUID(pUUID);
-					player.sendMessage("Has añadido a " + args[1]);
+					switch (user.addApplicationFriendUUID(pUUID)) {
+					case -1:
+						player.sendMessage(TextFormating.RED + "No puedes enviarte una solicitud a ti mismo. ¿Eres tonto?");
+						break;
+					case 0:
+						player.sendMessage(TextFormating.RED + "No puedes enviar mas solicitudes de amistad a " + args[1] + ".");
+						break;
+					case 1:
+						player.sendMessage(TextFormating.GREEN + "Has enviado una solicitud a " + args[1] + ".");
+						Player playerArgs = BewomByte.game.getServer().getPlayer(args[1]);
+						if(playerArgs != null){
+							playerArgs.sendMessage(TextFormating.GREEN + player.getUserName() + " quiere ser tu amigo.");
+							playerArgs.sendMessage(TextFormating.GREEN + "Usa /amigos añadir " + player.getUserName() + " para aceotar la solicitud.");
+							playerArgs.sendMessage(TextFormating.GREEN + "Usa /amigos eliminar " + player.getUserName() + " para eliminar la solicitud.");
+						}
+						break;
+					case 2:
+						player.sendMessage(TextFormating.GREEN + "Ahora eres amigo de " + args[1] + ".");
+						break;
+					case 3:
+						player.sendMessage(TextFormating.RED + "Ya eres amigo de " + args[1] + ".");
+						break;
+					}
 				} else if(args[0].equals("eliminar")){
 					user.deleteFriendUUID(pUUID);
-					player.sendMessage("Has eliminado a " + args[1]);
+					player.sendMessage(TextFormating.RED + "Ya no eres amigo de " + args[1] + ".");
 				}
 			}
 		}

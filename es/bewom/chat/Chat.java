@@ -23,7 +23,7 @@ public class Chat {
 			for (int i = 0; i < m.length; i++) {
 				for (Player player : game.getServer().getOnlinePlayers()){
 					if(m[i].equals(player.getUserName())){
-						player.playSound("random.pop", 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
+						player.playSound("random.successful_hit", 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
 					}
 				}
 			}

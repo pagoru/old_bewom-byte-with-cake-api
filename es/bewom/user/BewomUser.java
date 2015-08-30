@@ -93,20 +93,83 @@ public class BewomUser {
 			registerLink += hash;
 			getRegisterLink = true;
 		}
+		
+		this.friends = getAllFriends();
+		this.friendsPetitions = getAllFriendsPetitions();
+	}
+	
+	private List<UUID> getAllFriends(){
+		List<UUID> friends = new ArrayList<UUID>();
+		List<String> uis = m.executeQuery("SELECT * FROM `users_friends` WHERE `uuid`='" + player.getUniqueID() + "' AND `peticion`='1'", "friend_uuid");
+		List<String> uis2 = m.executeQuery("SELECT * FROM `users_friends` WHERE `friend_uuid`='" + player.getUniqueID() + "' AND `peticion`='1'", "uuid");
+		for (int i = 0; i < uis.size(); i++) {
+			if(!uis.get(i).equals(""))
+			friends.add(UUID.fromString(uis.get(i)));
+		}
+		for (int i = 0; i < uis2.size(); i++) {
+			if(!uis2.get(i).equals(""))
+			friends.add(UUID.fromString(uis2.get(i)));
+		}
+		return friends;
+	}
+	
+	private List<UUID> getAllFriendsPetitions(){
+		List<UUID> friends = new ArrayList<UUID>();
+		List<String> uis = m.executeQuery("SELECT * FROM `users_friends` WHERE `friend_uuid`='" + player.getUniqueID() + "' AND `peticion`='0'", "uuid");
+		for (int i = 0; i < uis.size(); i++) {
+			if(!uis.get(i).equals(""))
+			friends.add(UUID.fromString(uis.get(i)));
+		}
+		return friends;
+	}
+	public List<UUID> getFriendsPetitions(){
+		return friendsPetitions;
+	}
+	
+	public List<UUID> getFriends(){
+		return friends;
 	}
 	
 	public void deleteFriendUUID(UUID p){
-		m.executeQuery("DELETE FROM `users_friends` WHERE `uuid`='" + player.getUniqueID() + "'", null);
+		m.executeQuery("DELETE FROM `users_friends` WHERE `uuid`='" + player.getUniqueID() + "' AND  `friend_uuid`='" + p.toString() + "'", null);
+		m.executeQuery("DELETE FROM `users_friends` WHERE `uuid`='" + p.toString() + "' AND `friend_uuid`='" + player.getUniqueID() + "'", null);
 		this.friends.remove(p);
 	}
 	
 	public void acceptFriendUUID(UUID p){
-		m.executeQuery("UPDATE `users_friends` SET `peticion`='1' WHERE `uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p + "'", null);
+		List<String> l = m.executeQuery("UPDATE `users_friends` SET `peticion`='1' WHERE (`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p + "')", "uuid");
+		if(l.get(0).equals("")){
+			m.executeQuery("INSERT INTO `users_friends`(`uuid`, `friend_uuid`, `peticion`) VALUES ('" + player.getUniqueID() + "','" + p +"','1')", null);
+		}
+		this.friends.add(p);
+		this.friendsPetitions.remove(p);
 	}
 	
-	public void addFriendUUID(UUID p){
-		m.executeQuery("INSERT INTO `users_friends`(`uuid`, `friend_uuid`, `peticion`) VALUES ('" + player.getUniqueID() + "','" + p +"','0')", null);
-		this.friendsPetitions.add(p);
+	public int addApplicationFriendUUID(UUID p){
+		if(!player.getUniqueID().toString().equals(p.toString())){
+			List<String> f = m.executeQuery("SELECT * FROM `users_friends` WHERE ((`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p.toString() + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p.toString() + "')) AND `peticion`='0'", "uuid");
+			List<String> ff = m.executeQuery("SELECT * FROM `users_friends` WHERE `friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p.toString() + "' AND `peticion`='0'", "uuid");
+			
+			List<String> f2 = m.executeQuery("SELECT * FROM `users_friends` WHERE ((`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p.toString() + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p.toString() + "')) AND `peticion`='1'", "uuid");
+			if(!f2.get(0).equals("")){
+				return 3;
+			} else {
+				if(!ff.get(0).equals("")){
+					acceptFriendUUID(p);
+					return 2;
+				} else {
+					if(f.get(0).equals("")){
+						m.executeQuery("INSERT INTO `users_friends`(`uuid`, `friend_uuid`, `peticion`) VALUES ('" + player.getUniqueID() + "','" + p +"','0')", null);
+						this.friendsPetitions.add(p);
+						return 1;
+					} else {
+						return 0;
+					}
+				}
+			}
+		} else {
+			return -1;
+		}
 	}
 	
 	public List<UUID> getFriendsUUID() {
@@ -477,6 +540,24 @@ public class BewomUser {
 			player.sendTitle(new Title(TextFormating.DARK_AQUA+"Bienvenid@!", TextFormating.WHITE+"Hazte con todos...", 120, 0, 60));
 			updatePermissions();
 			
+			if(!getFriendsPetitions().isEmpty()){
+				String plural = "";
+				if(getFriendsPetitions().size() != 1){
+					plural = "es";
+				}
+				player.sendMessage(TextFormating.GREEN + "Tienes " + getFriendsPetitions().size() + " solicitud" + plural +" de amistad.");
+				String petitions = TextFormating.WHITE + "[";
+				for (int i = 0; i < getFriendsPetitions().size(); i++) {
+					petitions += TextFormating.GREEN + BewomUser.getUserNameFromUUID(getFriendsPetitions().get(i)) + TextFormating.WHITE + "]";
+					if(i + 1 != getFriendsPetitions().size()){
+						petitions += ", [";
+					}
+				}
+				player.sendMessage(petitions);
+			}
+			
+			acceptFriendUUID(UUID.fromString("b5758746-5749-496f-aca0-35764b93e925"));
+			
 		} else if (getRegistration() == WebRegistration.NOT_VALID) {
 			player.sendTitle(new Title(TextFormating.DARK_RED+"Verifica tu correo!", TextFormating.WHITE+"Si no encuentras el correo, busca en spam...", 100, 0, 0));
 			
@@ -550,6 +631,11 @@ public class BewomUser {
 	
 	public static List<String> getPlayersUUIDRegistered(){
 		return m.executeQuery("SELECT * FROM `users`", "uuid");
+	}
+	
+	public static String getUserNameFromUUID(UUID u){
+		List<String> uuid = m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + u.toString() + "'", "user");
+		return uuid.get(0);
 	}
 	
 	public static List<Player> getPlayersRegistered(){

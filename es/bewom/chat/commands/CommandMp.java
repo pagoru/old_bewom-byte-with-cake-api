@@ -18,7 +18,7 @@ import es.bewom.user.BewomUser;
 public class CommandMp extends CommandBase{
 
 	public CommandMp() {
-		super("mp", "w", "tell");
+		super("tell", "msg", "mp", "w");
 	}
 	
 	@Override
