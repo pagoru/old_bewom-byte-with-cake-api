@@ -28,9 +28,25 @@ public class CommandAmigos extends CommandBase {
 	public List addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
 		List<String> tab = new ArrayList<String>();
 		if(args.length == 1) {
-			tab.add("añadir");
-			tab.add("eliminar");			
+			tab.add("aceptar");
+			tab.add("denegar");
+			tab.add("eliminar");
+			if(BewomUser.getUser(sender.getPlayer().getUniqueID()).getPermissionLevel() < BewomUser.PERM_LEVEL_VIP) return tab;
+			tab.add("añadir");			
 		} else if(args.length == 2){
+			if(args[0].equals("eliminar")){
+				List<UUID> u = BewomUser.getUser(BewomByte.game.getServer().getPlayer(sender.getName())).getFriends();
+				for (int i = 0; i < u.size(); i++) {
+					tab.add(BewomUser.getUserNameFromUUID(u.get(i)));
+				}
+			}
+			if(args[0].equals("aceptar") || args[0].equals("denegar")){
+				List<UUID> u = BewomUser.getUser(BewomByte.game.getServer().getPlayer(sender.getName())).getFriendsPetitions();
+				for (int i = 0; i < u.size(); i++) {
+					tab.add(BewomUser.getUserNameFromUUID(u.get(i)));
+				}
+			}
+			if(BewomUser.getUser(sender.getPlayer().getUniqueID()).getPermissionLevel() < BewomUser.PERM_LEVEL_VIP) return tab;
 			if(args[0].equals("añadir")){
 				tab = BewomUser.getPlayersUsernameRegistered();
 				
@@ -43,12 +59,7 @@ public class CommandAmigos extends CommandBase {
 						}
 					}
 				}
-			} else if(args[0].equals("eliminar")){
-				List<UUID> u = BewomUser.getUser(BewomByte.game.getServer().getPlayer(sender.getName())).getFriends();
-				for (int i = 0; i < u.size(); i++) {
-					tab.add(BewomUser.getUserNameFromUUID(u.get(i)));
-				}
-			}
+			} 
 		}
 		return tab;
 	}
@@ -70,34 +81,61 @@ public class CommandAmigos extends CommandBase {
 			String p = uuidsPlayers.get(args[1]);
 			if(p != null){
 				UUID pUUID = UUID.fromString(uuidsPlayers.get(args[1]));
-				if(args[0].equals("añadir")){
-					switch (user.addApplicationFriendUUID(pUUID)) {
-					case -1:
-						player.sendMessage(TextFormating.RED + "No puedes enviarte una solicitud a ti mismo. ¿Eres tonto?");
-						break;
-					case 0:
-						player.sendMessage(TextFormating.RED + "No puedes enviar mas solicitudes de amistad a " + args[1] + ".");
-						break;
-					case 1:
-						player.sendMessage(TextFormating.GREEN + "Has enviado una solicitud a " + args[1] + ".");
-						Player playerArgs = BewomByte.game.getServer().getPlayer(args[1]);
-						if(playerArgs != null){
-							playerArgs.sendMessage(TextFormating.GREEN + player.getUserName() + " quiere ser tu amigo.");
-							playerArgs.sendMessage(TextFormating.GREEN + "Usa /amigos añadir " + player.getUserName() + " para aceotar la solicitud.");
-							playerArgs.sendMessage(TextFormating.GREEN + "Usa /amigos eliminar " + player.getUserName() + " para eliminar la solicitud.");
-						}
-						break;
+				
+				if(args[0].equals("aceptar") || args[0].equals("denegar")){
+					boolean a = true;
+					if(args[0].equals("denegar")){
+						a = false;
+					}
+					switch (user.acceptFriendOnlyIfApplicationWithUUID(pUUID, a)) {
 					case 2:
-						player.sendMessage(TextFormating.GREEN + "Ahora eres amigo de " + args[1] + ".");
+						player.sendMessage(TextFormating.RED + "¡Ya sóis amigos!");
 						break;
 					case 3:
-						player.sendMessage(TextFormating.RED + "Ya eres amigo de " + args[1] + ".");
+						player.sendMessage(TextFormating.RED + "¡No tienes ninguna solicitud de amsitad de " + args[1] + "!");
+						break;
+					case 1:
+						player.sendMessage(TextFormating.RED + "¡Acabas de aceptar la solicitud de amistad de " + args[1] + "!");
+						break;
+					case -1:
+						player.sendMessage(TextFormating.RED + "¡Acabas de rechazar la solicitud de amistad de " + args[1] + "!");
 						break;
 					}
 				} else if(args[0].equals("eliminar")){
 					user.deleteFriendUUID(pUUID);
-					player.sendMessage(TextFormating.RED + "Ya no eres amigo de " + args[1] + ".");
+					if(BewomUser.getUser(user.getUUID()) != null){
+						BewomUser.getUser(user.getUUID()).deleteFriendUUID(user.getUUID());
+					}
+					player.sendMessage(TextMessages.FRIENDS_NOT_FRIENDS + args[1] + ".");
 				}
+				
+				if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_VIP) return;
+				
+				if(args[0].equals("añadir")){
+					switch (user.addApplicationFriendUUID(pUUID)) {
+					case -1:
+						player.sendMessage(TextMessages.FRIENDS_WITH_YOU);
+						break;
+					case 0:
+						player.sendMessage(TextMessages.FRIENDS_LIMIT + args[1] + ".");
+						break;
+					case 1:
+						player.sendMessage(TextMessages.FRIENDS_SEND + args[1] + ".");
+						Player playerArgs = BewomByte.game.getServer().getPlayer(args[1]);
+						if(playerArgs != null){
+							playerArgs.sendMessage(TextMessages.FRIENDS_SEND_TO[0] + player.getUserName() + TextMessages.FRIENDS_SEND_TO[1]);
+							playerArgs.sendMessage(TextMessages.FRIENDS_SEND_TO_ADD_SUGESTION[0] + player.getUserName() + TextMessages.FRIENDS_SEND_TO_ADD_SUGESTION[1]);
+							playerArgs.sendMessage(TextMessages.FRIENDS_SEND_TO_DELETE_SUGESTION[0] + player.getUserName() + TextMessages.FRIENDS_SEND_TO_DELETE_SUGESTION[1]);
+						}
+						break;
+					case 2:
+						player.sendMessage(TextMessages.FRIENDS_NOW_FRIENDS + args[1] + ".");
+						break;
+					case 3:
+						player.sendMessage(TextMessages.FRIENDS_JUST_FRIENDS + args[1] + ".");
+						break;
+					}
+				} 
 			}
 		}
 	}	

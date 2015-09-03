@@ -52,13 +52,13 @@ public class CommandCentro extends CommandBase {
 			if(cp != null) {
 				player.setLocation(cp.getLocation());
 			}
-			player.sendMessage(TextFormating.RED + "Teletransporte exitoso.");
+			player.sendMessage(TextMessages.TP_SUCCESS);
 		} else if(args.length == 1){
 			CentroPokemon cp = CentroManager.centros.get(Integer.parseInt(args[0]));
 			if(cp != null) {
 				player.setLocation(cp.getLocation());
 			}
-			player.sendMessage(TextFormating.RED + "Teletransporte exitoso.");
+			player.sendMessage(TextMessages.TP_SUCCESS);
 		}
 	}
 

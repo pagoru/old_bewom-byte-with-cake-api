@@ -43,7 +43,7 @@ public class CommandPonerCentro extends CommandBase {
 			return;
 		}
 
-		player.sendMessage(TextFormating.RED + "Centro establecido correctamente.");
+		player.sendMessage(TextMessages.CENTER_ESTABLISHED);
 		CentroManager.save();
 	}
 }

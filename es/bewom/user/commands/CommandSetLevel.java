@@ -3,6 +3,7 @@ package es.bewom.user.commands;
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
+import org.cakepowered.api.scoreboard.Scoreboard;
 import org.cakepowered.api.scoreboard.Team;
 import org.cakepowered.api.util.text.TextFormating;
 
@@ -55,10 +56,8 @@ public class CommandSetLevel extends CommandBase {
 				commandSender.sendMessage(error);
 				return;
 			}
-
-			for(Team team : toChange.getWorld().getScoreboard().getTeams()) {
-				team.removePlayer(toChange);
-			}
+			Scoreboard score = toChange.getWorld().getScoreboard();
+			score.removePlayerFromTeams(toChange);
 
 			BewomUser p = BewomUser.getUser(toChange);
 			p.setPermissionLevel(level);

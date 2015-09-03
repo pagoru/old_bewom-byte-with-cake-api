@@ -17,7 +17,7 @@ public class CommandQuitarCentro extends CommandBase {
 
 	@Override
 	public String getCommandUsage(CommandSender commandSender) {
-		return "Eliminar el centro pokemon de la posiciÃ³n actual.";
+		return "Eliminar el centro pokemon de la posición actual.";
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class CommandQuitarCentro extends CommandBase {
 			return;
 		}
 
-		player.sendMessage(TextFormating.RED + "Centro quitado correctamente.");
+		player.sendMessage(TextMessages.CENTER_REMOVED);
 		CentroManager.save();
 	}
 

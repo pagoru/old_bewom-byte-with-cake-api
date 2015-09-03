@@ -137,12 +137,38 @@ public class BewomUser {
 	}
 	
 	public void acceptFriendUUID(UUID p){
-		List<String> l = m.executeQuery("UPDATE `users_friends` SET `peticion`='1' WHERE (`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p + "')", "uuid");
+		List<String> l = m.executeQuery("SELECT * FROM `users_friends` WHERE ((`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p.toString() + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p.toString() + "')) AND `peticion`='0'", "uuid");
 		if(l.get(0).equals("")){
 			m.executeQuery("INSERT INTO `users_friends`(`uuid`, `friend_uuid`, `peticion`) VALUES ('" + player.getUniqueID() + "','" + p +"','1')", null);
+		} else {
+			m.executeQuery("UPDATE `users_friends` SET `peticion`='1' WHERE (`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p + "')", "uuid");
 		}
 		this.friends.add(p);
 		this.friendsPetitions.remove(p);
+	}
+	
+	public int acceptFriendOnlyIfApplicationWithUUID(UUID p, boolean yes){
+		List<String> l = m.executeQuery("SELECT * FROM `users_friends` WHERE (`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p.toString() + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p.toString() + "')", "peticion");
+		if(l.get(0).equals("0")) {
+			if(yes){
+				m.executeQuery("UPDATE `users_friends` SET `peticion`='1' WHERE (`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p + "')", "uuid");
+				this.friends.add(p);
+				this.friendsPetitions.remove(p);
+				if(BewomUser.getUser(p) != null){
+					BewomUser.getUser(p).friendsPetitions.remove(player.getUniqueID());
+					BewomUser.getUser(p).friends.add(player.getUniqueID());
+				}
+				return 1;
+			} else {
+				m.executeQuery("DELETE FROM `users_friends` WHERE ((`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p + "'))", "uuid");
+				this.friendsPetitions.remove(p);
+				return -1;
+			}
+		} else if(l.get(0).equals("1")){
+			return 2;
+		} else {
+			return 3;
+		}
 	}
 	
 	public int addApplicationFriendUUID(UUID p){
@@ -159,8 +185,11 @@ public class BewomUser {
 					return 2;
 				} else {
 					if(f.get(0).equals("")){
-						m.executeQuery("INSERT INTO `users_friends`(`uuid`, `friend_uuid`, `peticion`) VALUES ('" + player.getUniqueID() + "','" + p +"','0')", null);
-						this.friendsPetitions.add(p);
+						m.executeQuery("INSERT INTO `users_friends` (`uuid`, `friend_uuid`, `peticion`) VALUES ('" + player.getUniqueID() + "', '" + p +"', '0')", null);;
+						if(BewomUser.getUser(p) != null){
+							BewomUser.getUser(p).friendsPetitions.remove(player.getUniqueID());
+							BewomUser.getUser(p).friendsPetitions.add(player.getUniqueID());
+						}
 						return 1;
 					} else {
 						return 0;
@@ -203,13 +232,8 @@ public class BewomUser {
 	}
 	
 	public void leaveAllTeams(){
-		
-		List<Team> teams = player.getWorld().getScoreboard().getTeams();
-		for (Team t : teams) {
-			if(t.getPlayers().contains(player)){
-				t.removePlayer(player);
-			}
-		}
+		Scoreboard score = player.getWorld().getScoreboard();
+		score.removePlayerFromTeams(player);
 		
 	}
 	
@@ -219,6 +243,7 @@ public class BewomUser {
 		String date = m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "date_type").get(0);
 		String days = m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "days_type").get(0);
 		
+		Scoreboard score = player.getWorld().getScoreboard();
 		if(!perm.equals("")){
 			
 			if(!days.equals("0")){
@@ -244,23 +269,19 @@ public class BewomUser {
 					}
 				}
 			}
-			
 			switch(perm) {
 			case PERM_ADMIN:
 				if(permissionLevel != PERM_LEVEL_ADMIN){
 					setPermissionLevel(3);
 					Team team = player.getWorld().getScoreboard().getTeam(PERM_ADMIN);
 					if(team == null) {
-						Scoreboard score = player.getWorld().getScoreboard();
 						score.addTeam(PERM_ADMIN).setColor(TextFormating.DARK_RED);
 						team = player.getWorld().getScoreboard().getTeam(PERM_ADMIN);
 					}
 					
 					if(!team.getPlayers().contains(player)){
-						for(Team t : player.getWorld().getScoreboard().getTeams()) {
-							t.removePlayer(player);
-						}
-						team.addPlayer(player);
+						score.removePlayerFromTeams(player);
+						score.addPlayerToTeam(player, team);
 					}
 					BewomByte.game.getCommandDispacher().executeCommand(BewomByte.game.getServer().getCommandSender(), "/op " + player.getName());
 					player.setGameMode(1);
@@ -271,16 +292,13 @@ public class BewomUser {
 					setPermissionLevel(2);
 					Team teamVip = player.getWorld().getScoreboard().getTeam(PERM_VIP);
 					if(teamVip == null) {
-						Scoreboard score = player.getWorld().getScoreboard();
 						score.addTeam(PERM_VIP).setColor(TextFormating.DARK_AQUA);
 						teamVip = player.getWorld().getScoreboard().getTeam(PERM_VIP);
 					}
 					
 					if(!teamVip.getPlayers().contains(player)){
-						for(Team t : player.getWorld().getScoreboard().getTeams()) {
-							t.removePlayer(player);
-						}
-						teamVip.addPlayer(player);
+						score.removePlayerFromTeams(player);
+						score.addPlayerToTeam(player, teamVip);
 					}
 					BewomByte.game.getCommandDispacher().executeCommand(BewomByte.game.getServer().getCommandSender(), "/deop " + player.getName());
 					player.setGameMode(2);
@@ -291,16 +309,13 @@ public class BewomUser {
 					setPermissionLevel(1);
 					Team teamUser = player.getWorld().getScoreboard().getTeam(PERM_USER);
 					if(teamUser == null) {
-						Scoreboard score = player.getWorld().getScoreboard();
 						score.addTeam(PERM_USER).setColor(TextFormating.GRAY);
 						teamUser = player.getWorld().getScoreboard().getTeam(PERM_USER);
 					}
 					
 					if(!teamUser.getPlayers().contains(player)){
-						for(Team t : player.getWorld().getScoreboard().getTeams()) {
-							t.removePlayer(player);
-						}
-						teamUser.addPlayer(player);
+						score.removePlayerFromTeams(player);
+						score.addPlayerToTeam(player, teamUser);
 					}
 					BewomByte.game.getCommandDispacher().executeCommand(BewomByte.game.getServer().getCommandSender(), "/deop " + player.getName());
 					player.setGameMode(2);
@@ -315,10 +330,8 @@ public class BewomUser {
 			if(teamUser != null){			
 				if(!teamUser.getPlayers().contains(player)){
 
-					for(Team team : player.getWorld().getScoreboard().getTeams()) {
-						team.removePlayer(player);
-					}
-					teamUser.addPlayer(player);
+					score.removePlayerFromTeams(player);
+					score.addPlayerToTeam(player, teamUser);
 				}
 			}
 		}
@@ -555,8 +568,6 @@ public class BewomUser {
 				}
 				player.sendMessage(petitions);
 			}
-			
-			acceptFriendUUID(UUID.fromString("b5758746-5749-496f-aca0-35764b93e925"));
 			
 		} else if (getRegistration() == WebRegistration.NOT_VALID) {
 			player.sendTitle(new Title(TextFormating.DARK_RED+"Verifica tu correo!", TextFormating.WHITE+"Si no encuentras el correo, busca en spam...", 100, 0, 0));

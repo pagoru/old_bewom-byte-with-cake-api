@@ -35,8 +35,13 @@ public class Chat {
 				for(Player player : src){
 					BewomUser user = BewomUser.getUser(player);
 					if(u.getMpPlayer() != null){
-						if(u.getMpPlayer().getUserName().equals(player.getUserName()) || user.isAdmin()){
+						if(u.getMpPlayer().getUserName().equals(player.getUserName())){
 							sendMessage(player, TextFormating.GRAY + "/" + u.getMpPlayer().getUserName() + formatedMSG);
+							sendMessage(p, TextFormating.GRAY + "/" + u.getMpPlayer().getUserName() + formatedMSG);
+						} else if(user.isAdmin()){
+							if(!p.equals(player)){
+								sendMessage(player, TextFormating.GRAY + "/" + u.getMpPlayer().getUserName() + formatedMSG);
+							}
 						}
 					} else {
 						sendMessage(player, formatedMSG);

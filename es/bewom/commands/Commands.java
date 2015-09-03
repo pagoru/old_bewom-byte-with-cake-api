@@ -50,6 +50,7 @@ public class Commands {
 		reg.registerCommand(new CommandEnderChest());
 		reg.registerCommand(new CommandMp());
 		reg.registerCommand(new CommandAmigos());
+		reg.registerCommand(new CommandPokeHeal());
 		
 	}
 }

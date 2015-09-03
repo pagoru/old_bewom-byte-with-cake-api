@@ -27,7 +27,8 @@ public class DeniedBlocks {
 	public static final String[] DENIED_INTERACT = {
 			"potion",
 			"Sunstone",
-			"Leafstone"
+			"Leafstone",
+			"enderpearl"
 	};
 	
 	public static final String[] DENIED_INTERACT_INTERIOR = {
