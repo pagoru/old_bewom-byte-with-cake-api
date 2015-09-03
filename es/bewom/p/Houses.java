@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.cakepowered.api.base.Game;
 import org.cakepowered.api.base.Player;
@@ -68,6 +69,7 @@ public class Houses {
 				}
 				//compra y venta
 				House hou = null;
+				House houOwner = null;
 				int o = 0;
 				for(House h : houses){
 					if(h.getOwner() != null){
@@ -78,38 +80,45 @@ public class Houses {
 					if(h.isSignSelected(event.getPosition().getX(), event.getPosition().getY(), event.getPosition().getZ(), p.getLocation().getDimension())){
 						if(h.getOwner() == null){
 							hou = h;
+						} else {
+							houOwner = h;
 						}
 					}
 				}
-				if(o == 1){
-					p.sendMessage(TextFormating.RED + "Aun no puedes tener mas de una casa!"); //cambiar despues de BETA
-				} else if(o == 0){
-					if(hou != null){
-						if(u.houseToBuyConfirm != null){
-							if(u.houseToBuyConfirm.equals(hou)){
-								if(u.canSubstractMoney(hou.getBuyPrice())){
-									u.substractMoney(hou.getBuyPrice());
-									u.houseToBuyConfirm = null;
-									p.sendMessage("Acabas de comprar esta maravillosa casa!");
-									hou.setUuidPropietario(p.getUniqueID().toString());
-									hou.setSoldSign(true);
-									Houses.save();
-								} else {
-									p.sendMessage(TextFormating.RED + "No tienes suficiente dinero! :(");
-									u.houseToBuyConfirm = null;
+				if(houOwner != null){
+					p.sendMessage(TextFormating.GREEN + "La inmobiliaria de " + TextFormating.GRAY + TextFormating.BOLD + "BANKIA");
+					p.sendMessage(TextFormating.GREEN + "Esta propiedad es de " + BewomUser.getUserNameFromUUID(UUID.fromString(houOwner.getOwner())) + ".");
+				} else {
+					if(o == 1){
+						p.sendMessage(TextFormating.RED + "Aun no puedes tener mas de una casa!"); //cambiar despues de BETA
+					} else if(o == 0){
+						if(hou != null){
+							if(u.houseToBuyConfirm != null){
+								if(u.houseToBuyConfirm.equals(hou)){
+									if(u.canSubstractMoney(hou.getBuyPrice())){
+										u.substractMoney(hou.getBuyPrice());
+										u.houseToBuyConfirm = null;
+										p.sendMessage(TextFormating.GREEN + "Acabas de comprar esta maravillosa casa!");
+										hou.setUuidPropietario(p.getUniqueID().toString());
+										hou.setSoldSign(true);
+										Houses.save();
+									} else {
+										p.sendMessage(TextFormating.RED + "No tienes suficiente dinero! :(");
+										u.houseToBuyConfirm = null;
+									}
+									return;
 								}
-								return;
 							}
+							
+							p.sendMessage(TextFormating.GREEN + "La inmobiliaria de " + TextFormating.GRAY + TextFormating.BOLD + "BANKIA");
+							p.sendMessage(TextFormating.GREEN + "Esta casa cuesta " + hou.getBuyPrice() + " woms.");
+							p.sendMessage(TextFormating.RED + "Si quieres comprar esta casa, haz click de nuevo.");
+							p.sendMessage(TextFormating.GREEN + "Por cierto, es muy luminosa...");
+							u.houseToBuyConfirm = hou;
+							
 						}
 						
-						p.sendMessage(TextFormating.GREEN + "La inmobiliaria de " + TextFormating.GRAY + TextFormating.BOLD + "BANKIA");
-						p.sendMessage(TextFormating.GREEN + "Esta casa cuesta " + hou.getBuyPrice() + " woms.");
-						p.sendMessage(TextFormating.RED + "Si quieres comprar esta casa, haz click de nuevo.");
-						p.sendMessage(TextFormating.GREEN + "Por cierto, es muy luminosa...");
-						u.houseToBuyConfirm = hou;
-						
 					}
-					
 				}
 			}
 		}

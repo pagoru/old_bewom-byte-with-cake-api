@@ -103,8 +103,8 @@ public class CommandAmigos extends CommandBase {
 					}
 				} else if(args[0].equals("eliminar")){
 					user.deleteFriendUUID(pUUID);
-					if(BewomUser.getUser(user.getUUID()) != null){
-						BewomUser.getUser(user.getUUID()).deleteFriendUUID(user.getUUID());
+					if(BewomUser.getUser(pUUID) != null){
+						BewomUser.getUser(pUUID).deleteFriendUUID(user.getUUID());
 					}
 					player.sendMessage(TextMessages.FRIENDS_NOT_FRIENDS + args[1] + ".");
 				}

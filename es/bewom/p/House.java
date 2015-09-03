@@ -29,8 +29,6 @@ public class House {
 	@Expose
 	private int buyPrice;
 	@Expose
-	private List<String> friends = new ArrayList<String>();;
-	@Expose
 	private double signX;
 	@Expose
 	private double signY;
@@ -52,20 +50,6 @@ public class House {
 		this.selectSign = false;
 		this.sellPrice = sellPrice;
 		this.buyPrice = buyPrice;
-	}
-	
-	public void addFriend(String uuid){
-		if(!friends.contains(uuid)){
-			if(this.friends == null){
-				friends = new ArrayList<String>();
-			}
-			this.friends.add(uuid);
-			Houses.save();
-		}
-	}
-	public void removeFriend(String uuid){
-		this.friends.remove(uuid);
-		Houses.save();
 	}
 	public void sellHouse(Player p){
 		this.uuidOwner = null;
@@ -106,9 +90,6 @@ public class House {
 	public int getBuyPrice() {
 		return buyPrice;
 	}
-	public List<String> getFriends() {
-		return friends;
-	}
 	
 	public void setPlayer(Player player) {
 		this.player = player;
@@ -128,9 +109,6 @@ public class House {
 	}
 	public void setBuyPrice(int buyPrice) {
 		this.buyPrice = buyPrice;
-	}
-	public void setFriends(List<String> friends) {
-		this.friends = friends;
 	}
 
 	public boolean isSelectDoor() {

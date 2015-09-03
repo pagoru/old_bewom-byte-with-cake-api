@@ -26,8 +26,6 @@ public class CommandCasa extends CommandBase {
 	public List<String> addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
 		List<String> tab = new ArrayList<String>();
 		if(args.length == 1){
-			tab.add("añadir");
-			tab.add("eliminar");
 			tab.add("vender");
 		} else if(args.length == 2){
 			tab = BewomUser.getPlayersUsernameRegistered();
@@ -62,18 +60,7 @@ public class CommandCasa extends CommandBase {
 		}
 		
 		if(house != null){
-			if(args.length == 2){
-				String uuid = BewomUser.getUUIDName(args[1]);
-				if(args[0].equals("añadir")){
-					house.addFriend(uuid);
-					player.sendMessage(TextFormating.RED + "Has añadido correctamente a " + args[1] + ".");
-					Chat.sendMessage(player, null, "/casa añadir " + args[1]);
-				} else if(args[0].equals("eliminar")){
-					house.removeFriend(uuid);
-					player.sendMessage(TextFormating.RED + "Has eliminado correctamente a " + args[1] + ".");
-					Chat.sendMessage(player, null, "/casa eliminar " + args[1]);
-				}
-			} else if(args.length == 1) {
+			if(args.length == 1) {
 				if(args[0].equals("vender")){
 					house.sellHouse(player);
 					player.sendMessage(TextFormating.RED + "Has vendido la casa por " + house.getSellPrice() + " woms.");

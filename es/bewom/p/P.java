@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.cakepowered.api.base.Game;
 import org.cakepowered.api.base.Player;
@@ -24,6 +25,7 @@ import com.google.gson.GsonBuilder;
 
 import es.bewom.BewomByte;
 import es.bewom.centrospokemon.CentroPokemon;
+import es.bewom.user.BewomUser;
 
 public class P {
 	
@@ -148,9 +150,11 @@ public class P {
 					if(uuid.equals(h.getOwner())){
 						return true;
 					}
-					for (int j = 0; j < h.getFriends().size(); j++) {
-						if(uuid.equals(h.getFriends().get(j))){
-							return true;
+					if(h.getOwner() != null){
+						for (UUID uuid1 : BewomUser.getUser(p.getUniqueID()).getFriends()) {
+							if(uuid1.equals(UUID.fromString(h.getOwner()))){
+								return true;
+							}
 						}
 					}
 					p.sendMessage(TextFormating.RED + "La puerta esta cerrada!");
