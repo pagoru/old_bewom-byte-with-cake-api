@@ -6,6 +6,7 @@ import java.util.List;
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
+import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
 
@@ -15,11 +16,12 @@ import es.bewom.p.House;
 import es.bewom.p.Houses;
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
+import es.bewom.util.Dimensions;
 
 public class CommandCasa extends CommandBase {
 
 	public CommandCasa() {
-		super("casa");
+		super("casa", "home");
 	}
 	
 	@Override
@@ -46,9 +48,7 @@ public class CommandCasa extends CommandBase {
 
 	@Override
 	public void execute(CommandSender commandSender, String[] args) {
-		
 		Player player = commandSender.getPlayer();
-		
 		House house = null;
 		for(House h : Houses.houses){
 			if(h.getOwner() != null){
@@ -60,15 +60,27 @@ public class CommandCasa extends CommandBase {
 		}
 		
 		if(house != null){
-			if(args.length == 1) {
+			if(args.length == 0){
+				PreciseLocation preciseL = null;
+				for(PreciseLocation pl : house.getDoor().getPreciseLocations()){
+					if(pl.getDimension() == Dimensions.INTERIORES){
+						preciseL = pl;
+					}
+				}
+				if(preciseL != null){
+					player.setLocation(preciseL);
+					player.sendMessage(TextFormating.RED + "Has sido teletransportado a tu casa!");
+				} else {
+					player.sendMessage(TextFormating.RED + "No has podido ser teletransportado a tu casa por un error 404!");
+				}
+			} else if(args.length == 1) {
 				if(args[0].equals("vender")){
 					house.sellHouse(player);
 					player.sendMessage(TextFormating.RED + "Has vendido la casa por " + house.getSellPrice() + " woms.");
 					Chat.sendMessage(player, null, "/casa vender");
 				}
 			}else {
-				player.sendMessage(TextFormating.RED + "/casa <añadir|eliminar> <usuario>");
-				player.sendMessage(TextFormating.RED + "/casa <vender>");
+				player.sendMessage(TextFormating.RED + "/casa vender");
 			}
 		} else {
 			player.sendMessage(TextFormating.RED + "No tienes casa...");

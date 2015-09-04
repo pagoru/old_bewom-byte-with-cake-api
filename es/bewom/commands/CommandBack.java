@@ -1,16 +1,24 @@
 package es.bewom.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
+import org.cakepowered.api.util.PreciseLocation;
+import org.cakepowered.api.util.Vector3i;
+import org.cakepowered.api.util.text.TextFormating;
 
+import es.bewom.BewomByte;
 import es.bewom.chat.Chat;
+import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
-public class CommandReload extends CommandBase {
+public class CommandBack extends CommandBase {
 	
-	public CommandReload() {
-		super("reload");
+	public CommandBack() {
+		super("back");
 	}
 	
 	@Override
@@ -28,9 +36,11 @@ public class CommandReload extends CommandBase {
 		
 		Player player = commandSender.getPlayer();
 		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
-		System.gc();
-		Chat.sendMessage(player, null, "/reload");
-		
+		BewomUser user = BewomUser.getUser(player);
+		PreciseLocation pl = user.getBack();
+		user.setBack();
+		if(pl != null){
+			player.setLocation(pl);
+		}
 	}
-
 }

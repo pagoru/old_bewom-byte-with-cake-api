@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.scoreboard.Scoreboard;
 import org.cakepowered.api.scoreboard.Team;
+import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.util.Title;
 import org.cakepowered.api.util.text.TextFormating;
 import org.cakepowered.api.util.text.TextModifier;
@@ -45,9 +46,6 @@ public class BewomUser {
 	private Player player;
 	private UUID uuid;
 	
-	private boolean isAfk;
-	private int lastMove;
-	
 	private int permissionLevel;
 	
 	public int updateState = 300;
@@ -74,7 +72,13 @@ public class BewomUser {
 	
 	private List<UUID> friends = new ArrayList<UUID>();
 	private List<UUID> friendsPetitions = new ArrayList<UUID>();
+	
+	private float afkYaw;
+	private float afkPitch;
+	private long afk = 0;
 
+	private PreciseLocation back;
+	
 	/**
 	 * Constructor. Creates a {@link BewomUser} from a player.
 	 * @param player to create the {@link BewomUser} from.
@@ -84,7 +88,6 @@ public class BewomUser {
 		this.loginDate = new Date().getTime();
 		this.player = player;
 		this.uuid = player.getUniqueID();
-		lastMove = plugin.getGame().getServer().getRunningTimeTicks();
 		registration = checkWebsiteRegistration(); //WebRegistration.VALID
 		permissionLevel = checkPermissionLevel(); //PERM_LEVEL_USER
 		
@@ -96,6 +99,31 @@ public class BewomUser {
 		
 		this.friends = getAllFriends();
 		this.friendsPetitions = getAllFriendsPetitions();
+	}
+	
+	public PreciseLocation getBack() {
+		return back;
+	}
+
+	public void setBack() {
+		this.back = player.getLocation();
+	}
+
+	public boolean isAfk() {
+		if(afk >= 72000){ //10 minutos en ticks
+			return true;
+		}
+		return false;
+	}
+	public void addAfkTime(){
+		this.afk += 1;
+	}
+	public void setAfkYawAndPitch(float Yaw, float Pitch) {
+		if(this.afkPitch != Pitch && this.afkYaw != Yaw){
+			this.afk = 0;
+			this.afkPitch = Pitch;
+			this.afkYaw = Yaw;
+		}
 	}
 	
 	private List<UUID> getAllFriends(){
@@ -337,50 +365,12 @@ public class BewomUser {
 		}
 	}
 
-		/**
-	 * Returns the {@link Player} attached to this {@link BewomUser}.
-	 * @return {@link Player}
-	 */
 	public Player getPlayer() {
 		return player;
 	}
-	
-	/**
-	 * Returns the name of the {@link Player} attached to this {@link BewomUser}.
-	 * @return {@link String}
-	 */
 	public UUID getUUID() {
 		return uuid;
 	}
-	
-	/**
-	 * Returns whether this {@link BewomUser} is Afk or not.
-	 * @return boolean
-	 */
-	public boolean isAfk() {
-		return isAfk;
-	}
-	
-	/**
-	 * Set the last time the player moved.
-	 * @param time in ticks.
-	 */
-	public void setLastMove(int time) {
-		this.lastMove = time;
-	}
-	
-	/**
-	 * Get the last time the player moved.
-	 * @return Last time player moved.
-	 */
-	public int getLastMove() {
-		return lastMove;
-	}
-	
-	/**
-	 * Returns the {@link WebRegistration} value of the player.
-	 * @return Registration value.
-	 */
 	public int getRegistration() {
 		return registration;
 	}

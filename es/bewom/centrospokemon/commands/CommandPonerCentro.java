@@ -21,6 +21,16 @@ public class CommandPonerCentro extends CommandBase {
 	public String getCommandUsage(CommandSender commandSender) {
 		return "Establecer un centro pokemon en la posicion actual.";
 	}
+	
+	@Override
+	public boolean canBeUsedBy(CommandSender commandSender){
+		if(commandSender.getPlayer() != null){
+			if(BewomUser.getUser(commandSender.getPlayer()).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
+				return false;
+			}
+		}
+		return true;
+	}
 
 	@Override
 	public void execute(CommandSender commandSender, String[] args) {

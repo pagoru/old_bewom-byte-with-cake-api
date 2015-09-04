@@ -16,6 +16,16 @@ public class CommandTpx extends CommandBase{
 	public CommandTpx() {
 		super("tpx");
 	}
+	
+	@Override
+	public boolean canBeUsedBy(CommandSender commandSender){
+		if(commandSender.getPlayer() != null){
+			if(BewomUser.getUser(commandSender.getPlayer()).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
+				return false;
+			}
+		}
+		return true;
+	}
 
 	@Override
 	public void execute(CommandSender commandSender, String[] args) {
@@ -31,6 +41,7 @@ public class CommandTpx extends CommandBase{
 			p.sendMessage("La dimension "+i+" no existe");
 			return; 
 		}
+		BewomUser.getUser(p).setBack();
 		PreciseLocation pre = new PreciseLocation(l.getDimension(), new Vector3d(0, 128, 0), p.getLocation().getYaw(), p.getLocation().getPitch());
 		p.setLocation(pre);
 		p.sendMessage(TextFormating.RED + "Te has teletransportado a la dimensión " + args[0] + ".");

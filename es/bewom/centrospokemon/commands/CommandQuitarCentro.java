@@ -19,6 +19,16 @@ public class CommandQuitarCentro extends CommandBase {
 	public String getCommandUsage(CommandSender commandSender) {
 		return "Eliminar el centro pokemon de la posición actual.";
 	}
+	
+	@Override
+	public boolean canBeUsedBy(CommandSender commandSender){
+		if(commandSender.getPlayer() != null){
+			if(BewomUser.getUser(commandSender.getPlayer()).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
+				return false;
+			}
+		}
+		return true;
+	}
 
 	@Override
 	public void execute(CommandSender commandSender, String[] args) {

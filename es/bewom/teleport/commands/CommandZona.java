@@ -9,10 +9,20 @@ import es.bewom.teleport.Homes;
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
-public class CommandHome extends CommandBase {
+public class CommandZona extends CommandBase {
 
-	public CommandHome() {
-		super("home");
+	public CommandZona() {
+		super("zona");
+	}
+	
+	@Override
+	public boolean canBeUsedBy(CommandSender commandSender){
+		if(commandSender.getPlayer() != null){
+			if(BewomUser.getUser(commandSender.getPlayer()).getPermissionLevel() < BewomUser.PERM_LEVEL_VIP){
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	@Override
@@ -29,9 +39,9 @@ public class CommandHome extends CommandBase {
 		if(args.length == 0){
 			if(Homes.getHome(p) != null){
 				p.setLocation(Homes.getHome(p).getLocation());
-				p.sendMessage(TextFormating.RED + "Has sido teletransportado a tu casa!");
+				p.sendMessage(TextFormating.RED + "Has sido teletransportado a tu ona!");
 			} else {
-				p.sendMessage(TextFormating.RED + "No tienes ninguna casa establecida!");
+				p.sendMessage(TextFormating.RED + "No tienes ninguna zona establecida!");
 			}
 		}
 		

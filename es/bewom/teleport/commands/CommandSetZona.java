@@ -10,10 +10,20 @@ import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 import es.bewom.util.Dimensions;
 
-public class CommandSetHome extends CommandBase {
+public class CommandSetZona extends CommandBase {
 
-	public CommandSetHome() {
-		super("sethome");
+	public CommandSetZona() {
+		super("setzona");
+	}
+	
+	@Override
+	public boolean canBeUsedBy(CommandSender commandSender){
+		if(commandSender.getPlayer() != null){
+			if(BewomUser.getUser(commandSender.getPlayer()).getPermissionLevel() < BewomUser.PERM_LEVEL_VIP){
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	@Override
@@ -30,12 +40,12 @@ public class CommandSetHome extends CommandBase {
 		if(args.length == 0){
 			if(p.getDimensionID() != Dimensions.INTERIORES){
 				Homes.setHome(p);
-				p.sendMessage(TextFormating.RED + "Se ha establecido tu casa correctamente.");
+				p.sendMessage(TextFormating.RED + "Se ha establecido tu zona correctamente.");
 			} else {
-				p.sendMessage(TextFormating.RED + "No se puede establecer una casa en este mundo.");
+				p.sendMessage(TextFormating.RED + "No se puede establecer una zona en este mundo.");
 			}
 		} else {
-			p.sendMessage(TextFormating.RED + "No se puede establecer una casa en este mundo.");
+			p.sendMessage(TextFormating.RED + "No se puede establecer una zona en este mundo.");
 		}
 		
 	}

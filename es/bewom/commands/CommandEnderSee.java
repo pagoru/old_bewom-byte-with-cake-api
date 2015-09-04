@@ -21,6 +21,16 @@ public class CommandEnderSee extends CommandBase{
 	}
 	
 	@Override
+	public boolean canBeUsedBy(CommandSender commandSender){
+		if(commandSender.getPlayer() != null){
+			if(BewomUser.getUser(commandSender.getPlayer()).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	@Override
 	public List<String> addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
 		return args.length == 1 ? CommandUtil.getStringsMachingLastWord(args, CommandUtil.getOnlinePlayers(sender.getWorld())) : null;
 	}

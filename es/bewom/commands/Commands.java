@@ -12,8 +12,8 @@ import es.bewom.economy.commands.CommandShop;
 import es.bewom.p.commands.CommandCasa;
 import es.bewom.p.commands.CommandH;
 import es.bewom.p.commands.CommandP;
-import es.bewom.teleport.commands.CommandHome;
-import es.bewom.teleport.commands.CommandSetHome;
+import es.bewom.teleport.commands.CommandZona;
+import es.bewom.teleport.commands.CommandSetZona;
 import es.bewom.teleport.commands.CommandTPA;
 
 public class Commands {
@@ -45,12 +45,13 @@ public class Commands {
 		reg.registerCommand(new CommandPlayerInventory());
 		reg.registerCommand(new CommandVanished());
 		reg.registerCommand(new CommandTPA());
-		reg.registerCommand(new CommandHome());
-		reg.registerCommand(new CommandSetHome());
+		reg.registerCommand(new CommandZona());
+		reg.registerCommand(new CommandSetZona());
 		reg.registerCommand(new CommandEnderChest());
 		reg.registerCommand(new CommandMp());
 		reg.registerCommand(new CommandAmigos());
 		reg.registerCommand(new CommandPokeHeal());
+		reg.registerCommand(new CommandBack());
 		
 	}
 }

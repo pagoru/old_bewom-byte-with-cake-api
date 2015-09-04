@@ -23,6 +23,16 @@ public class CommandTp extends CommandBase {
 	}
 	
 	@Override
+	public boolean canBeUsedBy(CommandSender commandSender){
+		if(commandSender.getPlayer() != null){
+			if(BewomUser.getUser(commandSender.getPlayer()).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	@Override
 	public List<String> addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
 		Player player = sender.getPlayer();
 		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return null;	
@@ -63,7 +73,7 @@ public class CommandTp extends CommandBase {
 		
 		if(args.length == 1){
 			if(BewomByte.game.getServer().getPlayer(args[0]) != null){
-				
+				BewomUser.getUser(player).setBack();
 				Player to = BewomByte.game.getServer().getPlayer(args[0]);
 				player.setLocation(to.getLocation());
 				player.sendMessage(TextFormating.RED + "Acabas de teletransportarte a " + args[0] + ".");

@@ -1,5 +1,8 @@
 package es.bewom.p;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.util.PreciseLocation;
 
@@ -67,6 +70,13 @@ public class Door {
 	
 	public PreciseLocation getPreciseLocation(){
 		return new PreciseLocation(dimension[pos], x[pos] + 0.5, y[pos], z[pos] + 0.5, yaw[pos], pitch[pos]);
+	}
+	
+	public List<PreciseLocation> getPreciseLocations(){
+		List<PreciseLocation> pl = new ArrayList<PreciseLocation>();
+		pl.add(new PreciseLocation(dimension[0], x[0] + 0.5, y[0], z[0] + 0.5, yaw[0], pitch[0]));
+		pl.add(new PreciseLocation(dimension[1], x[1] + 0.5, y[1], z[1] + 0.5, yaw[1], pitch[1]));
+		return pl;
 	}
 	
 	public Door setDoorPos(int pos){

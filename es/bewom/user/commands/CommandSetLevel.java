@@ -16,12 +16,17 @@ public class CommandSetLevel extends CommandBase {
 	public CommandSetLevel() {
 		super("perms", "lvl", "perm");
 	}
-
+	
 	@Override
-	public String getCommandUsage(CommandSender commandSender) {
-		return "Establecer el nivel de permisos a un jugador.";
+	public boolean canBeUsedBy(CommandSender commandSender){
+		if(commandSender.getPlayer() != null){
+			if(BewomUser.getUser(commandSender.getPlayer()).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
+				return false;
+			}
+		}
+		return true;
 	}
-
+	
 	@Override
 	public void execute(CommandSender commandSender, String[] args) {
 		boolean permissions = false;

@@ -6,6 +6,7 @@ import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
 import org.cakepowered.api.util.Vector3i;
+import org.cakepowered.api.util.text.TextFormating;
 
 import es.bewom.user.BewomUser;
 
@@ -26,7 +27,7 @@ public class CommandDinero extends CommandBase {
 		
 		Player player = commandSender.getPlayer();
 		
-		String message = "Tienes " + BewomUser.getMoney(player.getUniqueID()) + " woms.";	
+		String message = TextFormating.GREEN + "Tienes " + BewomUser.getMoney(player.getUniqueID()) + " woms.";	
 		player.sendMessage(message);
 	}
 

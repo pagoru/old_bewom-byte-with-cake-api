@@ -28,10 +28,12 @@ import es.bewom.economy.Shops;
 import es.bewom.p.House;
 import es.bewom.p.Houses;
 import es.bewom.p.P;
+import es.bewom.user.AwayFromKeyboard;
 import es.bewom.user.BewomUser;
 import es.bewom.user.DeniedBlocks;
 import es.bewom.user.PokemonCatcher;
 import es.bewom.user.WebRegistration;
+import es.bewom.util.CollectPlayersWeb;
 import es.bewom.util.Dimensions;
 
 public class EventsHandler {
@@ -230,11 +232,15 @@ public class EventsHandler {
 	public HashMap<UUID, PreciseLocation> position_map = new HashMap<UUID, PreciseLocation>();
 	
 	@EventSuscribe
-	public void tick(ServerUpdateEvent event){		
+	public void tick(ServerUpdateEvent event){
+		Date date = new Date();
 		Collection<Player> players = event.getServer().getOnlinePlayers();
+		if(!BewomByte.DEBUG){
+			CollectPlayersWeb.on(players, date);
+		}
 		for(Player p : players){
 			BewomUser user = BewomUser.getUser(p);
-			Date date = new Date();
+			AwayFromKeyboard.AFK(user);
 			long d = ((date.getTime()/1000) - (user.loginDate/1000));
 			
 			if (user.getRegistration() == WebRegistration.VALID) {
