@@ -37,7 +37,8 @@ public class DeniedBlocks {
 	};
 	
 	public static final String[] DENIED_PLACE_INTERIOR = {
-			"bike"
+			"bike",
+			"Ranch"
 	};
 	
 	public static final String[] ALLOWED_INTERACT_EXTERIOR = {

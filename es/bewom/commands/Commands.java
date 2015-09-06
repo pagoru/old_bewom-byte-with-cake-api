@@ -12,6 +12,7 @@ import es.bewom.economy.commands.CommandShop;
 import es.bewom.p.commands.CommandCasa;
 import es.bewom.p.commands.CommandH;
 import es.bewom.p.commands.CommandP;
+import es.bewom.p.commands.CommandRanch;
 import es.bewom.teleport.commands.CommandZona;
 import es.bewom.teleport.commands.CommandSetZona;
 import es.bewom.teleport.commands.CommandTPA;
@@ -52,6 +53,7 @@ public class Commands {
 		reg.registerCommand(new CommandAmigos());
 		reg.registerCommand(new CommandPokeHeal());
 		reg.registerCommand(new CommandBack());
+		reg.registerCommand(new CommandRanch());
 		
 	}
 }

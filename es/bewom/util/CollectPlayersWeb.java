@@ -17,9 +17,9 @@ public class CollectPlayersWeb {
 			BewomUser.m.executeQuery("DELETE FROM `PlayersOnLine`", null);
 			BewomUser.m.executeQuery("INSERT INTO `serverPing`(`lastPing`) VALUES ('" + (date.getTime()/1000) +"')", null);
 			if(players.size() != 0){
-				String pls = "INSERT INTO `bewom.es`.`PlayersOnLine` (`name`) VALUES ('";
+				String pls = "INSERT INTO `PlayersOnLine` (`name`) VALUES ";
 				for (Player p : players) {
-					pls += p.getUserName() + "'), ";
+					pls += "('" + p.getUserName() + "'), ";
 				}
 				pls = pls.substring(0, pls.length() - 2);
 				BewomUser.m.executeQuery(pls, null);

@@ -28,6 +28,7 @@ import es.bewom.economy.Shops;
 import es.bewom.p.House;
 import es.bewom.p.Houses;
 import es.bewom.p.P;
+import es.bewom.p.Ranchs;
 import es.bewom.user.AwayFromKeyboard;
 import es.bewom.user.BewomUser;
 import es.bewom.user.DeniedBlocks;
@@ -62,6 +63,9 @@ public class EventsHandler {
 		
 		CentroPokemon cp = CentroManager.getClosest(player.getLocation());
 		if(cp != null) {
+			if(player.getLocation().getDimension() != Dimensions.EXTERIORES){
+				cp = CentroManager.centros.get(0);
+			}
 			player.setLocation(cp.getLocation());
 		}
 		
@@ -120,6 +124,9 @@ public class EventsHandler {
 		CentroPokemon cp = CentroManager.getClosest(player.getLocation());
 
 		if(cp != null) {
+			if(player.getLocation().getDimension() != Dimensions.EXTERIORES){
+				cp = CentroManager.centros.get(0);
+			}
 			player.setLocation(cp.getLocation());
 		}
 		
@@ -152,7 +159,7 @@ public class EventsHandler {
 			DeniedBlocks.on(game, event);
 		}
 		
-		
+		Ranchs.on(event);
 		Houses.on(game, event);
 		P.on(game, event);
 	}
@@ -187,7 +194,7 @@ public class EventsHandler {
 		Player player = event.getPlayer();
 		
 		playerUpdateGameMode(player);
-
+				
 		if(!player.isOP()){
 			DeniedBlocks.on(game, event);
 		}
@@ -205,6 +212,7 @@ public class EventsHandler {
 			DeniedBlocks.on(game, event);
 		}
 		
+		Ranchs.on(event);
 		P.on(game, event);
 		
 	}

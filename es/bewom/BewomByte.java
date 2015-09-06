@@ -14,6 +14,7 @@ import es.bewom.commands.Commands;
 import es.bewom.imc.BewomMessageListener;
 import es.bewom.p.Houses;
 import es.bewom.p.P;
+import es.bewom.p.Ranchs;
 import es.bewom.teleport.Homes;
 import es.bewom.teleport.TPManager;
 import es.bewom.user.BewomUser;
@@ -28,7 +29,7 @@ import es.bewom.user.BewomUser;
 
 public class BewomByte {
 	
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 
 	public static Game game;
 	
@@ -62,6 +63,7 @@ public class BewomByte {
 		P.init(this);
 		Houses.init(this);
 		Homes.init();
+		Ranchs.init(this);
 		
 		game.getEventRegistry().registerEventListener(new EventsHandler(game));
 		game.getWorldManager().createFlatWorld(2);
