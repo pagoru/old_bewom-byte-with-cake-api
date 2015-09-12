@@ -35,10 +35,6 @@ public class BewomUser {
 	public static final int PERM_LEVEL_VIP = 2;
 	public static final int PERM_LEVEL_USER = 1;
 	
-	private static BewomByte plugin;
-	
-	public static MySQL m = new MySQL();
-	
 	static HashMap<UUID, BewomUser> onlineUsers = new HashMap<UUID, BewomUser>();
 	
 	private boolean logout = false;
@@ -91,7 +87,7 @@ public class BewomUser {
 		registration = checkWebsiteRegistration(); //WebRegistration.VALID
 		permissionLevel = checkPermissionLevel(); //PERM_LEVEL_USER
 		
-		String hash = m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueID() + "'", "hash").get(0);
+		String hash = BewomByte.m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueID() + "'", "hash").get(0);
 		if(!hash.equals("")){
 			registerLink += hash;
 			getRegisterLink = true;
@@ -128,8 +124,8 @@ public class BewomUser {
 	
 	private List<UUID> getAllFriends(){
 		List<UUID> friends = new ArrayList<UUID>();
-		List<String> uis = m.executeQuery("SELECT * FROM `users_friends` WHERE `uuid`='" + player.getUniqueID() + "' AND `peticion`='1'", "friend_uuid");
-		List<String> uis2 = m.executeQuery("SELECT * FROM `users_friends` WHERE `friend_uuid`='" + player.getUniqueID() + "' AND `peticion`='1'", "uuid");
+		List<String> uis = BewomByte.m.executeQuery("SELECT * FROM `users_friends` WHERE `uuid`='" + player.getUniqueID() + "' AND `peticion`='1'", "friend_uuid");
+		List<String> uis2 = BewomByte.m.executeQuery("SELECT * FROM `users_friends` WHERE `friend_uuid`='" + player.getUniqueID() + "' AND `peticion`='1'", "uuid");
 		for (int i = 0; i < uis.size(); i++) {
 			if(!uis.get(i).equals(""))
 			friends.add(UUID.fromString(uis.get(i)));
@@ -143,7 +139,7 @@ public class BewomUser {
 	
 	private List<UUID> getAllFriendsPetitions(){
 		List<UUID> friends = new ArrayList<UUID>();
-		List<String> uis = m.executeQuery("SELECT * FROM `users_friends` WHERE `friend_uuid`='" + player.getUniqueID() + "' AND `peticion`='0'", "uuid");
+		List<String> uis = BewomByte.m.executeQuery("SELECT * FROM `users_friends` WHERE `friend_uuid`='" + player.getUniqueID() + "' AND `peticion`='0'", "uuid");
 		for (int i = 0; i < uis.size(); i++) {
 			if(!uis.get(i).equals(""))
 			friends.add(UUID.fromString(uis.get(i)));
@@ -158,28 +154,36 @@ public class BewomUser {
 		return friends;
 	}
 	
+	public List<String> getFriendsNames(){
+		List<String> f = new ArrayList<String>();
+		for (UUID friend : friends) {
+			f.add(getUserNameFromUUID(friend));
+		}
+		return f;
+	}
+	
 	public void deleteFriendUUID(UUID p){
-		m.executeQuery("DELETE FROM `users_friends` WHERE `uuid`='" + player.getUniqueID() + "' AND  `friend_uuid`='" + p.toString() + "'", null);
-		m.executeQuery("DELETE FROM `users_friends` WHERE `uuid`='" + p.toString() + "' AND `friend_uuid`='" + player.getUniqueID() + "'", null);
+		BewomByte.m.executeQuery("DELETE FROM `users_friends` WHERE `uuid`='" + player.getUniqueID() + "' AND  `friend_uuid`='" + p.toString() + "'", null);
+		BewomByte.m.executeQuery("DELETE FROM `users_friends` WHERE `uuid`='" + p.toString() + "' AND `friend_uuid`='" + player.getUniqueID() + "'", null);
 		this.friends.remove(p);
 	}
 	
 	public void acceptFriendUUID(UUID p){
-		List<String> l = m.executeQuery("SELECT * FROM `users_friends` WHERE ((`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p.toString() + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p.toString() + "')) AND `peticion`='0'", "uuid");
+		List<String> l = BewomByte.m.executeQuery("SELECT * FROM `users_friends` WHERE ((`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p.toString() + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p.toString() + "')) AND `peticion`='0'", "uuid");
 		if(l.get(0).equals("")){
-			m.executeQuery("INSERT INTO `users_friends`(`uuid`, `friend_uuid`, `peticion`) VALUES ('" + player.getUniqueID() + "','" + p +"','1')", null);
+			BewomByte.m.executeQuery("INSERT INTO `users_friends`(`uuid`, `friend_uuid`, `peticion`) VALUES ('" + player.getUniqueID() + "','" + p +"','1')", null);
 		} else {
-			m.executeQuery("UPDATE `users_friends` SET `peticion`='1' WHERE (`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p + "')", "uuid");
+			BewomByte.m.executeQuery("UPDATE `users_friends` SET `peticion`='1' WHERE (`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p + "')", "uuid");
 		}
 		this.friends.add(p);
 		this.friendsPetitions.remove(p);
 	}
 	
 	public int acceptFriendOnlyIfApplicationWithUUID(UUID p, boolean yes){
-		List<String> l = m.executeQuery("SELECT * FROM `users_friends` WHERE (`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p.toString() + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p.toString() + "')", "peticion");
+		List<String> l = BewomByte.m.executeQuery("SELECT * FROM `users_friends` WHERE (`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p.toString() + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p.toString() + "')", "peticion");
 		if(l.get(0).equals("0")) {
 			if(yes){
-				m.executeQuery("UPDATE `users_friends` SET `peticion`='1' WHERE (`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p + "')", "uuid");
+				BewomByte.m.executeQuery("UPDATE `users_friends` SET `peticion`='1' WHERE (`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p + "')", "uuid");
 				this.friends.add(p);
 				this.friendsPetitions.remove(p);
 				if(BewomUser.getUser(p) != null){
@@ -188,7 +192,7 @@ public class BewomUser {
 				}
 				return 1;
 			} else {
-				m.executeQuery("DELETE FROM `users_friends` WHERE ((`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p + "'))", "uuid");
+				BewomByte.m.executeQuery("DELETE FROM `users_friends` WHERE ((`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p + "'))", "uuid");
 				this.friendsPetitions.remove(p);
 				return -1;
 			}
@@ -201,10 +205,10 @@ public class BewomUser {
 	
 	public int addApplicationFriendUUID(UUID p){
 		if(!player.getUniqueID().toString().equals(p.toString())){
-			List<String> f = m.executeQuery("SELECT * FROM `users_friends` WHERE ((`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p.toString() + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p.toString() + "')) AND `peticion`='0'", "uuid");
-			List<String> ff = m.executeQuery("SELECT * FROM `users_friends` WHERE `friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p.toString() + "' AND `peticion`='0'", "uuid");
+			List<String> f = BewomByte.m.executeQuery("SELECT * FROM `users_friends` WHERE ((`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p.toString() + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p.toString() + "')) AND `peticion`='0'", "uuid");
+			List<String> ff = BewomByte.m.executeQuery("SELECT * FROM `users_friends` WHERE `friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p.toString() + "' AND `peticion`='0'", "uuid");
 			
-			List<String> f2 = m.executeQuery("SELECT * FROM `users_friends` WHERE ((`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p.toString() + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p.toString() + "')) AND `peticion`='1'", "uuid");
+			List<String> f2 = BewomByte.m.executeQuery("SELECT * FROM `users_friends` WHERE ((`uuid`='" + player.getUniqueID() + "' AND `friend_uuid`='" + p.toString() + "') OR (`friend_uuid`='" + player.getUniqueID() + "' AND `uuid`='" + p.toString() + "')) AND `peticion`='1'", "uuid");
 			if(!f2.get(0).equals("")){
 				return 3;
 			} else {
@@ -213,7 +217,7 @@ public class BewomUser {
 					return 2;
 				} else {
 					if(f.get(0).equals("")){
-						m.executeQuery("INSERT INTO `users_friends` (`uuid`, `friend_uuid`, `peticion`) VALUES ('" + player.getUniqueID() + "', '" + p +"', '0')", null);;
+						BewomByte.m.executeQuery("INSERT INTO `users_friends` (`uuid`, `friend_uuid`, `peticion`) VALUES ('" + player.getUniqueID() + "', '" + p +"', '0')", null);;
 						if(BewomUser.getUser(p) != null){
 							BewomUser.getUser(p).friendsPetitions.remove(player.getUniqueID());
 							BewomUser.getUser(p).friendsPetitions.add(player.getUniqueID());
@@ -230,7 +234,7 @@ public class BewomUser {
 	}
 	
 	public List<UUID> getFriendsUUID() {
-		List<String> friends = m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + player.getUniqueID() + "' AND `peticion`='1'", "friend_uuid");
+		List<String> friends = BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + player.getUniqueID() + "' AND `peticion`='1'", "friend_uuid");
 		List<UUID> friendsUUID = new ArrayList<UUID>();
 		for (int i = 0; i < friends.size(); i++) {
 			friendsUUID.add(UUID.fromString(friends.get(i)));
@@ -267,9 +271,9 @@ public class BewomUser {
 	
 	public void updatePermissions(){
 		
-		String perm = m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "type").get(0);
-		String date = m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "date_type").get(0);
-		String days = m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "days_type").get(0);
+		String perm = BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "type").get(0);
+		String date = BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "date_type").get(0);
+		String days = BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "days_type").get(0);
 		
 		Scoreboard score = player.getWorld().getScoreboard();
 		if(!perm.equals("")){
@@ -290,7 +294,7 @@ public class BewomUser {
 				long ff = day - f;
 				
 				if(ff <= 0){
-					m.executeQuery("UPDATE `users` SET `type`='miembro',`date_type`='" + timestamp.toString() + "',`days_type`='0' WHERE `uuid`='" + player.getUniqueID().toString() + "'", null);
+					BewomByte.m.executeQuery("UPDATE `users` SET `type`='miembro',`date_type`='" + timestamp.toString() + "',`days_type`='0' WHERE `uuid`='" + player.getUniqueID().toString() + "'", null);
 					System.out.println(perm);
 					if(perm.equals(PERM_VIP)){
 						player.sendTitle(new Title(TextFormating.DARK_AQUA+"Se te ha acabado el vip!", TextFormating.WHITE+"Siempre puedes volver a donar... :)", 120, 0, 60));
@@ -382,22 +386,15 @@ public class BewomUser {
 			
 			registerLink += h;
 			
-			m.executeQuery("INSERT INTO `crear`(`uuid`, `user`, `hash`) VALUES ('" + player.getUniqueID() + "', '" + player.getUserName() + "', '" + h + "')", null);
+			BewomByte.m.executeQuery("INSERT INTO `crear`(`uuid`, `user`, `hash`) VALUES ('" + player.getUniqueID() + "', '" + player.getUserName() + "', '" + h + "')", null);
 			getRegisterLink = true;
 		}
 	}
 	
-	/**
-	 * Runs when player joins.
-	 * Grabs {@link WebRegistration} value from web server.
-	 * @return 
-	 */
 	public int checkWebsiteRegistration() {
-		//TODO: Check Registration in the database.
-				
-		String perm = m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueID() + "'", "valid").get(0);
+		String perm = BewomByte.m.executeQuery("SELECT * FROM `crear` WHERE `uuid`='" + player.getUniqueID() + "'", "valid").get(0);
 		if(perm.equals("0")){
-			String perm2 = m.executeQuery("SELECT * FROM `users_info` WHERE `uuid`='" + player.getUniqueID() + "'", "active").get(0);
+			String perm2 = BewomByte.m.executeQuery("SELECT * FROM `users_info` WHERE `uuid`='" + player.getUniqueID() + "'", "active").get(0);
 			if(perm2.equals("1")){
 				player.setGameMode(2);
 				return WebRegistration.VALID;
@@ -466,40 +463,22 @@ public class BewomUser {
 			return "Este grupo no existe.";
 		}
 		this.permissionLevel = level;
-		//TODO: Save to database.	
-		m.executeQuery("UPDATE `users` SET `type`='" + getPermissionType() + "' WHERE `uuid`='" + player.getUniqueID() + "'", null);	
+		BewomByte.m.executeQuery("UPDATE `users` SET `type`='" + getPermissionType() + "' WHERE `uuid`='" + player.getUniqueID() + "'", null);	
 		return null;
 	}
 	
-	/**
-	 * Gets a {@link BewomUser} that is online.
-	 * @param name of the player.
-	 * @return The {@link BewomUser} specified.
-	 */
 	public static BewomUser getUser(UUID uuid) {
 		return onlineUsers.get(uuid);
 	}
 	
-	/**
-	 * Gets a {@link BewomUser} that is online.
-	 * @param player
-	 * @return The {@link BewomUser} or null if not found.
-	 */
 	public static BewomUser getUser(Player player) {
 		return getUser(player.getUniqueID());
 	}
 	
-	/**
-	 * Adds the {@link BewomUser} to the onlineUsers {@link HashMap}
-	 * @param user
-	 */
 	public static void addUser(BewomUser user) {
 		onlineUsers.put(user.getUUID(), user);
 	}
 	
-	/**
-	 * Removes user from the online users list.
-	 */
 	public void remove() {
 		onlineUsers.remove(this.uuid);
 	}
@@ -511,16 +490,6 @@ public class BewomUser {
 		onlineUsers.remove(uuid);
 	}
 	
-	/**
-	 * DO NOT USE.
-	 * This function sets the current plugin.
-	 * This should only be used from BewomByte.class and just once when server starts.
-	 * @param game
-	 */
-	public static void setGame(BewomByte plugin) {
-		BewomUser.plugin = plugin;
-	}
-
 	public String getRegisterLink() {
 		return registerLink;
 	}
@@ -584,22 +553,22 @@ public class BewomUser {
 	}
 	
 	public static int getMoney(UUID uuid2){
-		return Integer.parseInt(m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid2 + "'", "money").get(0));
+		return Integer.parseInt(BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid2 + "'", "money").get(0));
 	}
 	
 	public static int getMoney(String name){
-		return Integer.parseInt(m.executeQuery("SELECT * FROM `users` WHERE `user`='" + name + "'", "money").get(0));
+		return Integer.parseInt(BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `user`='" + name + "'", "money").get(0));
 	}
 	
 	public static void addMoney(UUID uuid, int a){
 		int money = a + getMoney(uuid);
-		m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
+		BewomByte.m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
 	}
 	
 	public static boolean substractMoney(UUID uuid, int a){
 		if(getMoney(uuid) >= a){
 			int money = Math.abs(a - getMoney(uuid));
-			m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
+			BewomByte.m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
 			return true;
 		}
 		return false;
@@ -607,12 +576,12 @@ public class BewomUser {
 	}
 	
 	public int getMoney(){
-		return Integer.parseInt(m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "money").get(0));
+		return Integer.parseInt(BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "money").get(0));
 	}
 	
 	public void addMoney(int a){
 		int money = a + getMoney();
-		m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
+		BewomByte.m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
 	}
 	
 	public boolean canSubstractMoney(int a){
@@ -627,20 +596,20 @@ public class BewomUser {
 		if(getMoney() >= a){
 			money = getMoney() - a;
 		}		
-		m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
+		BewomByte.m.executeQuery("UPDATE `users` SET `money`='" + money + "' WHERE `uuid`='" + uuid + "'", null);
 	}
 	
 	public static List<String> getPlayersUUIDRegistered(){
-		return m.executeQuery("SELECT * FROM `users`", "uuid");
+		return BewomByte.m.executeQuery("SELECT * FROM `users`", "uuid");
 	}
 	
 	public static String getUserNameFromUUID(UUID u){
-		List<String> uuid = m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + u.toString() + "'", "user");
+		List<String> uuid = BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + u.toString() + "'", "user");
 		return uuid.get(0);
 	}
 	
 	public static List<Player> getPlayersRegistered(){
-		List<String> uuids = m.executeQuery("SELECT * FROM `users`", "uuid");
+		List<String> uuids = BewomByte.m.executeQuery("SELECT * FROM `users`", "uuid");
 		List<Player> players = new ArrayList<Player>();
 		for (int i = 0; i < uuids.size(); i++) {
 			players.add(BewomByte.game.getServer().getPlayer(uuids.get(i)));
@@ -649,11 +618,11 @@ public class BewomUser {
 	}
 	
 	public static List<String> getPlayersUsernameRegistered(){
-		return m.executeQuery("SELECT * FROM `users`", "user");
+		return BewomByte.m.executeQuery("SELECT * FROM `users`", "user");
 	}
 	
 	public static String getUUIDName(String name){
-		List<String> uuid = m.executeQuery("SELECT * FROM `users` WHERE `user`='" + name + "'", "uuid");
+		List<String> uuid = BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `user`='" + name + "'", "uuid");
 		return uuid.get(0);
 	}
 	

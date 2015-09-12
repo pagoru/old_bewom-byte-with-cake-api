@@ -50,7 +50,7 @@ public class EventsHandler {
 				
 		Player player = event.getPlayer();		
 		BewomUser user = new BewomUser(player);	
-		if(BewomUser.m.isBanned(player.getUniqueID().toString())){
+		if(BewomByte.m.isBanned(player.getUniqueID().toString())){
 			player.kick("");
 		}
 		BewomUser.addUser(user);
@@ -277,7 +277,7 @@ public class EventsHandler {
 					user.registerPitch += 0.02f;
 				}
 				
-				p.setLocation(new PreciseLocation(p.getDimensionID(), p.getLocation().getX(), p.getLocation().getY() + 5, p.getLocation().getZ(), user.registerYaw, user.registerPitch));
+				p.setPitchAndYaw(user.registerPitch, user.registerYaw);
 				if(d == user.registerDateVariable){
 					user.registration = user.checkWebsiteRegistration();
 					user.updateRegistration();

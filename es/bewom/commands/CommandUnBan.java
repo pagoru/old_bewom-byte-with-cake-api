@@ -9,6 +9,7 @@ import org.cakepowered.api.command.CommandSender;
 import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
 
+import es.bewom.BewomByte;
 import es.bewom.user.BewomUser;
 
 public class CommandUnBan extends CommandBase {
@@ -63,7 +64,7 @@ public class CommandUnBan extends CommandBase {
 			if(BewomUser.getUUIDName(args[0]) != null){
 				
 				String uuidBanned = BewomUser.getUUIDName(args[0]);
-				BewomUser.m.executeQuery("UPDATE `users_ban` SET `active`='false' WHERE `uuid`='" + uuidBanned + "'", null);
+				BewomByte.m.executeQuery("UPDATE `users_ban` SET `active`='false' WHERE `uuid`='" + uuidBanned + "'", null);
 				player.sendMessage(TextFormating.RED + "Has perdonado a " + args[0] + ".");
 				
 			} else {

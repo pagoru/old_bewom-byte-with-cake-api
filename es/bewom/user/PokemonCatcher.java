@@ -10,6 +10,8 @@ import org.jnbt.CompoundTag;
 import org.jnbt.NBTInputStream;
 import org.jnbt.Tag;
 
+import es.bewom.BewomByte;
+
 public class PokemonCatcher {
 	
 	private static FileInputStream a;
@@ -63,7 +65,7 @@ public class PokemonCatcher {
 				
 			}
 			
-			BewomUser.m.executeQuery("UPDATE `users` SET "
+			BewomByte.m.executeQuery("UPDATE `users` SET "
 					+ "`poke0name`='" + name[0] + "',`poke0lvl`='" + lvl[0] + "',"
 					+ "`poke1name`='" + name[1] + "',`poke1lvl`='" + lvl[1] + "',"
 					+ "`poke2name`='" + name[2] + "',`poke2lvl`='" + lvl[2] + "',"

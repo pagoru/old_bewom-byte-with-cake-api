@@ -86,8 +86,8 @@ public class CommandBan extends CommandBase {
 			
 			String uuidBanned = BewomUser.getUUIDName(args[0]);
 			
-			BewomUser.m.executeQuery("UPDATE `users_ban` SET `active`='false' WHERE `uuid`='" + uuidBanned + "'", null);
-			BewomUser.m.executeQuery("INSERT INTO `users_ban`(`uuid`, `uuidAdmin`, `motivo`, `perm`, `exp`) "
+			BewomByte.m.executeQuery("UPDATE `users_ban` SET `active`='false' WHERE `uuid`='" + uuidBanned + "'", null);
+			BewomByte.m.executeQuery("INSERT INTO `users_ban`(`uuid`, `uuidAdmin`, `motivo`, `perm`, `exp`) "
 					+ "VALUES ('" + uuidBanned + "','" + player.getUniqueID().toString() + "','" + motivo + "', '" + perm + "','" + time + "')", null);
 			
 			Chat.sendMessage(player, 

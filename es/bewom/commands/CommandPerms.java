@@ -11,6 +11,7 @@ import org.cakepowered.api.command.CommandSender;
 import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
 
+import es.bewom.BewomByte;
 import es.bewom.chat.Chat;
 import es.bewom.user.BewomUser;
 
@@ -82,7 +83,7 @@ public class CommandPerms extends CommandBase {
 			Timestamp timestamp = new Timestamp(d.getTime());
 			
 			if(p != null){
-				BewomUser.m.executeQuery("UPDATE `users` SET `type`='" + args[1] + "',`date_type`='" + timestamp.toString() + "',`days_type`='" + tiempo + "' WHERE `uuid`='" + p + "'", null);
+				BewomByte.m.executeQuery("UPDATE `users` SET `type`='" + args[1] + "',`date_type`='" + timestamp.toString() + "',`days_type`='" + tiempo + "' WHERE `uuid`='" + p + "'", null);
 			}
 			player.sendMessage(TextFormating.RED + "Le has cambiado los permisos de " + args[0] + " a " + args[1] + ".");
 			Chat.sendMessage(player, null, "/perms " + args[0] + " " + args[1]);

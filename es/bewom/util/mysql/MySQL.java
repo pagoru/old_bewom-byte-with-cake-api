@@ -37,7 +37,7 @@ public class MySQL {
 		}
 		if(o.get(0).contains(",")){
 			List<String> a = new ArrayList<String>();
-			String[] splited = o.get(0).split(",");
+			String[] splited = o.get(0).split(",", -1);
 			for (int i = 0; i < splited.length; i++) {
 				a.add(splited[i]);
 			}

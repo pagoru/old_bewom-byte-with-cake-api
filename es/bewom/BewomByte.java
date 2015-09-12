@@ -17,7 +17,9 @@ import es.bewom.p.P;
 import es.bewom.p.Ranchs;
 import es.bewom.teleport.Homes;
 import es.bewom.teleport.TPManager;
+import es.bewom.torneos.Torneo;
 import es.bewom.user.BewomUser;
+import es.bewom.util.mysql.MySQL;
 /**
  * 
  * Main plugin class. Here is where the magic happens.
@@ -32,10 +34,10 @@ public class BewomByte {
 	public static final boolean DEBUG = true;
 
 	public static Game game;
-	
 	public static Log log;
-	
 	public static BewomByte INSTANCE;
+	
+	public static MySQL m = new MySQL();
 	/**
 	 * Runs when the plugin is initializing.
 	 * @param e the {@link InitializationEvent}.
@@ -57,13 +59,13 @@ public class BewomByte {
 		
 		log.debug("Loading BewomByte events.");
 		
-		BewomUser.setGame(this);
 		TPManager.init(this);
 		CentroManager.init(this);
 		P.init(this);
 		Houses.init(this);
 		Homes.init();
 		Ranchs.init(this);
+		Torneo.load();
 		
 		game.getEventRegistry().registerEventListener(new EventsHandler(game));
 		game.getWorldManager().createFlatWorld(2);

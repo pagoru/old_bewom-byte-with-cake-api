@@ -82,7 +82,7 @@ public class CommandKick extends CommandBase {
 					TextFormating.BOLD + kickArgs + ".";				
 			}
 			
-			BewomUser.m.executeQuery("INSERT INTO `users_kicks`(`uuid`, `uuidAdmin`, `motivo`) VALUES ('" + 
+			BewomByte.m.executeQuery("INSERT INTO `users_kicks`(`uuid`, `uuidAdmin`, `motivo`) VALUES ('" + 
 					BewomByte.game.getServer().getPlayer(args[0]).getUniqueID() + "', '" + player.getUniqueID() + "', '" + kickArgs + "')", null);
 			BewomByte.game.getServer().getPlayer(args[0]).kick(kick);
 			

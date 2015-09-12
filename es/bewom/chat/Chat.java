@@ -61,10 +61,14 @@ public class Chat {
 	public static void sendMessage(Player p, String formatedMSG){
 		BewomUser user = BewomUser.getUser(p);
 		if(user.getRegistration() == WebRegistration.VALID){
-			p.sendMessage(formatedMSG);
+			if(user.isAdmin()){
+				p.sendMessageWithLinks(formatedMSG);
+			} else {
+				p.sendMessage(Censure.censureText(formatedMSG));
+			}
 		}
 	}
-	
+
 	public static String getCleanText(String t){
 		
 		if(t.length() > 5){
