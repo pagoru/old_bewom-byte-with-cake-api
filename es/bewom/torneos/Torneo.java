@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.cakepowered.api.base.Player;
@@ -17,10 +16,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 
 import es.bewom.BewomByte;
-import es.bewom.p.House;
 import es.bewom.user.BewomUser;
 import es.bewom.util.Location;
-import net.minecraft.command.PlayerSelector;
 
 public class Torneo {
 	

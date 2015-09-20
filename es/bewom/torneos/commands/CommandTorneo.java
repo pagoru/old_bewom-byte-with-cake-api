@@ -1,14 +1,11 @@
 package es.bewom.torneos.commands;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
-import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
 
@@ -23,6 +20,7 @@ import es.bewom.torneos.Torneos;
 import es.bewom.user.BewomUser;
 import es.bewom.util.Location;
 import es.bewom.util.Sounds;
+import es.bewom.torneos.Torneo;
 
 public class CommandTorneo extends CommandBase {
 

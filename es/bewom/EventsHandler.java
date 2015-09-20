@@ -130,13 +130,14 @@ public class EventsHandler {
 	@EventSuscribe
 	public void onUserRespawn(PlayerRespawnEvent event) {
 		Player player = event.getPlayer();
-		CentroPokemon cp = CentroManager.centros.get(0);
-
 		playerUpdateGameMode(player);
-		if(cp != null) {
-			player.setLocation(cp.getLocation());
+		
+		if(CentroManager.centros.size() > 0){
+			CentroPokemon cp = CentroManager.centros.get(0);
+			if(cp != null) {
+				player.setLocation(cp.getLocation());
+			}
 		}
-		System.out.println("RESPAWN!");
 		return;
 	}
 	
