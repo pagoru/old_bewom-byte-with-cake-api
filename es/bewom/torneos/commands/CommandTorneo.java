@@ -1,22 +1,15 @@
 package es.bewom.torneos.commands;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
-import org.cakepowered.api.util.PreciseLocation;
 import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
 
-import com.ibm.icu.text.DateFormat;
-import com.ibm.icu.text.SimpleDateFormat;
-
 import es.bewom.torneos.Torneo;
-import es.bewom.util.Location;
 
 public class CommandTorneo extends CommandBase {
 
