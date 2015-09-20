@@ -22,7 +22,7 @@ public class Chat {
 		if(!m[0].substring(0, 1).equals("/")){
 			for (int i = 0; i < m.length; i++) {
 				for (Player player : game.getServer().getOnlinePlayers()){
-					if(m[i].equals(player.getUserName())){
+					if(m[i].equalsIgnoreCase(player.getUserName())){
 						player.playSound("random.successful_hit", 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
 					}
 				}
@@ -31,10 +31,11 @@ public class Chat {
 		if(p != null){
 			BewomUser u = BewomUser.getUser(p);
 			if(formatedMSG != null){
-				Collection<Player> src = game.getServer().getOnlinePlayers();			
+				Collection<Player> src = game.getServer().getOnlinePlayers();
 				for(Player player : src){
 					BewomUser user = BewomUser.getUser(player);
-					if(u.getMpPlayer() != null){
+					if(u.getMpPlayer() != null && game.getServer().getOnlinePlayers().contains(u.getMpPlayer())){
+						u.getMpPlayer().playSound("random.successful_hit", 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
 						if(u.getMpPlayer().getUserName().equals(player.getUserName())){
 							sendMessage(player, TextFormating.GRAY + "/" + u.getMpPlayer().getUserName() + formatedMSG);
 							sendMessage(p, TextFormating.GRAY + "/" + u.getMpPlayer().getUserName() + formatedMSG);
@@ -44,6 +45,7 @@ public class Chat {
 							}
 						}
 					} else {
+						u.setMpPlayer(null);
 						sendMessage(player, formatedMSG);
 					}
 				}

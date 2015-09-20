@@ -1,5 +1,7 @@
 package es.bewom.user;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -30,18 +32,13 @@ public class PokemonCatcher {
 				strContent.append((char)ch);
 			}
 			
-			File file = new File(path);
-			file.setReadable(true, false);
-			file.setExecutable(true, false);
-			file.setWritable(true, false);
-			file.createNewFile();
+			ByteArrayOutputStream test = new ByteArrayOutputStream();
 			
-			GZIPOutputStream gzos = new GZIPOutputStream(new FileOutputStream(file));
+			GZIPOutputStream gzos = new GZIPOutputStream(test);
 			gzos.write(strContent.toString().getBytes());
 			gzos.close();
 			
-			
-			NBTInputStream ns = new NBTInputStream(new FileInputStream(file));
+			NBTInputStream ns = new NBTInputStream(new ByteArrayInputStream(test.toByteArray()));
 			Tag master = ns.readTag();
 			ns.close();
 			

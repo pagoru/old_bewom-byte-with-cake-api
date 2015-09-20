@@ -11,6 +11,7 @@ import es.bewom.user.BewomUser;
 public class CollectPlayersWeb {
 	
 	public static int i = 1200;
+	public static int j = 1200;
 	
 	public static void on(Collection<Player> players, Date date){
 		if(i == 1200){
@@ -27,7 +28,17 @@ public class CollectPlayersWeb {
 			}
 			i = 0;
 		}
+		if(j == 12000){
+			j = 0;
+		}
+		j++;
 		i++;
+	}
+	
+	public static void on(Player p){
+		int timeInMinutes = Integer.parseInt(BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + p.getUniqueID() + "'", "timePlaying").get(0));
+		timeInMinutes++;
+		BewomByte.m.executeQuery("UPDATE `users` SET `timePlaying`='" + timeInMinutes + "' WHERE `uuid`='" + p.getUniqueID() + "'", null);
 	}
 	
 }

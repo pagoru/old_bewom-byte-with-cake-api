@@ -23,7 +23,7 @@ public class TextMessages {
 			TextFormating.DARK_RED + "" + TextFormating.BOLD +"/" +
 			TextFormating.OBFUSCATED +  "" + TextFormating.BOLD + "K" +
 			TextFormating.DARK_RED + "" + TextFormating.BOLD + "/" +
-			TextFormating.DARK_RED +  "" + TextFormating.BOLD + "WOM" +  
+			TextFormating.DARK_RED +  "" + TextFormating.BOLD + "bewom" +  
 			TextFormating.RESET + TextFormating.WHITE + " < ";
 	
 	public static final String CENTER_ESTABLISHED = TextFormating.RED + "Centro establecido correctamente.";

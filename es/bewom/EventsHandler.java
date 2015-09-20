@@ -121,14 +121,6 @@ public class EventsHandler {
 			}
 			
 		}
-		CentroPokemon cp = CentroManager.getClosest(player.getLocation());
-
-		if(cp != null) {
-			if(player.getLocation().getDimension() != Dimensions.EXTERIORES){
-				cp = CentroManager.centros.get(0);
-			}
-			player.setLocation(cp.getLocation());
-		}
 		
 		if(position_map.containsKey(uuid)){
 			position_map.remove(uuid);
@@ -162,6 +154,7 @@ public class EventsHandler {
 		Ranchs.on(event);
 		Houses.on(game, event);
 		P.on(game, event);
+		AwayFromKeyboard.on(event);
 	}
 
 	@EventSuscribe //click derecho
@@ -256,6 +249,10 @@ public class EventsHandler {
 					user.updateState += 300;
 					user.updatePermissions();
 					PokemonCatcher.catchPokemons(p.getUniqueID().toString());
+				}
+				if(d == (user.timePlaying + user.registerDateVariable)){
+					user.timePlaying += 60;
+					CollectPlayersWeb.on(p);
 				}
 			}
 			if (user.getRegistration() != WebRegistration.VALID) {

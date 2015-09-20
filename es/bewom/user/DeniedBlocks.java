@@ -59,7 +59,8 @@ public class DeniedBlocks {
 			"poste",
 			"wallet",
 			"Bike.name",
-			"entity.pixelmon"
+			"entity.pixelmon",
+			"itemFinder"
 			
 	};
 	

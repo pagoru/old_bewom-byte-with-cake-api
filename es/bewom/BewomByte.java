@@ -18,6 +18,7 @@ import es.bewom.p.Ranchs;
 import es.bewom.teleport.Homes;
 import es.bewom.teleport.TPManager;
 import es.bewom.torneos.Torneo;
+import es.bewom.torneos.Torneos;
 import es.bewom.user.BewomUser;
 import es.bewom.util.mysql.MySQL;
 /**
@@ -65,7 +66,7 @@ public class BewomByte {
 		Houses.init(this);
 		Homes.init();
 		Ranchs.init(this);
-		Torneo.load();
+		Torneos.init();
 		
 		game.getEventRegistry().registerEventListener(new EventsHandler(game));
 		game.getWorldManager().createFlatWorld(2);

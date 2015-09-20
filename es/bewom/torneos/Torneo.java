@@ -24,274 +24,309 @@ import net.minecraft.command.PlayerSelector;
 
 public class Torneo {
 	
-	private int index;
-	private String name;
-	private String date;
-	private int maxPlayers;
-	public static Location[] pl = new Location[4];
-	private String[] players = new String[16];
-	private int[] round1 = new int[8];
-	private String[] winnersRound1 = new String[8];
-	private int[] round2 = new int[4];
-	private String[] winnersRound2 = new String[4];
-	private int[] round3 = new int[2];
-	private String[] winnersRound3 = new String[2];
-	private int round4;
-	private String winner;
 	
-	public static Torneo current;
+	@Expose private int index = -1;
+	@Expose private String name = "";
+	@Expose private String date = "";
 	
-	public List<Player> getBattle(int battle){
-		List<Player> players = new ArrayList<Player>();
-		if(battle >= 1 && battle <= 8){
-			updateWinners();
-			
-			String play1 = this.players[(battle*2)-2];
-			Player p1 = BewomByte.game.getServer().getPlayer(play1);
-			players.add(p1);
-			
-			String play2 = this.players[(battle*2)-1];
-			Player p2 = BewomByte.game.getServer().getPlayer(play2);
-			players.add(p2);
-			
-			return players;
-		} else if(battle >= 9 && battle <= 12){
-			int b = battle - 8;
-			updateWinners();
-			return getPlayersBattle(winnersRound1[(b*2)-1], winnersRound1[(b*2)-2]);
-		} else if(battle >= 13 && battle <= 14){
-			int b = battle - 12;
-			updateWinners();
-			return getPlayersBattle(winnersRound2[(b*2)-1], winnersRound2[(b*2)-2]);
-		} else if(battle == 15){
-			updateWinners();
-			return getPlayersBattle(winnersRound3[0], winnersRound3[1]);
-		}
-		
-		return null;
+	@Expose private Location[] location = new Location[4];
+	
+	@Expose private String[] playersRound1 = new String[16];
+	@Expose private String[] playersRound2 = new String[8];
+	@Expose private String[] playersRound3 = new String[4];
+	@Expose private String[] playersRound4 = new String[2];
+	@Expose private String playerRound5 = null;
+	
+	@Expose private int[] winnersRound1 = {-1, -1, -1, -1, -1, -1, -1, -1};
+	@Expose private int[] winnersRound2 = {-1, -1, -1, -1};
+	@Expose private int[] winnersRound3 = {-1, -1};
+	@Expose private int winnerRound4 = -1;
+	
+	public Torneo(){
+		index = Integer.parseInt(BewomByte.m.executeQuery("SELECT `index` FROM `torneos` ORDER BY `index` DESC", "index").get(0));
 	}
 	
-	private List<Player> getPlayersBattle(String wR1, String wR2){
-		List<Player> ps = new ArrayList<Player>();
-		if(wR1 != null){
-			Player p = BewomByte.game.getServer().getPlayer(wR1);
-			ps.add(p);
-		} else {
-			ps.add(null);
+	public Torneo(int index){
+		this.index = index;
+	}
+	
+	public Torneo(String name, String date){
+		index = Integer.parseInt(BewomByte.m.executeQuery("SELECT `index` FROM `torneos` ORDER BY `index` DESC", "index").get(0)) + 1;
+		
+		this.name = name;
+		this.date = date;
+		
+		insert();
+		
+		playersRound1 = new String[16];
+		playersRound2 = new String[8];
+		playersRound3 = new String[4];
+		playersRound4 = new String[2];
+		playerRound5 = null;
+		
+		for (int i = 0; i < winnersRound1.length; i++) {
+			winnersRound1[i] = -1;
 		}
-		if(wR2 != null){
-			Player p = BewomByte.game.getServer().getPlayer(wR2);
-			ps.add(p);
-		} else {
-			ps.add(null);
+		for (int i = 0; i < winnersRound2.length; i++) {
+			winnersRound2[i] = -1;
 		}
-		return ps;
+		for (int i = 0; i < winnersRound3.length; i++) {
+			winnersRound3[i] = -1;
+		}
+		winnerRound4 = -1;
+		
+		save();
+	}
+	
+	public void purgePlayers(){
+		for (int i = 0; i < playersRound1.length; i++) {
+			if(playersRound1[i] != null){
+				if(BewomByte.game.getServer().getPlayer(playersRound1[i]) == null){
+					System.out.println(playersRound1[i]);
+					BewomUser.addPoints(playersRound1[i], -1);
+					playersRound1[i] = null;
+				}
+			}
+		}
+		for(Player p : BewomByte.game.getServer().getOnlinePlayers()){
+			BewomUser u = BewomUser.getUser(p);
+			if(u.getPoints() < 0){
+				u.addPoints(1);
+			}
+		}
+	}
+	
+	public void setLocation(int i, PreciseLocation pl){
+		this.location[i] = new Location(pl);
+	}
+	
+	public Location[] getLocation(){
+		return this.location;
+	}
+	
+	public String getThirdWinner(){
+		int w = -1;
+		if(winnerRound4 == 0){
+			w = 1;
+		}
+		return playersRound3[winnersRound3[winnerRound4] + (winnerRound4*2) + w];
 	}
 	
 	private void updateWinners(){
-		int w = 0;
-		for (int i = 1; i < 9; i++) {
-			if(round1[i-1] == 1){
-				winnersRound1[w] = players[(i*2)-1];
-				w++;
-			} else if(round1[i-1] == 0){
-				winnersRound1[w] = players[(i*2)-2];
-				w++;
-			}
-		}
-		w = 0;
-		for (int i = 1; i < 5; i++) {
-			if(round2[i-1] == 1){
-				winnersRound2[w] = winnersRound1[(i*2)-1];
-				w++;
-			} else if(round2[i-1] == 0){
-				winnersRound2[w] = winnersRound1[(i*2)-2];
-				w++;
-			}
-		}
-		w = 0;
-		for (int i = 1; i < 3; i++) {
-			if(round3[i-1] == 1){
-				winnersRound3[w] = winnersRound2[(i*2)-1];
-				w++;
-			} else if(round3[i-1] == 0){
-				winnersRound3[w] = winnersRound2[(i*2)-2];
-				w++;
-			}
-		}
-		if(round4 == 1){
-			winner = winnersRound3[1];
-		} else if(round4 == 0){
-			winner = winnersRound3[0];
-		}
-	}
-	
-	private void init(){
-		maxPlayers = 16;
 		for (int i = 0; i < 8; i++) {
-			round1[i] = -1;
+			if(winnersRound1[i] != -1){
+				playersRound2[i] = playersRound1[(i*2) + winnersRound1[i]];
+			} else {
+				playersRound2[i] = null;
+			}
 		}
 		for (int i = 0; i < 4; i++) {
-			round2[i] = -1;
+			if(winnersRound2[i] != -1){
+				playersRound3[i] = playersRound2[(i*2) + winnersRound2[i]];
+			} else {
+				playersRound3[i] = null;
+			}
 		}
 		for (int i = 0; i < 2; i++) {
-			round3[i] = -1;
-		}
-		round4 = -1;
-		index = -1;
-		load();
-	}
-	
-	public Torneo(String name){
-		init();
-		this.name = name;
-		save();
-	}
-	
-	public Torneo(){
-		init();
-	}
-	
-	public void setLocation(int position, PreciseLocation loc){
-		pl[position - 1] = new Location(loc);
-		save();
-	}
-	
-	public PreciseLocation getLocation(int position){
-		load();
-		return pl[position].getPreciseLocation();
-	}
-	
-	public void setRound(int round, int battle, int win){
-		switch (round) {
-		case 1:
-			round1[battle] = win;
-			break;
-		case 2:
-			round2[battle] = win;
-			break;
-		case 3:
-			round3[battle] = win;
-			break;
-		}
-	}
-	
-	public static int getLastIndex(){
-		List<String> lastIndex = BewomByte.m.executeQuery("SELECT * FROM `torneos` ORDER BY `index` DESC", "index");
-		return Integer.parseInt(lastIndex.get(0)) + 1;
-	}
-	
-	public static Torneo load(int index){
-		Torneo.current = new Torneo();
-		Torneo.current.setIndex(index);
-		
-		String name = BewomByte.m.executeQuery("SELECT * FROM `torneos` WHERE `index`='" + index +"'", "name").get(0);
-		Torneo.current.setName(name);
-		
-		int maxPlayers = Integer.parseInt(BewomByte.m.executeQuery("SELECT * FROM `torneos` WHERE `index`='" + index +"'", "maxPlayers").get(0));
-		
-		String date = BewomByte.m.executeQuery("SELECT * FROM `torneos` WHERE `index`='" + index +"'", "date").get(0);
-		Torneo.current.setDate(date);
-		
-		Torneo.current.setPlayers(BewomByte.m.executeQuery("SELECT * FROM `torneos` WHERE `index`='" + index +"'", "playersName"));
-		
-		return Torneo.current;	
-	}
-	
-	private void setPlayers(List<String> playerArray) {
-		int x = 0;
-		for(String p : playerArray){
-			if(!p.equals("")){
-				this.players[x] = p;
+			if(winnersRound3[i] != -1){
+				playersRound4[i] = playersRound3[(i*2) + winnersRound3[i]];
 			} else {
-				this.players[x] = null;
+				playersRound4[i] = null;
 			}
-			x++;
 		}
+		if(winnerRound4 != -1){
+			playerRound5 = playersRound4[winnerRound4];
+		} else {
+			playerRound5 = null;
+		}
+	}
+	
+	public String[] getBattle(int ronda, int batalla){
+		load();
+		switch(ronda){
+			case 0:
+				return getBattleFromRound(playersRound1, batalla);
+			case 1:
+				return getBattleFromRound(playersRound2, batalla);
+			case 2:
+				return getBattleFromRound(playersRound3, batalla);
+			case 3:
+				return getBattleFromRound(playersRound4, batalla);
+		}
+		return null;
+	}
+	
+	private String[] getBattleFromRound(String[] ronda, int batalla){
+		String[] battle = new String[2];
+		battle[0] = ronda[batalla*2];
+		battle[1] = ronda[(batalla*2) + 1];
+		return battle;
+	}
+	
+	public boolean setWinner(int ronda, int batalla, String winner){
+		switch(ronda){
+			case 0:
+				return getWinnerFrom(playersRound1, playersRound2, batalla, winnersRound1, winner);
+			case 1:
+				return getWinnerFrom(playersRound2, playersRound3, batalla, winnersRound2, winner);
+			case 2:
+				return getWinnerFrom(playersRound3, playersRound4, batalla, winnersRound3, winner);
+			case 3:
+				return getWinnerFrom(playersRound4, playerRound5, batalla, winner);
+		}
+		return false;
+	}
+	
+	private boolean getWinnerFrom(String[] ronda, String[] ronda2, int batalla, int[] winnerRound, String winner){
+		String[] battle = new String[2];
+		battle[0] = ronda[batalla*2];
+		battle[1] = ronda[(batalla*2) + 1];
+		
+		if(winner.equalsIgnoreCase(battle[0])){
+			winnerRound[batalla] = 0;
+			ronda2[batalla] = battle[0];
+			updateWinners();
+			save();
+		} else if(winner.equalsIgnoreCase(battle[1])){
+			winnerRound[batalla] = 1;
+			ronda2[batalla] = battle[1];
+			updateWinners();
+			save();
+		} else if(winner.equalsIgnoreCase("null")){
+			winnerRound[batalla] = -1;
+			ronda2 = null;
+			updateWinners();
+			save();
+		} else {
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean getWinnerFrom(String[] ronda, String ronda2, int batalla, String winner){
+		String[] battle = new String[2];
+		battle[0] = ronda[batalla*2];
+		battle[1] = ronda[(batalla*2) + 1];
+		
+		if(winner.equalsIgnoreCase(battle[0])){
+			winnerRound4 = 0;
+			ronda2 = battle[0];
+			updateWinners();
+			save();
+		} else if(winner.equalsIgnoreCase(battle[1])){
+			winnerRound4 = 1;
+			ronda2 = battle[1];
+			updateWinners();
+			save();
+		} else if(winner.equalsIgnoreCase("null")){
+			winnerRound4 = -1;
+			ronda2 = null;
+			updateWinners();
+			save();
+		} else {
+			return false;
+		}
+		return true;
+	}
+	
+	public void load(){
+		this.name = BewomByte.m.executeQuery("SELECT `name` FROM `torneos` WHERE `index`='" + index + "'", "name").get(0);
+		this.date = BewomByte.m.executeQuery("SELECT `date` FROM `torneos` WHERE `index`='" + index + "'", "date").get(0);
+		
+		this.playersRound1 = getArrayStringFromList(BewomByte.m.executeQuery("SELECT `playersName` FROM `torneos` WHERE `index`='" + index + "'", "playersName"));
+		
+		this.winnersRound1 = getArrayIntFromList(BewomByte.m.executeQuery("SELECT `winsRound1` FROM `torneos` WHERE `index`='" + index + "'", "winsRound1"));
+		this.winnersRound2 = getArrayIntFromList(BewomByte.m.executeQuery("SELECT `winsRound2` FROM `torneos` WHERE `index`='" + index + "'", "winsRound2"));
+		this.winnersRound3 = getArrayIntFromList(BewomByte.m.executeQuery("SELECT `winsRound3` FROM `torneos` WHERE `index`='" + index + "'", "winsRound3"));
+		this.winnerRound4 = Integer.parseInt(BewomByte.m.executeQuery("SELECT `winsRound4` FROM `torneos` WHERE `index`='" + index + "'", "winsRound4").get(0));
+		
+		updateWinners();
+	}
+	
+	private int[] getArrayIntFromList(List<String> executeQuery) {
+		int[] i = new int[executeQuery.size()];
+		for (int j = 0; j < executeQuery.size(); j++) {
+			i[j] = Integer.parseInt(executeQuery.get(j));
+		}
+		return i;
+	}
+
+	private String[] getArrayStringFromList(List<String> executeQuery) {
+		String[] i = new String[executeQuery.size()];
+		for (int j = 0; j < executeQuery.size(); j++) {
+			if(executeQuery.get(j).length() != 0){
+				i[j] = executeQuery.get(j);
+			}
+		}
+		return i;
+	}
+	
+	public void insert(){
+		BewomByte.m.executeQuery(
+				"INSERT INTO `torneos` SET "
+				+ "`index`='" + index+ "',"
+				+ "`name`='" + name + "',"
+				+ "`date`='" + date + "'", null);
 	}
 
 	public void save(){
-		
-		if(index == -1){
-			BewomByte.m.executeQuery("INSERT INTO `torneos` SET `index`='" + getLastIndex() + "', `name`='" + name + "', `maxPlayers`='" + maxPlayers +"'", null);
-		} else {
-			BewomByte.m.executeQuery("UPDATE `torneos` SET `name`='" + name + "',`date`='" + date + "',`maxPlayers`='" + maxPlayers +"',"
-					+ "`playersName`='" + getPlayersString() + "',"
-					+ "`winsRound1`='" + getRoundString(round1) + "',`winsRound2`='" + getRoundString(round2) + "',"
-					+ "`winsRound3`='" + getRoundString(round3) + "',`winsRound4`='" + round4 + "' WHERE `index`='" + index + "'", null);
-		}
-		
-		try {
-			
-			
-			File folder = new File("bewom");
-			if(!folder.exists()) folder.mkdirs();
-			
-			File file = new File("bewom/Torneos.json");
-			if(!file.exists()) file.createNewFile();
-			
-			Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
-			String json = gson.toJson(pl);
-			
-			FileWriter writer = new FileWriter(file);
-			writer.write(json);
-			
-			writer.close();
-		
-		} catch (IOException e) {
-			BewomByte.log.debug(e.getMessage());
-		}
-		
+		BewomByte.m.executeQuery(
+				"UPDATE `torneos` SET "
+				+ "`name`='" + name + "',"
+				+ "`date`='" + date + "',"
+				
+				+ "`playersName`='" + getStringComasFromArrayString(playersRound1) + "',"
+				
+				+ "`winsRound1`='" + getStringComasFromArrayInt(winnersRound1) + "',"
+				+ "`winsRound2`='" + getStringComasFromArrayInt(winnersRound2) + "',"
+				+ "`winsRound3`='" + getStringComasFromArrayInt(winnersRound3) + "',"
+				+ "`winsRound4`='" + winnerRound4 + "' "
+				
+				+ "WHERE `index`='" + index + "'", "name");
 	}
 	
-	public static void load() {
-		
-		try {
-		
-			File folder = new File("bewom");
-			if(!folder.exists()) folder.mkdirs();
-			
-			File file = new File("bewom/Torneos.json");
-			if(!file.exists()) file.createNewFile();
-			
-			BufferedReader reader = new BufferedReader(new FileReader(file));
-			
-			Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
-			
-			Location[] l = gson.fromJson(reader, Location[].class);
-			pl = l;
-			
-		} catch (IOException e) {
-			BewomByte.log.debug(e.getMessage());
-		}
-		
-	}
-	
-	private String getPlayersString(){
-		if(players.length != 0){
-			String playersString = "";
-			for(String p : players){
-				playersString += p + ",";
+	//UTIL
+	private String getStringComasFromArrayString(String[] str){
+		String strComas = "";
+		for (int i = 0; i < str.length; i++) {
+			if(str[i] != null){
+				strComas += str[i] + ",";
+			} else {
+				strComas += ",";
 			}
-			return playersString.substring(0 , playersString.length() - 1);
 		}
-		return ",,,,,,,,,,,,,,,";
+		return strComas.substring(0, strComas.length()-1);
 	}
 	
-	private String getRoundString(int[] round){
-		String roundString = "";
-		for(int r : round){
-			roundString += r + ",";
+	private String getStringComasFromArrayInt(int[] str){
+		String strComas = "";
+		for (int i = 0; i < str.length; i++) {
+			strComas += str[i] + ",";
 		}
-		return roundString.substring(0 , roundString.length() - 1);
+		return strComas.substring(0, strComas.length()-1);
 	}
-
-	public int getIndex() {
-		return index;
+	
+	private String[] getArrayStringFromStringComas(String str){
+		String[] splited = str.split(",");
+		for (int i = 0; i < splited.length; i++) {
+			if(splited[i].length() == 0){
+				splited[i] = null;
+			}
+		}
+		return splited;
 	}
-
-	public void setIndex(int index) {
-		this.index = index;
+	
+	private int[] getArrayIntFromStringComas(String str){
+		String[] splited = str.split(",");
+		int[] in = new int[splited.length];
+		for (int i = 0; i < splited.length; i++) {
+			if(splited[i].length() == 0){
+				in[i] = Integer.parseInt(splited[i]);
+			} else {
+				in[i] = -1;
+			}
+		}
+		return in;
 	}
 
 	public String getName() {
@@ -300,13 +335,5 @@ public class Torneo {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getDate() {
-		return date;
-	}
-
-	public void setDate(String date) {
-		this.date = date;
 	}
 }

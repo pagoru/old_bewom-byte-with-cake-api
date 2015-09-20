@@ -75,10 +75,8 @@ public class BewomUser {
 
 	private PreciseLocation back;
 	
-	/**
-	 * Constructor. Creates a {@link BewomUser} from a player.
-	 * @param player to create the {@link BewomUser} from.
-	 */
+	public long timePlaying = 60;	
+	
 	public BewomUser(Player player) {
 		
 		this.loginDate = new Date().getTime();
@@ -97,6 +95,26 @@ public class BewomUser {
 		this.friendsPetitions = getAllFriendsPetitions();
 	}
 	
+	public void addPoints(int points){
+		int p = getPoints() + points;
+		BewomByte.m.executeQuery("UPDATE `users` SET `points`='" + p + "' WHERE `uuid`='" + player.getUniqueID() + "'", null);
+	}
+	public int getPoints(){
+		return Integer.parseInt(BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + player.getUniqueID() + "'", "points").get(0));
+	}
+	
+	public static void addPoints(String name, int points){
+		int p = getPoints(name) + points;
+		BewomByte.m.executeQuery("UPDATE `users` SET `points`='" + p + "' WHERE `user`='" + name + "'", null);
+	}
+	public static int getPoints(String name){
+		String points = BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `user`='" + name + "'", "points").get(0);
+		if(!points.isEmpty()){
+			return Integer.parseInt(points);
+		}
+		return -1;
+	}
+	
 	public PreciseLocation getBack() {
 		return back;
 	}
@@ -110,6 +128,9 @@ public class BewomUser {
 			return true;
 		}
 		return false;
+	}
+	public void removeAfkTime(){
+		this.afk = 0;
 	}
 	public void addAfkTime(){
 		this.afk += 1;

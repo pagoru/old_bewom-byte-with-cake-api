@@ -15,8 +15,14 @@ import org.cakepowered.api.util.text.TextFormating;
 import com.ibm.icu.text.DateFormat;
 import com.ibm.icu.text.SimpleDateFormat;
 
+import es.bewom.BewomByte;
+import es.bewom.chat.Chat;
+import es.bewom.texts.TextMessages;
 import es.bewom.torneos.Torneo;
+import es.bewom.torneos.Torneos;
+import es.bewom.user.BewomUser;
 import es.bewom.util.Location;
+import es.bewom.util.Sounds;
 
 public class CommandTorneo extends CommandBase {
 
@@ -26,114 +32,159 @@ public class CommandTorneo extends CommandBase {
 	
 	@Override
 	public List<String> addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos) {
-		List<String> ret = new ArrayList<String>();
-		if(args.length == 1){
-			ret.add("nuevo");
-			if(Torneo.current != null){
-				ret.add(Torneo.current.getIndex() + "");
-			}
-			for (int i = 1; i < Torneo.getLastIndex(); i++) {
-				ret.add(i + "");
-			}
-		} else if(args.length == 2){
-			ret.add("name");
-			ret.add("fecha");
-			ret.add("start");
-			ret.add("combate");
-			ret.add("finish");
-			ret.add("location");
-		} else if(args.length == 3){
-			for (int i = 1; i < 5; i++) {
-				ret.add(i + "");
-			}
-		}
-		
-		int Y = args.length - 1;
-		for (int i = 0; i < ret.size(); i++) {
-			if(args[Y].length() <= ret.get(i).length()){
-				if(args[Y].substring(0, args[Y].length()).toLowerCase().equals(ret.get(i).substring(0, args[Y].length()).toLowerCase())){
-					List<String> p = new ArrayList<String>();
-					p.add(ret.get(i));
-					return p;
-				}
-			}
-		}
-		return ret;
+		return null;
 	}
 	
 	@Override
 	public void execute(CommandSender commandSender, String[] args) {
 		/*
-		 * torneo nuevo <nombre>
-		 * torneo <indice> fecha 17/04/15 20:00
-		 * torneo <indice> name <collection>
-		 * torneo <indice> location <1, 2, 3, 4>
+		 * t nuevo <HH:MM> <dd/mm/yyyy> <name>
 		 * 
-		 * torneo <indice> start
-		 * torneo <indice> combate {1 - 15} 
-		 * torneo <indice> finish
+		 * t posicion A/B/C/D
 		 * 
-		 * torneo <indice> combate {1 - 15} <nick>
+		 * t ronda <ronda> combate <batalla>
+		 * t ronda <ronda> combate <batalla> ganador <player>
 		 * 
 		 */
+		Torneo t = Torneos.current;
 		Player p = commandSender.getPlayer();
-		if(args.length >= 2){
+		
+		if(args.length >= 5){
 			if(args[0].equals("nuevo")){
-				String torneoName = "";
-				for (int i = 1; i < args.length; i++) {
-					torneoName += args[i] + " ";
+				String name = "";
+				for (int i = 3; i < args.length; i++) {
+					name += args[i] + " ";
 				}
-				torneoName = torneoName.substring(0, torneoName.length() - 1);
-				Torneo.current = new Torneo(torneoName);
-				p.sendMessage(TextFormating.RED + "Torneo " + torneoName + " creado con éxito. Indice [" + Torneo.current.getIndex() + "]");
-			}
-			if(args[1].equals("name")){
-				Torneo.load(Integer.parseInt(args[0]));
-				String torneoName = "";
-				for (int i = 2; i < args.length; i++) {
-					torneoName += args[i] + " ";
+				name.substring(0, name.length() - 1);
+				
+				String[] date = args[2].split("/");
+				
+				String dateDate = date[2] + "-" + date[1] + "-" + date[0];
+				String dateHour = args[1] + ":00";
+				
+				Torneos.current = new Torneo(name, dateDate + " " + dateHour);
+			} else {
+				if(args.length == 6){
+					if(args[0].equals("ronda") && args[2].equals("combate") && args[4].equals("ganador")){
+						int round = Integer.parseInt(args[1]) - 1;
+						int battle = Integer.parseInt(args[3]) - 1;
+						String winner = args[5];
+						if((round == 0 && battle < 8) 
+								|| (round == 1 && battle < 4) 
+								|| (round == 2 && battle < 2)
+								|| (round == 3 && battle == 0)){
+							if(t.setWinner(round, battle, winner)){
+								if(!winner.equals("null")){
+									if(round == 3){
+										Chat.sendMessage(p, TextMessages.BROADCAST + winner + " ha ganado este torneo!", "/t");
+										for (int i = 0; i < 2; i++) {
+											if(t.getBattle(round, battle)[i] != null){
+												Player pBattle = BewomByte.game.getServer().getPlayer(t.getBattle(round, battle)[0]);
+												if(pBattle != null){
+													pBattle.setLocation(t.getLocation()[2].getPreciseLocation());
+												}
+											}
+										}
+										if(t.getThirdWinner() != null){
+											Player pThird = BewomByte.game.getServer().getPlayer(t.getThirdWinner());
+											if(pThird != null){
+												pThird.setLocation(t.getLocation()[2].getPreciseLocation());
+											}
+										}
+									} else {
+										Chat.sendMessage(p, TextMessages.BROADCAST + winner + " ha ganado este combate.", "/t");
+										for (int i = 0; i < 2; i++) {
+											if(t.getBattle(round, battle)[i] != null){
+												Player pBattle = BewomByte.game.getServer().getPlayer(t.getBattle(round, battle)[0]);
+												if(pBattle != null){
+													pBattle.setLocation(t.getLocation()[3].getPreciseLocation());
+												}
+											}
+										}
+									}
+									Sounds.playSoundToAll("fireworks.largeBlast_far", 1.0F, 1.2F);
+								}
+							} else {
+								p.sendMessage(TextFormating.RED + winner + " no participa en este combate.");
+							}
+						} else {
+							p.sendMessage(TextFormating.RED + "Combate o ronda invalidas");
+						}
+					} else {
+						p.sendMessage(TextFormating.RED + "/r ronda <r> combate <c>");
+					}
 				}
-				torneoName = torneoName.substring(0, torneoName.length() - 1);
-				Torneo.current.setName(torneoName);
-				Torneo.current.save();
-				p.sendMessage(TextFormating.RED + "Nombre del torneo cambiado!");
-				
 			}
-		}
-		if(args.length == 2){
-			if(args[1].equals("start")) {
-				
-			} else if(args[1].equals("finish")) {
-				
+		} else if(args.length == 1){
+			if(args[0].equals("start")){
+				t.purgePlayers();
+				Chat.sendMessage(p, TextMessages.BROADCAST + t.getName() + " esta a punto de empezar!", "/t");
 			}
-		} else if(args.length == 3){
-			if(args[1].equals("combate")) {
-				int battle = Integer.parseInt(args[2]);
-				int index = Integer.parseInt(args[0]);
-				Torneo.current = Torneo.load(index);
-				List<Player> playersBattle = Torneo.current.getBattle(battle);
-				p.sendMessage(playersBattle.get(0) + "_" + playersBattle.get(1)); //quitar
-				
-			} else if(args[1].equals("location")) {
-				Torneo.load(Integer.parseInt(args[0]));
-				Torneo.current.setLocation(Integer.parseInt(args[2]), p.getLocation());
+		} else if(args.length == 2){
+			if(args[0].equals("posicion")){
+				switch (args[1]) {
+				case "A":
+					t.setLocation(0, p.getLocation());
+					p.sendMessage(TextFormating.RED + "Posición A asignada.");
+					break;
+				case "B":
+					t.setLocation(1, p.getLocation());
+					p.sendMessage(TextFormating.RED + "Posición B asignada.");
+					break;
+				case "C":
+					t.setLocation(2, p.getLocation());
+					p.sendMessage(TextFormating.RED + "Posición C asignada.");
+					break;
+				case "D":
+					t.setLocation(3, p.getLocation());
+					p.sendMessage(TextFormating.RED + "Posición D asignada.");
+					break;
+				default:
+					p.sendMessage(TextFormating.RED + "Error. Posiciones A, B, C y D!");
+					break;
+				}
 			}
 		} else if(args.length == 4){
-			if(args[1].equals("fecha")) {
-				if(args[0].equals(Torneo.getLastIndex() - 1 + "")){
-					Torneo.load(Integer.parseInt(args[0]));
-					String[] date = args[2].split("/");
-					String d =  "20" + date[2] + "-" + date[1] + "-" + date[0] + " " + args[3] + ":00";
-					Torneo.current.setDate(d);
-					Torneo.current.save();
-					
-					p.sendMessage(TextFormating.RED + "Fecha del torneo " + d + ".");
+			if(args[0].equals("ronda") && args[2].equals("combate")){
+				int round = Integer.parseInt(args[1]) - 1;
+				int battle = Integer.parseInt(args[3]) - 1;
+				if((round == 0 && battle < 8) 
+						|| (round == 1 && battle < 4) 
+						|| (round == 2 && battle < 2)
+						|| (round == 3 && battle == 0)){
+					if(t.getBattle(round, battle)[0] == null && t.getBattle(round, battle)[1] != null){
+						if(t.setWinner(round, battle, t.getBattle(round, battle)[1])){
+							Chat.sendMessage(p, TextMessages.BROADCAST + t.getBattle(round, battle)[1] + " ha ganado por desclasificación del contrincante!", "/t");
+						}
+					} else if(t.getBattle(round, battle)[0] != null && t.getBattle(round, battle)[1] == null){
+						if(t.setWinner(round, battle, t.getBattle(round, battle)[0])){
+							Chat.sendMessage(p, TextMessages.BROADCAST + t.getBattle(round, battle)[0] + " ha ganado por desclasificación del contrincante!", "/t");
+						}
+					} else if(t.getBattle(round, battle)[0] == null && t.getBattle(round, battle)[1] == null){
+						if(t.setWinner(round, battle, null)){
+							p.sendMessage(TextFormating.RED + "Las dos partes son nulas.");
+						}
+					} else {
+						p.sendMessage(t.getBattle(round, battle)[0] + "_" + t.getBattle(round, battle)[1]);
+						Chat.sendMessage(p, TextMessages.BROADCAST + "Empieza el combate entre " + t.getBattle(round, battle)[0] + " y " + t.getBattle(round, battle)[1], "/t");
+						Sounds.playSoundToAll("fireworks.twinkle_far", 1.0F, 1.2F);
+						for (int i = 0; i < 2; i++) {
+							if(t.getBattle(round, battle)[i] != null){
+								Player pBattle = BewomByte.game.getServer().getPlayer(t.getBattle(round, battle)[i]);
+								if(pBattle != null){
+									pBattle.setLocation(t.getLocation()[i].getPreciseLocation());
+								}
+							}
+						}
+					}
+				} else {
+					p.sendMessage(TextFormating.RED + "Combate o ronda invalidas");
 				}
-			} else if(args[1].equals("combate")) {
-				
+			} else {
+				p.sendMessage(TextFormating.RED + "/r ronda <r> combate <c>");
 			}
-		}
-		
+		} 
+		Torneos.save();
 	}
 
 }
