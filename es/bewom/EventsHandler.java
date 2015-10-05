@@ -24,11 +24,12 @@ import org.cakepowered.api.util.text.TextFormating;
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.chat.Chat;
-import es.bewom.economy.Shops;
 import es.bewom.p.House;
 import es.bewom.p.Houses;
 import es.bewom.p.P;
 import es.bewom.p.Ranchs;
+import es.bewom.texts.TextMessages;
+import es.bewom.torneos.Torneos;
 import es.bewom.user.AwayFromKeyboard;
 import es.bewom.user.BewomUser;
 import es.bewom.user.DeniedBlocks;
@@ -47,7 +48,7 @@ public class EventsHandler {
 
 	@EventSuscribe
 	public void onUserJoin(PlayerJoinEvent event) {
-				
+		
 		Player player = event.getPlayer();		
 		BewomUser user = new BewomUser(player);	
 		if(BewomByte.m.isBanned(player.getUniqueID().toString())){
@@ -108,7 +109,6 @@ public class EventsHandler {
 		Player player = event.getPlayer();
 		UUID uuid = player.getUniqueID();
 		BewomUser u = BewomUser.getUser(uuid);
-		PokemonCatcher.catchPokemons(player.getUniqueID().toString());
 		
 		if(u != null){
 			
@@ -240,14 +240,22 @@ public class EventsHandler {
 		if(!BewomByte.DEBUG){
 			CollectPlayersWeb.on(players, date);
 		}
+		
+		Chat.save();
+		backup(date);
+		
+		Torneos.fuegos(date);
 		for(Player p : players){
+//			if(!p.isOP()){
+//				DeniedBlocks.on(p);
+//			}
 			BewomUser user = BewomUser.getUser(p);
 			AwayFromKeyboard.AFK(user);
 			long d = ((date.getTime()/1000) - (user.loginDate/1000));
 			
 			if (user.getRegistration() == WebRegistration.VALID) {
 				if(d == (user.updateState + user.registerDateVariable)){
-					user.updateState += 300;
+					user.updateState += 60;
 					user.updatePermissions();
 					PokemonCatcher.catchPokemons(p.getUniqueID().toString());
 				}
@@ -286,6 +294,28 @@ public class EventsHandler {
 				}
 			}
 		}
+	}
+	
+	private int second = 1200;
+	private void backup(Date date) {
+		
+		if(second == 1200){
+			
+			if(date.getHours() == 3){
+				
+				if(date.getMinutes() >= 45 && date.getMinutes() < 55){
+					Chat.sendMessage(null, TextMessages.BROADCAST + "El servidor se va a reiniciar en " + (55 - date.getMinutes()) + " minuto(s).", "/stop ");	
+				} else if(date.getMinutes() == 55){
+					Chat.sendMessage(null, TextMessages.BROADCAST + "El servidor se esta reiniciando...", "/stop ");	
+					BewomByte.game.getServer().stop();
+				}
+				
+			}
+			
+			second = 0;
+		}
+		second++;
+		
 	}
 
 	private void onPlayerMove(BewomUser user) {

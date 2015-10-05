@@ -8,7 +8,6 @@ import es.bewom.centrospokemon.commands.CommandPonerCentro;
 import es.bewom.centrospokemon.commands.CommandQuitarCentro;
 import es.bewom.chat.commands.CommandMp;
 import es.bewom.economy.commands.CommandDinero;
-import es.bewom.economy.commands.CommandShop;
 import es.bewom.p.commands.CommandCasa;
 import es.bewom.p.commands.CommandH;
 import es.bewom.p.commands.CommandP;
@@ -35,7 +34,6 @@ public class Commands {
 		reg.registerCommand(new CommandPlugins());
 		reg.registerCommand(new CommandDinero());
 		reg.registerCommand(new CommandTpx());
-		reg.registerCommand(new CommandShop());
 		reg.registerCommand(new CommandH());
 		reg.registerCommand(new CommandCasa());
 		reg.registerCommand(new CommandTp());
@@ -56,6 +54,8 @@ public class Commands {
 		reg.registerCommand(new CommandBack());
 		reg.registerCommand(new CommandRanch());
 		reg.registerCommand(new CommandTorneo());
+		reg.registerCommand(new CommandCraft());
+		reg.registerCommand(new CommandTpb());
 		
 	}
 }

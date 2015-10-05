@@ -15,6 +15,8 @@ public class CollectPlayersWeb {
 	
 	public static void on(Collection<Player> players, Date date){
 		if(i == 1200){
+			BewomByte.m.executeQuery("INSERT INTO `playersUsage`(`players`) VALUES ('" + players.size() + "')", null);
+			
 			BewomByte.m.executeQuery("DELETE FROM `serverPing`", null);
 			BewomByte.m.executeQuery("DELETE FROM `PlayersOnLine`", null);
 			BewomByte.m.executeQuery("INSERT INTO `serverPing`(`lastPing`) VALUES ('" + (date.getTime()/1000) +"')", null);

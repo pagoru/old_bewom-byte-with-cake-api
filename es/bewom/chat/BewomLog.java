@@ -29,6 +29,8 @@ public class BewomLog {
 	private DateFormat df2 = new SimpleDateFormat("HH:mm:ss");
 	private Gson g = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
 	
+	private int timeToSave = 6000;
+	
 	public BewomLog(){
 		Date d = new Date();
 		this.day = df.format(d);
@@ -67,6 +69,26 @@ public class BewomLog {
 	    return false;
 	}
 	
+	public void saveLog(){
+		
+		if(timeToSave == 6000){
+			
+			try {
+				String outLog = g.toJson(this);
+				System.out.println("saving... bewom/log/" + day + extra + ".log");
+				FileWriter w = new FileWriter("bewom/log/" + day + extra + ".log");
+				w.write(outLog);
+				w.close();
+			} catch (IOException e) {
+				e.getStackTrace();
+			}
+			
+			timeToSave = 0;
+		}
+		timeToSave++;
+		
+	}
+	
 	public void add(Player p, String m){
 		Date d = new Date();
 		if(!this.day.equals(df.format(d))){
@@ -90,15 +112,6 @@ public class BewomLog {
 				.uuid(uuid)
 				.message(m)
 				.hour(df2.format(d)));
-		String outLog = g.toJson(this);
-		
-		try {
-			FileWriter w = new FileWriter("bewom/log/" + day + extra + ".log");
-			w.write(outLog);
-			w.close();
-		} catch (IOException e) {
-			e.getStackTrace();
-		}
 	}
 	
 	public String getDay() {

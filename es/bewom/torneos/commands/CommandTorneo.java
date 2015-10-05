@@ -6,6 +6,12 @@ import java.util.List;
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
+import org.cakepowered.api.util.Color;
+import org.cakepowered.api.util.DyeColor;
+import org.cakepowered.api.util.FireworkProperties;
+import org.cakepowered.api.util.FireworkProperties.FireworkExplosion;
+import org.cakepowered.api.util.FireworkProperties.FireworkType;
+import org.cakepowered.api.util.Vector3d;
 import org.cakepowered.api.util.Vector3i;
 import org.cakepowered.api.util.text.TextFormating;
 
@@ -29,8 +35,33 @@ public class CommandTorneo extends CommandBase {
 	}
 	
 	@Override
+	public boolean canBeUsedBy(CommandSender commandSender){
+		if(commandSender.getPlayer() != null){
+			if(BewomUser.getUser(commandSender.getPlayer()).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	@Override
 	public List<String> addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos) {
-		return null;
+		List<String> str = new ArrayList<String>();
+		if(args.length == 1){
+			str.add("nuevo");
+			str.add("posicion");
+			str.add("ronda");
+		} else if(args.length == 2){
+			str.add("A");
+			str.add("B");
+			str.add("C");
+			str.add("D");
+		} else if(args.length == 3){
+			str.add("combate");
+		} else if(args.length == 5){
+			str.add("ganador");
+		}
+		return str;
 	}
 	
 	@Override
@@ -44,8 +75,11 @@ public class CommandTorneo extends CommandBase {
 		 * t ronda <ronda> combate <batalla> ganador <player>
 		 * 
 		 */
+		Torneos.load();
 		Torneo t = Torneos.current;
 		Player p = commandSender.getPlayer();
+		
+		if(BewomUser.getUser(p).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
 		
 		if(args.length >= 5){
 			if(args[0].equals("nuevo")){
@@ -75,25 +109,34 @@ public class CommandTorneo extends CommandBase {
 								if(!winner.equals("null")){
 									if(round == 3){
 										Chat.sendMessage(p, TextMessages.BROADCAST + winner + " ha ganado este torneo!", "/t");
+										Torneos.fuegos = true;
 										for (int i = 0; i < 2; i++) {
 											if(t.getBattle(round, battle)[i] != null){
-												Player pBattle = BewomByte.game.getServer().getPlayer(t.getBattle(round, battle)[0]);
+												Player pBattle = BewomByte.game.getServer().getPlayer(t.getBattle(round, battle)[i]);
 												if(pBattle != null){
 													pBattle.setLocation(t.getLocation()[2].getPreciseLocation());
+													if(pBattle.getUserName().equals(winner)){
+														BewomUser.getUser(pBattle).addPoints(3);
+													} else {
+														BewomUser.getUser(pBattle).addPoints(2);
+													}
 												}
 											}
 										}
 										if(t.getThirdWinner() != null){
 											Player pThird = BewomByte.game.getServer().getPlayer(t.getThirdWinner());
+											System.out.println(pThird.getUserName());
 											if(pThird != null){
 												pThird.setLocation(t.getLocation()[2].getPreciseLocation());
+												BewomUser.getUser(pThird).addPoints(1);
 											}
 										}
+										Sounds.playSoundToAll("records.wait", 1.0F, 2.0F);
 									} else {
 										Chat.sendMessage(p, TextMessages.BROADCAST + winner + " ha ganado este combate.", "/t");
 										for (int i = 0; i < 2; i++) {
 											if(t.getBattle(round, battle)[i] != null){
-												Player pBattle = BewomByte.game.getServer().getPlayer(t.getBattle(round, battle)[0]);
+												Player pBattle = BewomByte.game.getServer().getPlayer(t.getBattle(round, battle)[i]);
 												if(pBattle != null){
 													pBattle.setLocation(t.getLocation()[3].getPreciseLocation());
 												}
@@ -116,7 +159,18 @@ public class CommandTorneo extends CommandBase {
 		} else if(args.length == 1){
 			if(args[0].equals("start")){
 				t.purgePlayers();
+				t.reOrderPlayers();
 				Chat.sendMessage(p, TextMessages.BROADCAST + t.getName() + " esta a punto de empezar!", "/t");
+				FireworkExplosion explosion = new FireworkExplosion(
+						FireworkType.LARGE, new Color[]{DyeColor.RED.getColor(), DyeColor.WHITE.getColor()}, true, true,
+						new Color[]{DyeColor.RED.getColor(), DyeColor.WHITE.getColor()});
+				
+				FireworkProperties properties = new FireworkProperties(Byte.MAX_VALUE, explosion);
+				
+				for (Player player : BewomByte.game.getServer().getOnlinePlayers()) {
+					player.getWorld().spawnFirework(new Vector3d(player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ()), properties);
+					
+				}
 			}
 		} else if(args.length == 2){
 			if(args[0].equals("posicion")){

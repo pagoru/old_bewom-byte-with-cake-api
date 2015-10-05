@@ -13,7 +13,12 @@ public class Censure {
 			".com",
 			".net",
 			".tc",
-			".cat"
+			".cat",
+			"skype",
+			"facebook",
+			"telefono",
+			"movil",
+			"whatsapp"
 	};
 	
 	public static String[] wordsNotCensured = {
@@ -51,11 +56,35 @@ public class Censure {
 		return toReturn;
 	}
 	
-	public static boolean blockIps(String addr){
-	    if (addr.matches("^\\d+\\.\\d+\\.\\d+\\.\\d+$") || addr.indexOf(":") >= 0 || addr.subSequence(0, addr.length() - 1).toString().matches("^\\d+\\.\\d+\\.\\d+\\.\\d+$")){
-	        return true;
-	    }
-	    return false;
+	public static boolean blockIps(String ip){
+		if(ip.length() > 0){
+			ip = ip.substring(0, ip.length()-1);
+			try {
+		        if ( ip == null || ip.isEmpty() ) {
+		            return false;
+		        }
+
+		        String[] parts = ip.split( "\\." );
+		        if ( parts.length != 4 ) {
+		            return false;
+		        }
+
+		        for ( String s : parts ) {
+		            int i = Integer.parseInt( s );
+		            if ( (i < 0) || (i > 255) ) {
+		                return false;
+		            }
+		        }
+		        if ( ip.endsWith(".") ) {
+		            return false;
+		        }
+
+		        return true;
+		    } catch (NumberFormatException nfe) {
+		        return false;
+		    }
+		}
+		return false;
 	}
 	
 }

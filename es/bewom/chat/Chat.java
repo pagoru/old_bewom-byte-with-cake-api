@@ -17,6 +17,12 @@ public class Chat {
 	private static BewomLog l = new BewomLog();
 	private static Random rand = new Random();
 	
+	public static void save(){
+		
+		l.saveLog();
+		
+	}
+	
 	public static void sendMessage(Player p, String formatedMSG, String msg){
 		String[] m = msg.split(" ");
 		if(!m[0].substring(0, 1).equals("/")){

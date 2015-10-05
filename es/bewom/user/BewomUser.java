@@ -44,7 +44,7 @@ public class BewomUser {
 	
 	private int permissionLevel;
 	
-	public int updateState = 300;
+	public int updateState = 60;
 	
 	private String registerLink = "http://bewom.es/crear/";
 	private boolean getRegisterLink = false;
@@ -75,7 +75,11 @@ public class BewomUser {
 
 	private PreciseLocation back;
 	
-	public long timePlaying = 60;	
+	public long timePlaying = 60;
+	
+	public boolean isFirstUpdate = true;
+	
+	public long timeTpRandom;
 	
 	public BewomUser(Player player) {
 		
@@ -314,11 +318,31 @@ public class BewomUser {
 				long f = a1 - a2;
 				long ff = day - f;
 				
-				if(ff <= 0){
-					BewomByte.m.executeQuery("UPDATE `users` SET `type`='miembro',`date_type`='" + timestamp.toString() + "',`days_type`='0' WHERE `uuid`='" + player.getUniqueID().toString() + "'", null);
-					System.out.println(perm);
+				int diasRestantes = (int) Math.ceil((((double)ff/60)/60)/24);
+				
+				if(isFirstUpdate){
+					
+					if(diasRestantes > 0){
+						if(diasRestantes == 1){
+							player.sendMessage(TextFormating.DARK_AQUA + "Te queda 1 dia restantes como vip.");
+						} else {
+							player.sendMessage(TextFormating.DARK_AQUA + "Te quedan " + diasRestantes + " dias restantes como vip.");
+						}
+					}
+					isFirstUpdate = false;
+				}
+				
+				System.out.println("dias:" + diasRestantes);
+				if(isUser() && perm.equals(PERM_VIP)){
+					if(diasRestantes > 0){
+						player.sendTitle(new Title(TextFormating.DARK_AQUA + "¡Ya eres vip!", TextFormating.WHITE + "Muchas gracias por tu donación :)", 120, 0, 60));
+					}
+				}
+				if(diasRestantes < 0){
 					if(perm.equals(PERM_VIP)){
-						player.sendTitle(new Title(TextFormating.DARK_AQUA+"Se te ha acabado el vip!", TextFormating.WHITE+"Siempre puedes volver a donar... :)", 120, 0, 60));
+						perm = PERM_USER;
+						BewomByte.m.executeQuery("UPDATE `users` SET `type`='miembro', `days_type`='0' WHERE `uuid`='" + uuid + "'", null);
+						player.sendTitle(new Title(TextFormating.DARK_AQUA + "¡Se te ha acabado el vip!", TextFormating.WHITE + "Siempre puedes volver a donar :)", 120, 0, 60));
 					}
 				}
 			}

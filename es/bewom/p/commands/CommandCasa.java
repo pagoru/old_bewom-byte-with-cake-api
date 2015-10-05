@@ -106,9 +106,13 @@ public class CommandCasa extends CommandBase {
 					if(user.getFriends().contains(UUID.fromString(uuid))){
 						House friendHouse = null;
 						for(House h : Houses.houses){
-							if(h.getOwner().equals(uuid)){
-								friendHouse = h;
-								break;
+							if(h != null){
+								if(h.getOwner() != null){
+									if(h.getOwner().equals(uuid)){
+										friendHouse = h;
+										break;
+									}
+								}
 							}
 						}
 						if(friendHouse != null){

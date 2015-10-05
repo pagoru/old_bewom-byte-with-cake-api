@@ -5,12 +5,21 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Date;
+
+import org.cakepowered.api.util.Color;
+import org.cakepowered.api.util.DyeColor;
+import org.cakepowered.api.util.FireworkProperties;
+import org.cakepowered.api.util.FireworkProperties.FireworkExplosion;
+import org.cakepowered.api.util.FireworkProperties.FireworkType;
+import org.cakepowered.api.util.Vector3d;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import es.bewom.BewomByte;
 import es.bewom.p.House;
+import es.bewom.util.Dimensions;
 
 public class Torneos {
 	
@@ -52,7 +61,7 @@ public class Torneos {
 	public static void load() {
 		
 		try {
-		
+			
 			File folder = new File("bewom");
 			if(!folder.exists()) folder.mkdirs();
 			
@@ -81,5 +90,30 @@ public class Torneos {
 		load();
 		save();
 	}
-
+	
+	public static boolean fuegos = false;
+	public static int f = 0;
+	
+	private static int x = -10;
+	public static void fuegos(Date date){
+		if(fuegos){
+			if(f == 5){
+				FireworkExplosion explosion = new FireworkExplosion(
+						FireworkType.LARGE, new Color[]{DyeColor.RED.getColor(), DyeColor.WHITE.getColor()}, true, true,
+						new Color[]{DyeColor.RED.getColor(), DyeColor.WHITE.getColor()});
+				FireworkProperties properties = new FireworkProperties((byte) 0, explosion);
+				BewomByte.game.getServer().getWorld(Dimensions.EXTERIORES).spawnFirework(
+						new Vector3d(current.getLocation()[2].getPosition().getX() + x, 
+								current.getLocation()[2].getPosition().getY(), 
+								current.getLocation()[2].getPosition().getZ()), properties);
+				if(x == 10){
+					fuegos = false;
+					x = -10;
+				}
+				x++;
+				f = 0;
+			}
+			f++;
+		}
+	}
 }

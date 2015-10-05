@@ -18,6 +18,7 @@ import com.google.gson.annotations.Expose;
 import es.bewom.BewomByte;
 import es.bewom.user.BewomUser;
 import es.bewom.util.Location;
+import io.netty.util.internal.ThreadLocalRandom;
 
 public class Torneo {
 	
@@ -73,6 +74,20 @@ public class Torneo {
 		winnerRound4 = -1;
 		
 		save();
+	}
+	
+	public void reOrderPlayers(){
+		List<Integer> i = getRandom(16);
+		String[] players = new String[16];
+		
+		int x = 0;
+		for(int in : i){
+			players[in] = playersRound1[x];
+			x++;
+		}
+		
+		playersRound1 = players;
+		
 	}
 	
 	public void purgePlayers(){
@@ -179,23 +194,30 @@ public class Torneo {
 		battle[0] = ronda[batalla*2];
 		battle[1] = ronda[(batalla*2) + 1];
 		
-		if(winner.equalsIgnoreCase(battle[0])){
-			winnerRound[batalla] = 0;
-			ronda2[batalla] = battle[0];
-			updateWinners();
-			save();
-		} else if(winner.equalsIgnoreCase(battle[1])){
-			winnerRound[batalla] = 1;
-			ronda2[batalla] = battle[1];
-			updateWinners();
-			save();
-		} else if(winner.equalsIgnoreCase("null")){
+		if(winner == null){
 			winnerRound[batalla] = -1;
 			ronda2 = null;
 			updateWinners();
 			save();
 		} else {
-			return false;
+			if(winner.equalsIgnoreCase(battle[0])){
+				winnerRound[batalla] = 0;
+				ronda2[batalla] = battle[0];
+				updateWinners();
+				save();
+			} else if(winner.equalsIgnoreCase(battle[1])){
+				winnerRound[batalla] = 1;
+				ronda2[batalla] = battle[1];
+				updateWinners();
+				save();
+			} else if(winner.equals("null")){
+				winnerRound[batalla] = -1;
+				ronda2 = null;
+				updateWinners();
+				save();
+			} else {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -205,30 +227,36 @@ public class Torneo {
 		battle[0] = ronda[batalla*2];
 		battle[1] = ronda[(batalla*2) + 1];
 		
-		if(winner.equalsIgnoreCase(battle[0])){
-			winnerRound4 = 0;
-			ronda2 = battle[0];
-			updateWinners();
-			save();
-		} else if(winner.equalsIgnoreCase(battle[1])){
-			winnerRound4 = 1;
-			ronda2 = battle[1];
-			updateWinners();
-			save();
-		} else if(winner.equalsIgnoreCase("null")){
+		if(winner == null){
 			winnerRound4 = -1;
 			ronda2 = null;
 			updateWinners();
 			save();
 		} else {
-			return false;
+			if(winner.equalsIgnoreCase(battle[0])){
+				winnerRound4 = 0;
+				ronda2 = battle[0];
+				updateWinners();
+				save();
+			} else if(winner.equalsIgnoreCase(battle[1])){
+				winnerRound4 = 1;
+				ronda2 = battle[1];
+				updateWinners();
+				save();
+			} else if(winner.equals("null")){
+				winnerRound4 = -1;
+				ronda2 = null;
+				updateWinners();
+				save();
+			} else {
+				return false;
+			}
 		}
 		return true;
 	}
 	
 	public void load(){
 		this.name = BewomByte.m.executeQuery("SELECT `name` FROM `torneos` WHERE `index`='" + index + "'", "name").get(0);
-		this.date = BewomByte.m.executeQuery("SELECT `date` FROM `torneos` WHERE `index`='" + index + "'", "date").get(0);
 		
 		this.playersRound1 = getArrayStringFromList(BewomByte.m.executeQuery("SELECT `playersName` FROM `torneos` WHERE `index`='" + index + "'", "playersName"));
 		
@@ -267,11 +295,10 @@ public class Torneo {
 	}
 
 	public void save(){
+		updateWinners();
 		BewomByte.m.executeQuery(
 				"UPDATE `torneos` SET "
-				+ "`name`='" + name + "',"
-				+ "`date`='" + date + "',"
-				
+				+ "`name`='" + name + "',"				
 				+ "`playersName`='" + getStringComasFromArrayString(playersRound1) + "',"
 				
 				+ "`winsRound1`='" + getStringComasFromArrayInt(winnersRound1) + "',"
@@ -283,6 +310,19 @@ public class Torneo {
 	}
 	
 	//UTIL
+	private List<Integer> getRandom(int num){
+		List<Integer> in = new ArrayList<Integer>();
+		for (int j = 0; j < num; j++) {
+			while(true){
+				int i = ThreadLocalRandom.current().nextInt(0, num);
+				if(!in.contains(i)){
+					in.add(i);
+					break;
+				}
+			}
+		}
+		return in;
+	}
 	private String getStringComasFromArrayString(String[] str){
 		String strComas = "";
 		for (int i = 0; i < str.length; i++) {

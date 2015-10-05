@@ -8,88 +8,47 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
 
-import org.jnbt.CompoundTag;
-import org.jnbt.NBTInputStream;
-import org.jnbt.Tag;
+import org.cakepowered.api.nbt.NBTBase;
+import org.cakepowered.api.nbt.NBTCompund;
+import org.cakepowered.api.nbt.NBTFactory;
+import org.cakepowered.api.nbt.NBTList;
 
 import es.bewom.BewomByte;
 
 public class PokemonCatcher {
 	
-	private static FileInputStream a;
 
 	public static void catchPokemons(String uuid){
 		
-		try {
-			a = new FileInputStream(new File("world/pokemon/" + uuid + ".pktemp"));
+		NBTCompund nbt = BewomByte.game.getNBTFactory().readNBT(new File("world/pokemon/" + uuid + ".pk"));
+		
+		int[] lvl = {0, 0, 0, 0, 0, 0}; 
+		String[] name = {"", "", "", "", "", ""};
+		int[] sh = {0, 0, 0, 0, 0, 0};
+		
+		for (int i = 0; i < 6; i++) {
 			
-			String path = "world/pokemon/" + uuid + ".data_";
+			NBTCompund n = (NBTCompund) nbt.getCompound("party" + i);
 			
-			int ch;
-		    StringBuffer strContent = new StringBuffer("");
-			
-			while( (ch = a.read()) != -1){
-				strContent.append((char)ch);
-			}
-			
-			ByteArrayOutputStream test = new ByteArrayOutputStream();
-			
-			GZIPOutputStream gzos = new GZIPOutputStream(test);
-			gzos.write(strContent.toString().getBytes());
-			gzos.close();
-			
-			NBTInputStream ns = new NBTInputStream(new ByteArrayInputStream(test.toByteArray()));
-			Tag master = ns.readTag();
-			ns.close();
-			
-			
-			String[] lvl = {"0", "0", "0", "0", "0", "0"}; 
-			String[] name = {"", "", "", "", "", ""};
-			
-			for (int i = 0; i < 200; i++) {
-				
-				if(getCompounfTag(master).getValue().get("party" + i) != null){
+			if(n != null){
+				if(n.getString("Name") != null){
+					name[i] = n.getString("Name");
+					lvl[i] = n.getInteger("Level");
 					
-					Tag t = getCompounfTag(master).getValue().get("party" + i);
-					
-					lvl[i] = getValueFromTag(t, "Level");
-					name[i] = getValueFromTag(t, "Name");
-					
-	//				String gender = getValueFromTag(t, "Gender");
-	//				String Healh = getValueFromTag(t, "Health");
-					
+					sh[i] = n.getByte("IsShiny");
 				}
-				
 			}
 			
-			BewomByte.m.executeQuery("UPDATE `users` SET "
-					+ "`poke0name`='" + name[0] + "',`poke0lvl`='" + lvl[0] + "',"
-					+ "`poke1name`='" + name[1] + "',`poke1lvl`='" + lvl[1] + "',"
-					+ "`poke2name`='" + name[2] + "',`poke2lvl`='" + lvl[2] + "',"
-					+ "`poke3name`='" + name[3] + "',`poke3lvl`='" + lvl[3] + "',"
-					+ "`poke4name`='" + name[4] + "',`poke4lvl`='" + lvl[4] + "',"
-					+ "`poke5name`='" + name[5] + "',`poke5lvl`='" + lvl[5] + "'"
-					+ "WHERE `uuid`='" + uuid + "'", null);
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		};
-		
-	}
-	
-	private static String getValueFromTag(Tag t, String key) throws IOException{
-		
-		return getCompounfTag(t).getValue().get(key).getValue().toString();
-		
-	}
-	
-	private static CompoundTag getCompounfTag(Tag master) throws IOException{
-		
-		if (!(master instanceof CompoundTag)) {
-			throw new IllegalArgumentException("Expected CompoundTag, got " + master.getClass());
 		}
-
-		return (CompoundTag) master;
+		
+		BewomByte.m.executeQuery("UPDATE `users` SET "
+				+ "`poke0name`='" + name[0] + "',`poke0lvl`='" + lvl[0] + "',`poke0shiny`='" + sh[0] + "',"
+				+ "`poke1name`='" + name[1] + "',`poke1lvl`='" + lvl[1] + "',`poke1shiny`='" + sh[1] + "',"
+				+ "`poke2name`='" + name[2] + "',`poke2lvl`='" + lvl[2] + "',`poke2shiny`='" + sh[2] + "',"
+				+ "`poke3name`='" + name[3] + "',`poke3lvl`='" + lvl[3] + "',`poke3shiny`='" + sh[3] + "',"
+				+ "`poke4name`='" + name[4] + "',`poke4lvl`='" + lvl[4] + "',`poke4shiny`='" + sh[4] + "',"
+				+ "`poke5name`='" + name[5] + "',`poke5lvl`='" + lvl[5] + "',`poke5shiny`='" + sh[5] + "'"
+				+ "WHERE `uuid`='" + uuid + "'", null);
 		
 	}
 	

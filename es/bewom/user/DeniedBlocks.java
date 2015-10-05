@@ -28,12 +28,15 @@ public class DeniedBlocks {
 			"potion",
 			"Sunstone",
 			"Leafstone",
-			"enderpearl"
+			"enderPearl",
+			"bucketLava",
+			"bucketWater"
 	};
 	
 	public static final String[] DENIED_INTERACT_INTERIOR = {
 			"Bike.name",
-			"Pixelmon.name"
+			"Pixelmon.name",
+			"enderPearl"
 	};
 	
 	public static final String[] DENIED_PLACE_INTERIOR = {
@@ -42,7 +45,7 @@ public class DeniedBlocks {
 	};
 	
 	public static final String[] ALLOWED_INTERACT_EXTERIOR = {
-			"apriconr tree",
+			"apricorntree",
 			"pc",
 			"trademachine",
 			"mechanicalanvil",
@@ -179,6 +182,17 @@ public class DeniedBlocks {
 				for (int i = 0; i < DENIED_PLACE_INTERIOR.length; i++) {
 					
 					if(p.getCurrentItem().getUnlocalizedName().contains(DENIED_PLACE_INTERIOR[i])){
+						
+						e.setEventCanceled(true);
+						break;
+						
+					}
+					
+				}
+				
+				for (int i = 0; i < DENIED_INTERACT_INTERIOR.length; i++) {
+					
+					if(p.getCurrentItem().getUnlocalizedName().contains(DENIED_INTERACT_INTERIOR[i])){
 						
 						e.setEventCanceled(true);
 						break;
@@ -343,5 +357,32 @@ public class DeniedBlocks {
 			}
 		}
 	}
+//
+//	public static void on(Player p) {
+//		
+//		int d = p.getDimensionID();
+//		
+//		if(d == Dimensions.INTERIORES || d == Dimensions.EXTERIORES){
+//			
+//			if(p.getCurrentItem() != null){
+//				
+//				System.out.println(p.getCurrentItem().getUnlocalizedName());
+//				
+//				for (int i = 0; i < DENIED_INTERACT_INTERIOR.length; i++) {
+//					
+//					if(p.getCurrentItem().getUnlocalizedName().contains(DENIED_INTERACT_INTERIOR[i])){
+//						
+//						p.getCurrentItem().setItem(null);
+//						break;
+//						
+//					}
+//					
+//				}
+//				
+//			}
+//			
+//		}
+//		
+//	}
 
 }
