@@ -24,6 +24,7 @@ import org.cakepowered.api.util.text.TextFormating;
 import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.chat.Chat;
+import es.bewom.gimnasios.Gimnasios;
 import es.bewom.p.House;
 import es.bewom.p.Houses;
 import es.bewom.p.P;
@@ -154,6 +155,7 @@ public class EventsHandler {
 		
 		Ranchs.on(event);
 		Houses.on(game, event);
+		Gimnasios.on(event);
 		P.on(game, event);
 		AwayFromKeyboard.on(event);
 	}
