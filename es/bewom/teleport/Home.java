@@ -9,22 +9,16 @@ import com.google.gson.annotations.Expose;
 
 public class Home {
 	
-	@Expose
-	private double x;
-	@Expose
-	private double y;
-	@Expose
-	private double z;
-	@Expose
-	private float yaw;
-	@Expose
-	private float pitch;
-	@Expose
-	private int dimension;
-	@Expose
-	private UUID uuid;
+	@Expose private double x;
+	@Expose private double y;
+	@Expose private double z;
+	@Expose private float yaw;
+	@Expose private float pitch;
+	@Expose private int dimension;
+	@Expose private UUID uuid;
+	@Expose private String name;
 	
-	public Home(Player p) {
+	public Home(Player p, String name) {
 		super();
 		this.x = p.getLocation().getX();
 		this.y = p.getLocation().getY();
@@ -33,6 +27,7 @@ public class Home {
 		this.pitch = p.getLocation().getPitch();
 		this.dimension = p.getDimensionID();
 		this.uuid = p.getUniqueID();
+		this.name = name;
 	}
 	
 	public PreciseLocation getLocation(){
@@ -68,6 +63,14 @@ public class Home {
 	}
 	public void setUuid(UUID uuid) {
 		this.uuid = uuid;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }

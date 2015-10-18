@@ -37,15 +37,19 @@ public class CommandSetZona extends CommandBase {
 			return;
 		}
 		if(BewomUser.getUser(p).getPermissionLevel() < BewomUser.PERM_LEVEL_VIP) return;
-		if(args.length == 0){
+		if(args.length == 1){
 			if(p.getDimensionID() != Dimensions.INTERIORES){
-				Homes.setHome(p);
-				p.sendMessage(TextFormating.RED + "Se ha establecido tu zona correctamente.");
+				if(Homes.getHomes(p).size() < 5){
+					Homes.setHome(p, args[0]);
+					p.sendMessage(TextFormating.RED + "Se ha establecido tu zona correctamente con el nombre " + args[0] + ".");
+				} else {
+					p.sendMessage(TextFormating.RED + "No puedes asignar mas de 5 zonas, elimina alguna antigua.");
+				}
 			} else {
 				p.sendMessage(TextFormating.RED + "No se puede establecer una zona en este mundo.");
 			}
 		} else {
-			p.sendMessage(TextFormating.RED + "No se puede establecer una zona en este mundo.");
+			p.sendMessage(TextFormating.RED + "Has de asignar un nombre a tu zona.");
 		}
 		
 	}

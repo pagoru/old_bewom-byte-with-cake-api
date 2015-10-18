@@ -11,6 +11,7 @@ import org.cakepowered.api.inventory.PlayerInventory;
 
 import es.bewom.BewomByte;
 import es.bewom.util.Dimensions;
+import es.bewom.util.Pokemons;
 
 public class DeniedBlocks {
 	
@@ -29,8 +30,7 @@ public class DeniedBlocks {
 			"Sunstone",
 			"Leafstone",
 			"enderPearl",
-			"bucketLava",
-			"bucketWater"
+			"bucketLava" // "bucketWater"
 	};
 	
 	public static final String[] DENIED_INTERACT_INTERIOR = {
@@ -235,6 +235,16 @@ public class DeniedBlocks {
 			for (int i = 0; i < ALLOWED_INTERACT_EXTERIOR.length; i++) {
 				
 				if(e.getEntity().getName().contains(ALLOWED_INTERACT_EXTERIOR[i])){
+					
+					x = false;
+					break;
+					
+				}
+				
+			}
+			for (int i = 0; i < Pokemons.pokemons.length; i++) {
+				
+				if(e.getEntity().getName().contains(Pokemons.pokemons[i])){
 					
 					x = false;
 					break;

@@ -75,6 +75,7 @@ public class CommandTorneo extends CommandBase {
 		 * t ronda <ronda> combate <batalla> ganador <player>
 		 * 
 		 */
+		
 		Torneos.load();
 		Torneo t = Torneos.current;
 		Player p = commandSender.getPlayer();
@@ -237,6 +238,7 @@ public class CommandTorneo extends CommandBase {
 			}
 		} 
 		Torneos.save();
+		
 	}
 
 }

@@ -7,6 +7,7 @@ import es.bewom.centrospokemon.commands.CommandCentro;
 import es.bewom.centrospokemon.commands.CommandPonerCentro;
 import es.bewom.centrospokemon.commands.CommandQuitarCentro;
 import es.bewom.chat.commands.CommandMp;
+import es.bewom.commands.randomTp.CommandTpb;
 import es.bewom.economy.commands.CommandDinero;
 import es.bewom.p.commands.CommandCasa;
 import es.bewom.p.commands.CommandH;
@@ -56,6 +57,7 @@ public class Commands {
 		reg.registerCommand(new CommandTorneo());
 		reg.registerCommand(new CommandCraft());
 		reg.registerCommand(new CommandTpb());
+		reg.registerCommand(new CommandTps());
 		
 	}
 }

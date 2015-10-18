@@ -97,6 +97,15 @@ public class BewomUser {
 		
 		this.friends = getAllFriends();
 		this.friendsPetitions = getAllFriendsPetitions();
+		
+		Date d = new Date();
+		Timestamp timestamp = new Timestamp(d.getTime());
+		
+		System.out.println("adioas98yas9y8d9y8asd98 as897sa 89da s978ds098");
+		
+		BewomByte.m.executeQuery("UPDATE `users` SET `user`='" + player.getUserName() + "' WHERE `uuid`='" + uuid + "'", null);
+		BewomByte.m.executeQuery("UPDATE `users` SET `lastLogin`='" + timestamp.toString() + "' WHERE `uuid`='" + uuid + "'", null);
+		
 	}
 	
 	public void addPoints(int points){
@@ -332,7 +341,6 @@ public class BewomUser {
 					isFirstUpdate = false;
 				}
 				
-				System.out.println("dias:" + diasRestantes);
 				if(isUser() && perm.equals(PERM_VIP)){
 					if(diasRestantes > 0){
 						player.sendTitle(new Title(TextFormating.DARK_AQUA + "¡Ya eres vip!", TextFormating.WHITE + "Muchas gracias por tu donación :)", 120, 0, 60));

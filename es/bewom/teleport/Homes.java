@@ -24,12 +24,26 @@ public class Homes {
 		load();
 	}
 	
-	public static Home getHome(Player p){
+	public static List<String> getHomes(Player p){
+		List<String> hom = new ArrayList<String>();
+		if(homes != null){
+			for(Home h : homes){
+				if(h.getUuid().equals(p.getUniqueID())){
+					hom.add(h.getName());
+				}
+			}
+		}
+		return hom;
+	}
+	
+	public static Home getHome(Player p, String name){
 		
 		if(homes != null){
 			for(Home h : homes){
 				if(h.getUuid().equals(p.getUniqueID())){
-					return h;
+					if(h.getName().equalsIgnoreCase(name)){
+						return h;
+					}
 				}
 			}
 		}
@@ -38,7 +52,25 @@ public class Homes {
 		
 	}
 	
-	public static void setHome(Player p){
+	public static void removeHome(Player p, String name){
+		Home toDelete = null;
+		if(homes != null){
+			for(Home h : homes){
+				if(h.getUuid().equals(p.getUniqueID())){
+					if(h.getName().equalsIgnoreCase(name)){
+						toDelete = h;
+					}
+				}
+			}
+		}
+		if(toDelete != null){
+			homes.remove(toDelete);
+		}
+		save();
+		
+	}
+	
+	public static void setHome(Player p, String name){
 		
 		Home ho = null;
 		Home toRemove = null;
@@ -46,8 +78,10 @@ public class Homes {
 		if(homes != null){
 			for(Home h : homes){
 				if(h.getUuid().equals(p.getUniqueID())){
-					ho = new Home(p);
-					toRemove = h;
+					if(h.getName().equalsIgnoreCase(name)){
+						ho = new Home(p, name);
+						toRemove = h;
+					}
 				}
 			}
 			if(toRemove != null){
@@ -57,7 +91,7 @@ public class Homes {
 		}
 		
 		if(ho == null){
-			homes.add(new Home(p));
+			homes.add(new Home(p, name));
 		}
 		save();
 		
