@@ -55,7 +55,6 @@ public class House {
 		this.uuidOwner = null;
 		setSoldSign(false);
 		BewomUser.getUser(p).addMoney(sellPrice);
-		p.setLocation(new PreciseLocation(signDimension, new Vector3d(signX, signY, signZ), p.getLocation().getYaw(), p.getLocation().getPitch()));
 	}
 	
 	public void setSoldSign(boolean sold){

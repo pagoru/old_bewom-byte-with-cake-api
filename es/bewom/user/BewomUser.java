@@ -2,6 +2,7 @@ package es.bewom.user;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.cakepowered.api.util.text.TextModifier;
 
 import es.bewom.BewomByte;
 import es.bewom.p.House;
+import es.bewom.util.Medallas;
 import es.bewom.util.Ran;
 import es.bewom.util.mysql.MySQL;
 
@@ -27,13 +29,13 @@ import es.bewom.util.mysql.MySQL;
  */
 public class BewomUser {
 	
-	public static final String PERM_ADMIN = "admin";
-	public static final String PERM_VIP = "vip";
-	public static final String PERM_USER = "miembro";
+	public static final String PERM_ADMIN 		= "admin";
+	public static final String PERM_VIP 			= "vip";
+	public static final String PERM_USER 		= "miembro";
 	
-	public static final int PERM_LEVEL_ADMIN = 3;
-	public static final int PERM_LEVEL_VIP = 2;
-	public static final int PERM_LEVEL_USER = 1;
+	public static final int PERM_LEVEL_ADMIN 	= 3;
+	public static final int PERM_LEVEL_VIP 		= 2;
+	public static final int PERM_LEVEL_USER 	= 1;
 	
 	static HashMap<UUID, BewomUser> onlineUsers = new HashMap<UUID, BewomUser>();
 	
@@ -105,6 +107,38 @@ public class BewomUser {
 		
 		BewomByte.m.executeQuery("UPDATE `users` SET `user`='" + player.getUserName() + "' WHERE `uuid`='" + uuid + "'", null);
 		BewomByte.m.executeQuery("UPDATE `users` SET `lastLogin`='" + timestamp.toString() + "' WHERE `uuid`='" + uuid + "'", null);
+		
+		setMedallas();
+		
+	}
+	
+	private void setMedallas(){
+		
+		Calendar c = Calendar.getInstance();
+		
+		int d = c.get(Calendar.DAY_OF_MONTH);
+		int m = c.get(Calendar.MONTH);
+		int y = c.get(Calendar.YEAR);
+		
+		System.out.println(d + "-" + m + "-" + y);
+		
+		if(d >= 30 && d <= 31 && m == Calendar.OCTOBER && y == 2015){
+			
+			setMedalla(Medallas.HALLOWEEN_2015);
+			
+		}
+		
+	}
+	
+	public void setMedalla(String m){
+		
+		List<String> medallas = BewomByte.m.executeQuery("SELECT * FROM `medallas` WHERE `uuid`='" + player.getUniqueID() + "'", "medalla");
+		
+		if(!medallas.contains(m)){
+			
+			BewomByte.m.executeQuery("INSERT INTO `medallas`(`medalla`, `uuid`) VALUES ('" + m + "','" + player.getUniqueID() + "')", null);
+			
+		}
 		
 	}
 	
@@ -186,6 +220,16 @@ public class BewomUser {
 	
 	public List<UUID> getFriends(){
 		return friends;
+	}
+	
+	public boolean isFriend(BewomUser u){
+		
+		for (UUID uuid : friends) {
+			if(u.getUUID().equals(uuid)){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public List<String> getFriendsNames(){
@@ -375,10 +419,10 @@ public class BewomUser {
 			case PERM_VIP:
 				if(permissionLevel != PERM_LEVEL_VIP){
 					setPermissionLevel(2);
-					Team teamVip = player.getWorld().getScoreboard().getTeam(PERM_VIP);
+					Team teamVip = player.getWorld().getScoreboard().getTeam("ae_" + PERM_VIP);
 					if(teamVip == null) {
-						score.addTeam(PERM_VIP).setColor(TextFormating.DARK_AQUA);
-						teamVip = player.getWorld().getScoreboard().getTeam(PERM_VIP);
+						score.addTeam("ae_" + PERM_VIP).setColor(TextFormating.DARK_AQUA);
+						teamVip = player.getWorld().getScoreboard().getTeam("ae_" + PERM_VIP);
 					}
 					
 					if(!teamVip.getPlayers().contains(player)){
@@ -525,7 +569,15 @@ public class BewomUser {
 	}
 	
 	public static BewomUser getUser(Player player) {
-		return getUser(player.getUniqueID());
+		
+		BewomUser us = getUser(player.getUniqueID());
+		
+		if(us == null){
+			us = new BewomUser(player);
+			addUser(us);
+		}
+		
+		return us;
 	}
 	
 	public static void addUser(BewomUser user) {

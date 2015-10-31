@@ -6,7 +6,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.cakepowered.api.base.Game;
@@ -32,6 +34,48 @@ public class Houses {
 	
 	public static List<House> houses = new ArrayList<House>();
 	public static House eliminar;
+	
+	public static List<String> housesAVender = new ArrayList<String>();
+	
+	private static void comprar(House hou, BewomUser u, Player p){
+		
+		if(hou != null){
+			if(u.houseToBuyConfirm != null){
+				if(u.houseToBuyConfirm.equals(hou)){
+					if(u.canSubstractMoney(hou.getBuyPrice())){
+						u.substractMoney(hou.getBuyPrice());
+						u.houseToBuyConfirm = null;
+						p.sendMessage(TextFormating.GREEN + "Acabas de comprar esta maravillosa casa!");
+						hou.setUuidPropietario(p.getUniqueID().toString());
+						hou.setSoldSign(true);
+						Houses.save();
+					} else {
+						p.sendMessage(TextFormating.RED + "No tienes suficiente dinero! :(");
+						u.houseToBuyConfirm = null;
+					}
+					return;
+				}
+			}
+			
+			p.sendMessage(TextFormating.GREEN + "La inmobiliaria de " + TextFormating.GRAY + TextFormating.BOLD + "BANKIA");
+			p.sendMessage(TextFormating.GREEN + "Esta casa cuesta " + hou.getBuyPrice() + " woms.");
+			p.sendMessage(TextFormating.RED + "Si quieres comprar esta casa, haz click de nuevo.");
+			
+			String desc = TextFormating.GREEN + "";
+			if(hou.getBuyPrice() < 80000){
+				desc += "Esta propiedad mide menos de 20x20x9.";
+			} else if(hou.getBuyPrice() == 80000){
+				desc += "Esta propiedad mide 20x20x9.";
+			} else {
+				desc += "Esta propiedad mide mas de 20x20x9.";
+			}
+			p.sendMessage(desc);
+			u.houseToBuyConfirm = hou;
+			
+		}
+		
+	}
+		
 	
 	public static void on(Game game, PlayerInteractEvent event){
 		
@@ -86,38 +130,28 @@ public class Houses {
 					}
 				}
 				if(houOwner != null){
-					p.sendMessage(TextFormating.GREEN + "La inmobiliaria de " + TextFormating.GRAY + TextFormating.BOLD + "BANKIA");
-					p.sendMessage(TextFormating.GREEN + "Esta propiedad es de " + BewomUser.getUserNameFromUUID(UUID.fromString(houOwner.getOwner())) + ".");
-				} else {
-					if(o == 1){
-						p.sendMessage(TextFormating.RED + "Aun no puedes tener mas de una casa!"); //cambiar despues de BETA
-					} else if(o == 0){
-						if(hou != null){
-							if(u.houseToBuyConfirm != null){
-								if(u.houseToBuyConfirm.equals(hou)){
-									if(u.canSubstractMoney(hou.getBuyPrice())){
-										u.substractMoney(hou.getBuyPrice());
-										u.houseToBuyConfirm = null;
-										p.sendMessage(TextFormating.GREEN + "Acabas de comprar esta maravillosa casa!");
-										hou.setUuidPropietario(p.getUniqueID().toString());
-										hou.setSoldSign(true);
-										Houses.save();
-									} else {
-										p.sendMessage(TextFormating.RED + "No tienes suficiente dinero! :(");
-										u.houseToBuyConfirm = null;
-									}
-									return;
-								}
-							}
-							
-							p.sendMessage(TextFormating.GREEN + "La inmobiliaria de " + TextFormating.GRAY + TextFormating.BOLD + "BANKIA");
-							p.sendMessage(TextFormating.GREEN + "Esta casa cuesta " + hou.getBuyPrice() + " woms.");
-							p.sendMessage(TextFormating.RED + "Si quieres comprar esta casa, haz click de nuevo.");
-							p.sendMessage(TextFormating.GREEN + "Por cierto, es muy luminosa...");
-							u.houseToBuyConfirm = hou;
-							
+					boolean ab = true;
+					if(housesAVender.contains(p.getUniqueID().toString())){
+						if(p.getUniqueID().toString().equals(houOwner.getOwner())){
+							houOwner.sellHouse(p);
+							housesAVender.remove(p.getUniqueID().toString());
+							p.sendMessage(TextFormating.RED + "Has vendido la casa por " + houOwner.getSellPrice() + " woms.");
+							ab = false;
 						}
-						
+					}
+					if(ab){
+						p.sendMessage(TextFormating.GREEN + "La inmobiliaria de " + TextFormating.GRAY + TextFormating.BOLD + "BANKIA");
+						p.sendMessage(TextFormating.GREEN + "Esta propiedad es de " + BewomUser.getUserNameFromUUID(UUID.fromString(houOwner.getOwner())) + ".");
+					}
+				} else {
+					if(o == 0 || (o < 2 && u.getPermissionLevel() >= BewomUser.PERM_LEVEL_VIP)){
+						comprar(hou, u, p);
+					} else {
+						if(u.getPermissionLevel() >= BewomUser.PERM_LEVEL_VIP){
+							p.sendMessage(TextFormating.RED + "No puedes tener mas de dos casas!");
+						} else {
+							p.sendMessage(TextFormating.RED + "No puedes tener mas de una casa!");
+						}
 					}
 				}
 			}

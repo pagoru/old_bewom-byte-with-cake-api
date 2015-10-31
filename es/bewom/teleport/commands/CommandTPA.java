@@ -102,11 +102,17 @@ public class CommandTPA extends CommandBase {
 					BewomUser u2 = BewomUser.getUser(p2);
 					if(u2.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
 						if(!p.getUserName().equals(p2.getUserName())){
-							TPManager.newRequest(p, p2, 1);
-							commandSender.sendMessage(TextMessages.TP_REQUEST_SENT);
-							p2.sendMessage(p.getUserName() + TextFormating.GREEN + " quiere teletransportarse a ti.");
-							p2.sendMessage(TextFormating.RED + "    Usa /tpa si - para aceptar la solicitud.");
-							p2.sendMessage(TextFormating.RED + "    Usa /tpd no - para denegar la solicitud.");
+							if(BewomUser.getUser(p).isFriend(BewomUser.getUser(p2))){
+								p.setLocation(p2.getLocation());
+								p.sendMessage(TextMessages.TP_SUCCESS);
+							} else {
+								TPManager.newRequest(p, p2, 1);
+								commandSender.sendMessage(TextMessages.TP_REQUEST_SENT);
+								p2.sendMessage(p.getUserName() + TextFormating.GREEN + " quiere teletransportarse a ti.");
+								p2.sendMessage(TextFormating.RED + "    Usa /tpa si - para aceptar la solicitud.");
+								p2.sendMessage(TextFormating.RED + "    Usa /tpd no - para denegar la solicitud.");
+								
+							}
 							return;
 						}
 					}

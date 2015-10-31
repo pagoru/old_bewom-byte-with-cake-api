@@ -94,8 +94,9 @@ public class CommandCasa extends CommandBase {
 		} else if(args.length == 1) {
 			if(args[0].equals("vender")){
 				if(house != null){
-					house.sellHouse(player);
-					player.sendMessage(TextFormating.RED + "Has vendido la casa por " + house.getSellPrice() + " woms.");
+					Houses.housesAVender.add(player.getUniqueID().toString());
+					
+					player.sendMessage(TextFormating.RED + "Selecciona el cartel de la casa que quieres vender.");
 					Chat.sendMessage(player, null, "/casa vender");
 				} else {
 					player.sendMessage(TextFormating.RED + "No tienes casa...");
