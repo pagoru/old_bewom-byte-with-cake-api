@@ -18,9 +18,7 @@ public class CommandPlugins extends CommandBase {
 	public void execute(CommandSender commandSender, String[] args) {
 		
 		Player player = commandSender.getPlayer();
-		
-		if(new BewomUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
-		
+				
 		player.sendMessage(	"Plugins/Apis en el servidor: { [" 
 		+ TextFormating.GREEN + "CakeApi" + TextFormating.WHITE + "], [" 
 				+ TextFormating.GREEN + "BewomByte" + TextFormating.WHITE + "] }");

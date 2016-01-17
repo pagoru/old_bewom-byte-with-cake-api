@@ -9,6 +9,7 @@ import org.cakepowered.api.command.CommandUtil;
 import org.cakepowered.api.command.CommandUtil.ArgumentType;
 import org.cakepowered.api.inventory.Inventory;
 import org.cakepowered.api.util.Vector3i;
+import org.cakepowered.api.util.text.TextFormating;
 
 import es.bewom.BewomByte;
 import es.bewom.chat.Chat;
@@ -23,7 +24,7 @@ public class CommandEnderSee extends CommandBase{
 	@Override
 	public boolean canBeUsedBy(CommandSender commandSender){
 		if(commandSender.getPlayer() != null){
-			if(BewomUser.getUser(commandSender.getPlayer()).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
+			if(BewomUser.getUser(commandSender.getPlayer()).getPermissionLevel() < BewomUser.PERM_LEVEL_MOD){
 				return false;
 			}
 		}
@@ -38,22 +39,17 @@ public class CommandEnderSee extends CommandBase{
 	@Override
 	public void execute(CommandSender commandSender, String[] args) {
 		Player player = commandSender.getPlayer();
-		if(player == null) {
-			commandSender.sendMessage("Este comando solo lo pueden usar jugadores");
-			return;
-		}
 		BewomUser user = BewomUser.getUser(player);
-		if(user.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
-			commandSender.sendMessage("Insuficientes permisos para usar este comando");
-			return;
-		}
+		
+		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_MOD) return;
+		
 		if(CommandUtil.checkArguments(args, new ArgumentType[]{ArgumentType.PLAYER}, commandSender.getWorld())){
 			Player p = BewomByte.game.getServer().getPlayer(args[0]);
 			Inventory inv = p.getPlayerEnderChest();
 			player.openGui(inv);
 			Chat.sendMessage(p, null, "/endersee" + args[0]);	
 		}else{
-			commandSender.sendMessage("Argumentos invalidos: Uso /enderchest <player>");
+			commandSender.sendMessage(TextFormating.RED + "/enderchest <player>");
 		}
 	}
 }

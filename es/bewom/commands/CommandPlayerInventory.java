@@ -23,7 +23,7 @@ public class CommandPlayerInventory extends CommandBase{
 	@Override
 	public boolean canBeUsedBy(CommandSender commandSender){
 		if(commandSender.getPlayer() != null){
-			if(BewomUser.getUser(commandSender.getPlayer()).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
+			if(BewomUser.getUser(commandSender.getPlayer()).getPermissionLevel() < BewomUser.PERM_LEVEL_MOD){
 				return false;
 			}
 		}
@@ -43,7 +43,7 @@ public class CommandPlayerInventory extends CommandBase{
 			return;
 		}
 		BewomUser user = BewomUser.getUser(player);
-		if(user.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
+		if(user.getPermissionLevel() < BewomUser.PERM_LEVEL_MOD){
 			commandSender.sendMessage("Insuficientes permisos para usar este comando");
 			return;
 		}

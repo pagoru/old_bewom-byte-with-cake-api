@@ -30,10 +30,12 @@ import es.bewom.util.mysql.MySQL;
 public class BewomUser {
 	
 	public static final String PERM_ADMIN 		= "admin";
+	public static final String PERM_MOD 			= "mod";
 	public static final String PERM_VIP 			= "vip";
 	public static final String PERM_USER 		= "miembro";
 	
-	public static final int PERM_LEVEL_ADMIN 	= 3;
+	public static final int PERM_LEVEL_ADMIN 	= 4;
+	public static final int PERM_LEVEL_MOD	 	= 3;
 	public static final int PERM_LEVEL_VIP 		= 2;
 	public static final int PERM_LEVEL_USER 	= 1;
 	
@@ -102,12 +104,10 @@ public class BewomUser {
 		
 		Date d = new Date();
 		Timestamp timestamp = new Timestamp(d.getTime());
-		
-		System.out.println("adioas98yas9y8d9y8asd98 as897sa 89da s978ds098");
-		
+				
 		BewomByte.m.executeQuery("UPDATE `users` SET `user`='" + player.getUserName() + "' WHERE `uuid`='" + uuid + "'", null);
 		BewomByte.m.executeQuery("UPDATE `users` SET `lastLogin`='" + timestamp.toString() + "' WHERE `uuid`='" + uuid + "'", null);
-		
+				
 		setMedallas();
 		
 	}
@@ -120,12 +120,33 @@ public class BewomUser {
 		int m = c.get(Calendar.MONTH);
 		int y = c.get(Calendar.YEAR);
 		
+		int h = c.get(Calendar.HOUR_OF_DAY);
+		
 		System.out.println(d + "-" + m + "-" + y);
 		
-		if(d >= 30 && d <= 31 && m == Calendar.OCTOBER && y == 2015){
-			
-			setMedalla(Medallas.HALLOWEEN_2015);
-			
+		if(h >= 3 && h <= 6){
+			setMedalla(Medallas.TRASNOCHADOR);
+		}
+		
+		if(y == 2015){
+			if(d >= 30 && d <= 31 && m == Calendar.OCTOBER){
+				setMedalla(Medallas.HALLOWEEN_2015);
+			}
+			if(d == 25 && m == Calendar.DECEMBER && y == 2015){
+				setMedalla(Medallas.NAVIDAD_2015);
+			}
+		}
+		
+		if(y == 2016){
+			if(d == 1 && m == Calendar.JANUARY){
+				setMedalla(Medallas.NUEVO_AÑO_2016);
+			}
+			if(d == 6 && m == Calendar.JANUARY){
+				setMedalla(Medallas.REYES_2016);
+			}
+			if(d == 14 && m == Calendar.FEBRUARY){
+				setMedalla(Medallas.ST_VALENTIN_2016);
+			}
 		}
 		
 	}
@@ -143,11 +164,18 @@ public class BewomUser {
 	}
 	
 	public void addPoints(int points){
-		int p = getPoints() + points;
-		BewomByte.m.executeQuery("UPDATE `users` SET `points`='" + p + "' WHERE `uuid`='" + player.getUniqueID() + "'", null);
+		if(getPoints() != -48151623){
+			int p = getPoints() + points;
+			BewomByte.m.executeQuery("UPDATE `users` SET `points`='" + p + "' WHERE `uuid`='" + player.getUniqueID() + "'", null);
+		}
 	}
 	public int getPoints(){
-		return Integer.parseInt(BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + player.getUniqueID() + "'", "points").get(0));
+		String p = BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + player.getUniqueID() + "'", "points").get(0);
+		System.out.println("Puntos: " + player.getUniqueID() + " - " + p);
+		if(!p.isEmpty()){
+			return Integer.parseInt(p);
+		}
+		return -48151623;
 	}
 	
 	public static void addPoints(String name, int points){
@@ -347,61 +375,69 @@ public class BewomUser {
 		
 	}
 	
+	public int getTimeVip(){
+		return Integer.parseInt(BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + player.getUniqueID() + "'", "timeVip").get(0));
+	}
+	
+	public void addTimeVip(int o){
+		int i = getTimeVip();
+		i += o;
+		BewomByte.m.executeQuery("UPDATE `users` SET `timeVip`='" + i + "' WHERE `uuid`='" + player.getUniqueID() + "'", null);
+	}
+	
+	public void substractTimeVip(int o){
+		int i = getTimeVip();
+		i -= o;
+		BewomByte.m.executeQuery("UPDATE `users` SET `timeVip`='" + i + "' WHERE `uuid`='" + player.getUniqueID() + "'", null);
+	}
+	
 	public void updatePermissions(){
 		
 		String perm = BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "type").get(0);
-		String date = BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "date_type").get(0);
-		String days = BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + uuid + "'", "days_type").get(0);
+		int timeVip = getTimeVip();
 		
 		Scoreboard score = player.getWorld().getScoreboard();
 		if(!perm.equals("")){
 			
-			if(!days.equals("0")){
+			if(isFirstUpdate){
 				
-				Date d = new Date();
-				Timestamp timestamp = new Timestamp(d.getTime());
-				
-				int day = Integer.parseInt(days) * 86400;
-				
-				Timestamp time = Timestamp.valueOf(date);
-				
-				long a1 = timestamp.getTime()/1000;
-				long a2 = time.getTime()/1000;
-				
-				long f = a1 - a2;
-				long ff = day - f;
-				
-				int diasRestantes = (int) Math.ceil((((double)ff/60)/60)/24);
-				
-				if(isFirstUpdate){
+				if(timeVip > 0){
 					
-					if(diasRestantes > 0){
-						if(diasRestantes == 1){
-							player.sendMessage(TextFormating.DARK_AQUA + "Te queda 1 dia restantes como vip.");
-						} else {
-							player.sendMessage(TextFormating.DARK_AQUA + "Te quedan " + diasRestantes + " dias restantes como vip.");
-						}
+					perm = PERM_VIP;
+					BewomByte.m.executeQuery("UPDATE `users` SET `type`='vip' WHERE `uuid`='" + uuid + "'", null);
+					
+					if(timeVip == 1){
+						player.sendMessage(TextFormating.DARK_AQUA + "Te queda 1 minuto restante como vip.");
+					} else {
+						player.sendMessage(TextFormating.DARK_AQUA + "Te quedan " + timeVip + " minutos restantes como vip.");
 					}
-					isFirstUpdate = false;
+					
 				}
 				
-				if(isUser() && perm.equals(PERM_VIP)){
-					if(diasRestantes > 0){
-						player.sendTitle(new Title(TextFormating.DARK_AQUA + "¡Ya eres vip!", TextFormating.WHITE + "Muchas gracias por tu donación :)", 120, 0, 60));
-					}
-				}
-				if(diasRestantes < 0){
-					if(perm.equals(PERM_VIP)){
-						perm = PERM_USER;
-						BewomByte.m.executeQuery("UPDATE `users` SET `type`='miembro', `days_type`='0' WHERE `uuid`='" + uuid + "'", null);
-						player.sendTitle(new Title(TextFormating.DARK_AQUA + "¡Se te ha acabado el vip!", TextFormating.WHITE + "Siempre puedes volver a donar :)", 120, 0, 60));
-					}
+				isFirstUpdate = false;
+				
+			}
+				
+			if(!perm.equals(PERM_VIP)){
+				if(timeVip > 0){
+					perm = PERM_VIP;
+					BewomByte.m.executeQuery("UPDATE `users` SET `type`='vip' WHERE `uuid`='" + uuid + "'", null);
+					player.sendTitle(new Title(TextFormating.DARK_AQUA + "¡Ya eres vip!", TextFormating.WHITE + "Muchas gracias por tu donación :)", 120, 0, 60));
 				}
 			}
+			
+			if(timeVip == 0){
+				if(perm.equals(PERM_VIP)){
+					perm = PERM_USER;
+					BewomByte.m.executeQuery("UPDATE `users` SET `type`='miembro', `days_type`='0' WHERE `uuid`='" + uuid + "'", null);
+					player.sendTitle(new Title(TextFormating.DARK_AQUA + "¡Se te ha acabado el vip!", TextFormating.WHITE + "Siempre puedes volver a donar :)", 120, 0, 60));
+				}
+			}
+			
 			switch(perm) {
 			case PERM_ADMIN:
 				if(permissionLevel != PERM_LEVEL_ADMIN){
-					setPermissionLevel(3);
+					setPermissionLevel(PERM_LEVEL_ADMIN);
 					Team team = player.getWorld().getScoreboard().getTeam(PERM_ADMIN);
 					if(team == null) {
 						score.addTeam(PERM_ADMIN).setColor(TextFormating.DARK_RED);
@@ -416,13 +452,30 @@ public class BewomUser {
 					player.setGameMode(1);
 				}
 				break;
+			case PERM_MOD:
+				if(permissionLevel != PERM_LEVEL_MOD){
+					setPermissionLevel(PERM_LEVEL_MOD);
+					Team team = player.getWorld().getScoreboard().getTeam("ae_" + PERM_MOD);
+					if(team == null) {
+						score.addTeam("ae_" + PERM_MOD).setColor(TextFormating.GOLD);
+						team = player.getWorld().getScoreboard().getTeam("ae_" + PERM_MOD);
+					}
+					
+					if(!team.getPlayers().contains(player)){
+						score.removePlayerFromTeams(player);
+						score.addPlayerToTeam(player, team);
+					}
+					BewomByte.game.getCommandDispacher().executeCommand(BewomByte.game.getServer().getCommandSender(), "/deop " + player.getName());
+					player.setGameMode(2);
+				}
+				break;
 			case PERM_VIP:
 				if(permissionLevel != PERM_LEVEL_VIP){
-					setPermissionLevel(2);
-					Team teamVip = player.getWorld().getScoreboard().getTeam("ae_" + PERM_VIP);
+					setPermissionLevel(PERM_LEVEL_VIP);
+					Team teamVip = player.getWorld().getScoreboard().getTeam("af_" + PERM_VIP);
 					if(teamVip == null) {
-						score.addTeam("ae_" + PERM_VIP).setColor(TextFormating.DARK_AQUA);
-						teamVip = player.getWorld().getScoreboard().getTeam("ae_" + PERM_VIP);
+						score.addTeam("af_" + PERM_VIP).setColor(TextFormating.DARK_AQUA);
+						teamVip = player.getWorld().getScoreboard().getTeam("af_" + PERM_VIP);
 					}
 					
 					if(!teamVip.getPlayers().contains(player)){
@@ -435,7 +488,7 @@ public class BewomUser {
 				break;
 			case PERM_USER:
 				if(permissionLevel != PERM_LEVEL_USER){
-					setPermissionLevel(1);
+					setPermissionLevel(PERM_LEVEL_USER);
 					Team teamUser = player.getWorld().getScoreboard().getTeam(PERM_USER);
 					if(teamUser == null) {
 						score.addTeam(PERM_USER).setColor(TextFormating.GRAY);
@@ -508,32 +561,13 @@ public class BewomUser {
 		return this.permissionLevel;
 	}
 	
-	public boolean isAdmin(){
-		if(this.permissionLevel == PERM_LEVEL_ADMIN){
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean isVip(){
-		if(this.permissionLevel == PERM_LEVEL_VIP){
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean isUser(){
-		if(this.permissionLevel == PERM_LEVEL_USER){
-			return true;
-		}
-		return false;
-	}
-	
 	public String getPermissionType(){
 		
 		switch (permissionLevel) {
 		case PERM_LEVEL_ADMIN:
 			return PERM_ADMIN;
+		case PERM_LEVEL_MOD:
+			return PERM_MOD;
 		case PERM_LEVEL_VIP:
 			return PERM_VIP;
 		case PERM_LEVEL_USER:
@@ -555,13 +589,9 @@ public class BewomUser {
 		return permissionLevel;
 	}
 	
-	public String setPermissionLevel(int level) {
-		if(level < PERM_LEVEL_USER || level > PERM_LEVEL_ADMIN) {
-			return "Este grupo no existe.";
-		}
+	public void setPermissionLevel(int level) {
 		this.permissionLevel = level;
 		BewomByte.m.executeQuery("UPDATE `users` SET `type`='" + getPermissionType() + "' WHERE `uuid`='" + player.getUniqueID() + "'", null);	
-		return null;
 	}
 	
 	public static BewomUser getUser(UUID uuid) {
@@ -614,7 +644,12 @@ public class BewomUser {
 	public void updateRegistration() {
 		
 		if (getRegistration() == WebRegistration.VALID) {
-			player.sendTitle(new Title(TextFormating.DARK_AQUA+"Bienvenid@!", TextFormating.WHITE+"Hazte con todos...", 120, 0, 60));
+			
+			Calendar c = Calendar.getInstance();
+			int y = c.get(Calendar.YEAR);
+			
+			String bienvenid = TextFormating.DARK_AQUA + "Bienvenid@!";			
+			player.sendTitle(new Title(bienvenid, TextFormating.WHITE + "Hazte con todos...", 120, 0, 60));
 			updatePermissions();
 			
 			if(!getFriendsPetitions().isEmpty()){
@@ -729,6 +764,16 @@ public class BewomUser {
 	public static String getUUIDName(String name){
 		List<String> uuid = BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `user`='" + name + "'", "uuid");
 		return uuid.get(0);
+	}
+	
+	public static Calendar getLastLogin(String nick){
+		List<String> uuid = BewomByte.m.executeQuery("SELECT `lastLogin` FROM `users` WHERE `user`='" + nick + "'", "lastLogin");
+		Calendar ca = Calendar.getInstance();
+		ca.setTimeInMillis(Timestamp.valueOf("2015-01-01 00:00:00").getTime());
+		if(!uuid.get(0).equalsIgnoreCase("0000-00-00 00:00:00")){
+			ca.setTimeInMillis(Timestamp.valueOf(uuid.get(0)).getTime());
+		}
+		return ca;
 	}
 	
 }

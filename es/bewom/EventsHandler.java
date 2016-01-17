@@ -1,5 +1,6 @@
 package es.bewom;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import es.bewom.centrospokemon.CentroManager;
 import es.bewom.centrospokemon.CentroPokemon;
 import es.bewom.chat.Chat;
 import es.bewom.gimnasios.Gimnasios;
+import es.bewom.metro.Metro;
 import es.bewom.p.House;
 import es.bewom.p.Houses;
 import es.bewom.p.P;
@@ -81,21 +83,32 @@ public class EventsHandler {
 		
 		if (b.getRegistration() == WebRegistration.VALID) {
 			String message = "";
-			String postName = Chat.getCleanText(event.getMessage());
+			String postName = event.getMessage();
 			String name = event.getUsername();
 			
 			if(!postName.equals(b.lastMessage) || b.getPermissionLevel() == BewomUser.PERM_LEVEL_ADMIN){
 				
-				switch(b.getPermissionLevel()) {
-				case BewomUser.PERM_LEVEL_USER:
-					message = b.getPrefix() + TextFormating.GRAY + "/" + name + TextFormating.WHITE + " < " + postName;
-					break;
-				case BewomUser.PERM_LEVEL_VIP:
-					message = b.getPrefix() + TextFormating.DARK_AQUA + "/" + name + TextFormating.WHITE + " < " + postName;
-					break;
-				case BewomUser.PERM_LEVEL_ADMIN:
-					message = b.getPrefix() + TextFormating.DARK_RED + "" + TextFormating.BOLD + "/" + name + TextFormating.WHITE + " < " + postName;
-					break;
+				if(b.getMpPlayer() == null){
+					
+					switch(b.getPermissionLevel()) {
+					case BewomUser.PERM_LEVEL_USER:
+						message = TextFormating.GRAY + name + ":" + TextFormating.WHITE + " " + postName;
+						break;
+					case BewomUser.PERM_LEVEL_VIP:
+						message = TextFormating.DARK_AQUA + name + ":" + TextFormating.WHITE + " " + postName;
+						break;
+					case BewomUser.PERM_LEVEL_MOD:
+						message = TextFormating.GOLD + name + ":" + TextFormating.WHITE + " " + postName;
+						break;
+					case BewomUser.PERM_LEVEL_ADMIN:
+						message = TextFormating.DARK_RED + "" + TextFormating.BOLD + name + ":" + TextFormating.WHITE + " " + postName;
+						break;
+					}
+					
+				} else {
+					
+					message = TextFormating.GREEN + name + ":" + TextFormating.WHITE + " " + postName;
+					
 				}
 				
 				b.lastMessage = postName;
@@ -146,17 +159,18 @@ public class EventsHandler {
 	public void on(PlayerInteractEvent event){
 		
 		Player player = event.getPlayer();
+		BewomUser u = BewomUser.getUser(player);
 		
 		playerUpdateGameMode(player);
 		
-		if(!player.isOP()){
+		if(u.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
 			DeniedBlocks.on(game, event);
 		}
 		
 		Ranchs.on(event);
 		Houses.on(game, event);
-		Gimnasios.on(event);
 		P.on(game, event);
+		Metro.on(event);
 		AwayFromKeyboard.on(event);
 	}
 
@@ -164,10 +178,11 @@ public class EventsHandler {
 	public void on(PlayerInteractEntityEvent event){
 		
 		Player player = event.getPlayer();
+		BewomUser u = BewomUser.getUser(player);
 		
 		playerUpdateGameMode(player);
 		
-		if(!player.isOP()){
+		if(u.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
 			DeniedBlocks.on(game, event);
 		}
 		
@@ -177,8 +192,9 @@ public class EventsHandler {
 	public void on(EntityAttackedEvent event){
 				
 		Player player = event.getPlayer();
+		BewomUser u = BewomUser.getUser(player);
 		
-		if(!player.isOP()){
+		if(u.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
 			DeniedBlocks.on(game, event);
 		}
 		
@@ -188,10 +204,11 @@ public class EventsHandler {
 	public void on(BlockPlaceEvent event){
 		
 		Player player = event.getPlayer();
+		BewomUser u = BewomUser.getUser(player);
 		
 		playerUpdateGameMode(player);
 				
-		if(!player.isOP()){
+		if(u.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
 			DeniedBlocks.on(game, event);
 		}
 		
@@ -201,10 +218,11 @@ public class EventsHandler {
 	public void on(BlockBreakEvent event){
 		
 		Player player = event.getPlayer();
+		BewomUser u = BewomUser.getUser(player);
 		
 		playerUpdateGameMode(player);		
 		
-		if(!player.isOP()){
+		if(u.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
 			DeniedBlocks.on(game, event);
 		}
 		
@@ -215,9 +233,9 @@ public class EventsHandler {
 	
 	public void playerUpdateGameMode(Player player){
 		BewomUser u = BewomUser.getUser(player);
-		if(u.getPermissionLevel() != BewomUser.PERM_LEVEL_ADMIN){
+		if(u.getPermissionLevel() < BewomUser.PERM_LEVEL_MOD){
 			if(player.getGameMode() != 3){
-				if(!u.isAdmin()){
+				if(u.getPermissionLevel() < BewomUser.PERM_LEVEL_MOD){
 					if ((player.getDimensionID() == Dimensions.EXTERIORES
 							|| (player.getDimensionID() == Dimensions.INTERIORES && player.getLocation().getZ() > Dimensions.LIMITE_INTERIORES))) {
 						if(player.getGameMode() != 2){
@@ -309,7 +327,7 @@ public class EventsHandler {
 					Chat.sendMessage(null, TextMessages.BROADCAST + "El servidor se va a reiniciar en " + (55 - date.getMinutes()) + " minuto(s).", "/stop ");	
 				} else if(date.getMinutes() == 55){
 					Chat.sendMessage(null, TextMessages.BROADCAST + "El servidor se esta reiniciando...", "/stop ");	
-					BewomByte.game.getServer().stop();
+					game.getServer().stop();
 				}
 				
 			}

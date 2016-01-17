@@ -3,9 +3,7 @@ package es.bewom.chat;
 public class Censure {
 	
 	public static String[] wordsCensured = {
-			"meriland", 
-			"http://",
-			"https://",
+			"meriland",
 			"dynamic",
 			"www.",
 			"meryland",

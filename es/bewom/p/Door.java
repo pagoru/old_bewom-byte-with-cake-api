@@ -58,15 +58,6 @@ public class Door {
 	public void setSecondDoor(boolean secondDoor) {
 		this.secondDoor = secondDoor;
 	}
-
-	public boolean isSameWorld(){
-		
-		if(dimension[0] == dimension[1]){
-			return true;
-		}
-		return false;
-		
-	}
 	
 	public PreciseLocation getPreciseLocation(){
 		return new PreciseLocation(dimension[pos], x[pos] + 0.5, y[pos], z[pos] + 0.5, yaw[pos], pitch[pos]);

@@ -55,12 +55,8 @@ public class CommandSetLevel extends CommandBase {
 		if (toChange != null) {
 
 			BewomUser user = BewomUser.getUser(toChange);
-			String error = user.setPermissionLevel(level);
+			user.setPermissionLevel(level);
 
-			if (error != null) {
-				commandSender.sendMessage(error);
-				return;
-			}
 			Scoreboard score = toChange.getWorld().getScoreboard();
 			score.removePlayerFromTeams(toChange);
 

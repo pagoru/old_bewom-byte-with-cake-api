@@ -47,34 +47,26 @@ public class CommandP extends CommandBase {
 		
 		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
 		
-		if(user.isAdmin()){
+		if(args.length == 1){
 			
-			if(args.length == 1){
-				
-				if(args[0].equals("eliminar")){
-					player.sendMessage("Selecciona una de las dos puertas a borrar.");
-					P.eliminar.add(player);
-				} else if(args[0].equals("exit")){
-					for (Door d : P.doors) {
-						if(d.getPlayer() != null){
-							P.eliminar.remove(player);
-							P.doors.remove(new Door(player));
-							if(d.getPlayer().equals(player)){
-								P.doorToDelete = d;
-							}
+			if(args[0].equals("eliminar")){
+				player.sendMessage("Selecciona una de las dos puertas a borrar.");
+				P.eliminar.add(player);
+			} else if(args[0].equals("exit")){
+				for (Door d : P.doors) {
+					if(d.getPlayer() != null){
+						P.eliminar.remove(player);
+						P.doors.remove(new Door(player));
+						if(d.getPlayer().equals(player)){
+							P.doorToDelete = d;
 						}
 					}
 				}
-				return;
-			} else {
-				player.sendMessage("Selecciona la primera puerta.");
-				P.doors.add(new Door(player));
 			}
-			
+			return;
 		} else {
-			
-			player.sendMessage(TextMessages.NO_PERMISSIONS);
-			
+			player.sendMessage("Selecciona la primera puerta.");
+			P.doors.add(new Door(player));
 		}
 		
 	}

@@ -25,7 +25,7 @@ public class CommandTp extends CommandBase {
 	@Override
 	public boolean canBeUsedBy(CommandSender commandSender){
 		if(commandSender.getPlayer() != null){
-			if(BewomUser.getUser(commandSender.getPlayer()).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
+			if(BewomUser.getUser(commandSender.getPlayer()).getPermissionLevel() < BewomUser.PERM_LEVEL_MOD){
 				return false;
 			}
 		}
@@ -35,7 +35,7 @@ public class CommandTp extends CommandBase {
 	@Override
 	public List<String> addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
 		Player player = sender.getPlayer();
-		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return null;	
+		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_MOD) return null;	
 		if(args.length == 1){
 			return getTab(args, 0);
 		} else if(args.length == 2){
@@ -69,7 +69,7 @@ public class CommandTp extends CommandBase {
 		
 		Player player = commandSender.getPlayer();
 		
-		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
+		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_MOD) return;
 		
 		if(args.length == 1){
 			if(BewomByte.game.getServer().getPlayer(args[0]) != null){
@@ -98,9 +98,11 @@ public class CommandTp extends CommandBase {
 			player.sendMessage(TextFormating.RED + "Acabas de teletransportar a " + args[0] + " " + args[1] + " " + args[2] + ".");
 			Chat.sendMessage(player, null, "/tp " + args[0] + " " + args[1] + " " + args[2]);
 			
+		} else {
+			
+			player.sendMessage(TextMessages.ERROR);
+			
 		}
-		
-		player.sendMessage(TextMessages.ERROR);
 		
 	}
 

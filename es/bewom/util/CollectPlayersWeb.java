@@ -41,6 +41,13 @@ public class CollectPlayersWeb {
 		int timeInMinutes = Integer.parseInt(BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + p.getUniqueID() + "'", "timePlaying").get(0));
 		timeInMinutes++;
 		BewomByte.m.executeQuery("UPDATE `users` SET `timePlaying`='" + timeInMinutes + "' WHERE `uuid`='" + p.getUniqueID() + "'", null);
+		
+		//VIP
+		int timeInMinutesVIP = BewomUser.getUser(p).getTimeVip();
+		if(timeInMinutesVIP > 0){
+			timeInMinutesVIP--;
+			BewomUser.getUser(p).substractTimeVip(1);
+		}
 	}
 	
 }

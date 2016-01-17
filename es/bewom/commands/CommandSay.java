@@ -32,31 +32,24 @@ public class CommandSay extends CommandBase {
 		
 		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
 		
-		if(user.isAdmin()){
-			if(args.length > 0){
-				
-				String text = "";
-				
-				for (int i = 0; i < args.length; i++) {
-					if(i == 0){
-						text += args[0]; 
-					} else {
-						text += " " + args[i];
-					}
-					
+		if(args.length > 0){
+			
+			String text = "";
+			
+			for (int i = 0; i < args.length; i++) {
+				if(i == 0){
+					text += args[0]; 
+				} else {
+					text += " " + args[i];
 				}
-				
-				Chat.sendMessage(player, TextMessages.BROADCAST + text + ".", "/say " + text);	
-				
-			} else {
-				
-				player.sendMessage(TextMessages.ERROR);
 				
 			}
 			
+			Chat.sendMessage(player, TextMessages.BROADCAST + text, "/say " + text);	
+			
 		} else {
 			
-			player.sendMessage(TextMessages.NO_PERMISSIONS);
+			player.sendMessage(TextMessages.ERROR);
 			
 		}
 		

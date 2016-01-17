@@ -20,11 +20,8 @@ public class TextMessages {
 	public static final String WORLD_NOT_FOUND = TextFormating.RED + "No se ha encontrado el mundo especificado.";
 	
 	public static final String BROADCAST = 
-			TextFormating.DARK_RED + "" + TextFormating.BOLD +"/" +
-			TextFormating.OBFUSCATED +  "" + TextFormating.BOLD + "K" +
-			TextFormating.DARK_RED + "" + TextFormating.BOLD + "/" +
 			TextFormating.DARK_RED +  "" + TextFormating.BOLD + "bewom" +  
-			TextFormating.RESET + TextFormating.WHITE + " < ";
+			TextFormating.RESET + TextFormating.WHITE + ": ";
 	
 	public static final String CENTER_ESTABLISHED = TextFormating.RED + "Centro establecido correctamente.";
 	public static final String CENTER_REMOVED = TextFormating.RED + "Centro quitado correctamente.";
@@ -33,7 +30,7 @@ public class TextMessages {
 				TextFormating.GREEN + "Ahora estas hablando con ",
 				" por mensaje privado."
 		};
-	public static final String MP_TALKING_FINISH_SUGESTION = TextFormating.GREEN + "Escribe de nuevo /mp para dejar de hablar por mensaje privado.";
+	public static final String MP_TALKING_FINISH_SUGESTION = TextFormating.GREEN + "Escribe /mp para dejar de hablar por mensaje privado.";
 	public static final String MP_TALKING_FINISH = TextFormating.RED + "Has dejado de hablar por mensaje privado.";
 	public static final String MP_TALKING_WITH_YOU = TextFormating.RED + "No puedes enviarte un mensaje a ti mismo. ¿Te pegan?";
 	

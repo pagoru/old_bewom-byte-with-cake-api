@@ -116,11 +116,6 @@ public class CommandTorneo extends CommandBase {
 												Player pBattle = BewomByte.game.getServer().getPlayer(t.getBattle(round, battle)[i]);
 												if(pBattle != null){
 													pBattle.setLocation(t.getLocation()[2].getPreciseLocation());
-													if(pBattle.getUserName().equals(winner)){
-														BewomUser.getUser(pBattle).addPoints(3);
-													} else {
-														BewomUser.getUser(pBattle).addPoints(2);
-													}
 												}
 											}
 										}
@@ -129,7 +124,6 @@ public class CommandTorneo extends CommandBase {
 											System.out.println(pThird.getUserName());
 											if(pThird != null){
 												pThird.setLocation(t.getLocation()[2].getPreciseLocation());
-												BewomUser.getUser(pThird).addPoints(1);
 											}
 										}
 										Sounds.playSoundToAll("records.wait", 1.0F, 2.0F);

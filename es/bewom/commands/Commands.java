@@ -7,8 +7,12 @@ import es.bewom.centrospokemon.commands.CommandCentro;
 import es.bewom.centrospokemon.commands.CommandPonerCentro;
 import es.bewom.centrospokemon.commands.CommandQuitarCentro;
 import es.bewom.chat.commands.CommandMp;
+import es.bewom.commands.evsivs.CommandEvs;
+import es.bewom.commands.evsivs.CommandHiddenPower;
+import es.bewom.commands.evsivs.CommandIvs;
 import es.bewom.commands.randomTp.CommandTpb;
 import es.bewom.economy.commands.CommandDinero;
+import es.bewom.metro.commands.CommandMetro;
 import es.bewom.p.commands.CommandCasa;
 import es.bewom.p.commands.CommandH;
 import es.bewom.p.commands.CommandP;
@@ -58,6 +62,15 @@ public class Commands {
 		reg.registerCommand(new CommandCraft());
 		reg.registerCommand(new CommandTpb());
 		reg.registerCommand(new CommandTps());
+		reg.registerCommand(new CommandMoney());
+		reg.registerCommand(new CommandPuntos());
+		reg.registerCommand(new CommandMetro());
+		reg.registerCommand(new CommandEvs());
+		reg.registerCommand(new CommandIvs());
+		reg.registerCommand(new CommandHiddenPower());
+		reg.registerCommand(new CommandStop());
+		reg.registerCommand(new CommandLoad());
+		reg.registerCommand(new CommandVip());
 		
 	}
 }

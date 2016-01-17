@@ -102,9 +102,7 @@ public class Torneo {
 		}
 		for(Player p : BewomByte.game.getServer().getOnlinePlayers()){
 			BewomUser u = BewomUser.getUser(p);
-			if(u.getPoints() < 0){
-				u.addPoints(1);
-			}
+			u.addPoints(1);
 		}
 	}
 	
@@ -117,11 +115,25 @@ public class Torneo {
 	}
 	
 	public String getThirdWinner(){
-		int w = -1;
-		if(winnerRound4 == 0){
-			w = 1;
+		
+		String pw = playerRound5;
+		
+		String pr1 = playersRound3[0];
+		String pr2 = playersRound3[1];
+		String pr3 = playersRound3[2];
+		String pr4 = playersRound3[3];
+		
+		if(pw.equalsIgnoreCase(pr1)){
+			return pr2;
+		} else if(pw.equalsIgnoreCase(pr2)){
+			return pr1;
+		} else if(pw.equalsIgnoreCase(pr3)){
+			return pr4;
+		} else if(pw.equalsIgnoreCase(pr4)){
+			return pr3;
 		}
-		return playersRound3[winnersRound3[winnerRound4] + (winnerRound4*2) + w];
+		
+		return null;
 	}
 	
 	private void updateWinners(){

@@ -32,7 +32,7 @@ public class Ranchs {
 		Player p = e.getPlayer();
 		BewomUser u = BewomUser.getUser(p);
 		
-		if(!u.isAdmin()){
+		if(u.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
 			if(p.getDimensionID() == Dimensions.RECURSOS){
 				for(Ranch r : Ranchs.ranchs){
 					if(r != null){
@@ -111,7 +111,7 @@ public class Ranchs {
 	public static void on(BlockBreakEvent e) {
 		Player p = e.getPlayer();
 		BewomUser u = BewomUser.getUser(p);
-		if(!u.isAdmin()){
+		if(u.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
 			if(p.getDimensionID() == Dimensions.RECURSOS){
 				for(Ranch r : Ranchs.ranchs){
 					if(r != null){

@@ -17,7 +17,6 @@ import es.bewom.BewomByte;
 
 public class PokemonCatcher {
 	
-
 	public static void catchPokemons(String uuid){
 		
 		NBTCompund nbt = BewomByte.game.getNBTFactory().readNBT(new File("world/pokemon/" + uuid + ".pk"));

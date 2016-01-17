@@ -12,6 +12,7 @@ import es.bewom.centrospokemon.CentroManager;
 import es.bewom.chat.Chat;
 import es.bewom.commands.Commands;
 import es.bewom.imc.BewomMessageListener;
+import es.bewom.metro.Metro;
 import es.bewom.p.Houses;
 import es.bewom.p.P;
 import es.bewom.p.Ranchs;
@@ -20,6 +21,8 @@ import es.bewom.teleport.TPManager;
 import es.bewom.torneos.Torneo;
 import es.bewom.torneos.Torneos;
 import es.bewom.user.BewomUser;
+import es.bewom.util.Dimensions;
+import es.bewom.util.PokemonList;
 import es.bewom.util.mysql.MySQL;
 /**
  * 
@@ -67,11 +70,14 @@ public class BewomByte {
 		Homes.init();
 		Ranchs.init(this);
 		Torneos.init();
+		Metro.init(this);
 		
 		game.getEventRegistry().registerEventListener(new EventsHandler(game));
-		game.getWorldManager().createFlatWorld(2);
-		game.getWorldManager().createNormalWorld(3, 343822243);
+		game.getWorldManager().createFlatWorld(Dimensions.INTERIORES);
+		game.getWorldManager().createNormalWorld(Dimensions.EXTERIORES, -8913466909937400889L); //seed recursos 343822243
 		game.getMessageDispatcher().register(BewomMessageListener.INSTANCE, this);
+		
+		PokemonList.addPokes();
 		
 	}
 	

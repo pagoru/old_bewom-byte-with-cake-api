@@ -1,19 +1,25 @@
-package es.bewom.p.commands;
+package es.bewom.commands;
 
 import org.cakepowered.api.base.Player;
 import org.cakepowered.api.command.CommandBase;
 import org.cakepowered.api.command.CommandSender;
-import org.cakepowered.api.util.text.TextFormating;
 
-import es.bewom.p.House;
+import es.bewom.centrospokemon.CentroManager;
+import es.bewom.chat.Chat;
+import es.bewom.metro.Metro;
+import es.bewom.p.Door;
 import es.bewom.p.Houses;
+import es.bewom.p.P;
+import es.bewom.p.Ranch;
+import es.bewom.p.Ranchs;
+import es.bewom.teleport.Homes;
 import es.bewom.texts.TextMessages;
 import es.bewom.user.BewomUser;
 
-public class CommandH extends CommandBase {
-
-	public CommandH() {
-		super("h");
+public class CommandLoad extends CommandBase {
+	
+	public CommandLoad() {
+		super("load");
 	}
 	
 	@Override
@@ -25,7 +31,7 @@ public class CommandH extends CommandBase {
 		}
 		return true;
 	}
-
+	
 	@Override
 	public void execute(CommandSender commandSender, String[] args) {
 		
@@ -34,25 +40,12 @@ public class CommandH extends CommandBase {
 		
 		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
 		
-		if(args.length == 1){
-			if(args[0].equals("exit")){
-				for (House h : Houses.houses) {
-					if(h.getPlayer() != null){
-						if(h.getPlayer().equals(player)){
-							Houses.eliminar = h;
-						}
-					}
-				}
-			}
-			return;
-		} else {
-			if(args.length == 2){
-				player.sendMessage("Selecciona una puerta valida.");
-				Houses.houses.add(new House(player, Integer.parseInt(args[0]), Integer.parseInt(args[1])));
-			} else {
-				player.sendMessage(TextFormating.RED + "/h <$vender> <$comprar>");
-			}
-		}
+		CentroManager.load();
+		Homes.load();
+		Ranchs.load();
+		P.load();
+		Houses.load();
+		Metro.loadStations();
 		
 	}
 

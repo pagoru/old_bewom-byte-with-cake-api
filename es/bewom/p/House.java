@@ -57,6 +57,11 @@ public class House {
 		BewomUser.getUser(p).addMoney(sellPrice);
 	}
 	
+	public void sellHouse(){
+		this.uuidOwner = null;
+		setSoldSign(false);
+	}
+	
 	public void setSoldSign(boolean sold){
 		TileEntity tileEntity = BewomByte.game.getServer().getWorld(signDimension).getTileEntity(new Vector3i(signX, signY, signZ));
 		NBTCompund nbt = BewomByte.game.getNBTFactory().newNBTCompound();

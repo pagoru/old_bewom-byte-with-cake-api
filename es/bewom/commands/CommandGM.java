@@ -29,7 +29,7 @@ public class CommandGM extends CommandBase {
 	@Override
 	public boolean canBeUsedBy(CommandSender commandSender){
 		if(commandSender.getPlayer() != null){
-			if(BewomUser.getUser(commandSender.getPlayer()).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
+			if(BewomUser.getUser(commandSender.getPlayer()).getPermissionLevel() < BewomUser.PERM_LEVEL_MOD){
 				return false;
 			}
 		}
@@ -39,7 +39,7 @@ public class CommandGM extends CommandBase {
 	@Override
 	public List<String> addTabCompletionOptions(CommandSender sender, String[] args, Vector3i pos){
 		Player player = sender.getPlayer();
-		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return null;
+		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_MOD) return null;
 		List<String> tab = new ArrayList<String>();
 		if(args.length == 2){
 			tab.add("0");
@@ -79,7 +79,7 @@ public class CommandGM extends CommandBase {
 			return;
 		}
 		
-		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
+		if(BewomUser.getUser(player).getPermissionLevel() < BewomUser.PERM_LEVEL_MOD) return;
 		
 		int gm = 0;
 		

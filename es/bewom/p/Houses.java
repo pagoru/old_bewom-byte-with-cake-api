@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -140,10 +141,22 @@ public class Houses {
 						}
 					}
 					if(ab){
-						p.sendMessage(TextFormating.GREEN + "La inmobiliaria de " + TextFormating.GRAY + TextFormating.BOLD + "BANKIA");
-						p.sendMessage(TextFormating.GREEN + "Esta propiedad es de " + BewomUser.getUserNameFromUUID(UUID.fromString(houOwner.getOwner())) + ".");
+						Calendar c1 = BewomUser.getLastLogin(BewomUser.getUserNameFromUUID(UUID.fromString(houOwner.getOwner())));
+						Calendar c2 = Calendar.getInstance();
+						
+						long days = (c2.getTimeInMillis() - c1.getTimeInMillis()) / (1000*60*60*24);
+						
+						if(days < 45){
+							p.sendMessage(TextFormating.GREEN + "La inmobiliaria de " + TextFormating.GRAY + TextFormating.BOLD + "BANKIA");
+							p.sendMessage(TextFormating.GREEN + "Esta propiedad es de " + BewomUser.getUserNameFromUUID(UUID.fromString(houOwner.getOwner())) + ".");
+						} else {
+							p.sendMessage(TextFormating.GREEN + "Esta propiedad era de " + BewomUser.getUserNameFromUUID(UUID.fromString(houOwner.getOwner())) + " y ahora esta a la venta.");
+							houOwner.sellHouse();
+							houOwner = null;
+						}
 					}
-				} else {
+				}
+				if(houOwner == null){
 					if(o == 0 || (o < 2 && u.getPermissionLevel() >= BewomUser.PERM_LEVEL_VIP)){
 						comprar(hou, u, p);
 					} else {
