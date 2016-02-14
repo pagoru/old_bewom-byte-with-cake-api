@@ -20,7 +20,7 @@ public class CommandTpx extends CommandBase{
 	@Override
 	public boolean canBeUsedBy(CommandSender commandSender){
 		if(commandSender.getPlayer() != null){
-			if(BewomUser.getUser(commandSender.getPlayer()).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
+			if(BewomUser.getUser(commandSender.getPlayer()).getPermissionLevel() < BewomUser.PERM_LEVEL_MOD){
 				return false;
 			}
 		}
@@ -32,7 +32,7 @@ public class CommandTpx extends CommandBase{
 		
 		Player p = commandSender.getPlayer();
 		
-		if(BewomUser.getUser(p).getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN) return;
+		if(BewomUser.getUser(p).getPermissionLevel() < BewomUser.PERM_LEVEL_MOD) return;
 		
 		if(p == null)return;
 		int i = Integer.parseInt(args[0]);

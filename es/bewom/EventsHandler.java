@@ -1,5 +1,6 @@
 package es.bewom;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -52,6 +53,8 @@ public class EventsHandler {
 	@EventSuscribe
 	public void onUserJoin(PlayerJoinEvent event) {
 		
+		removeUserCache();
+		
 		Player player = event.getPlayer();		
 		BewomUser user = new BewomUser(player);	
 		if(BewomByte.m.isBanned(player.getUniqueID().toString())){
@@ -72,6 +75,13 @@ public class EventsHandler {
 			}
 			player.setLocation(cp.getLocation());
 		}
+		
+	}
+	
+	private static void removeUserCache(){
+		
+		File f = new File("usercache.json");
+		f.delete();
 		
 	}
 
@@ -163,7 +173,7 @@ public class EventsHandler {
 		
 		playerUpdateGameMode(player);
 		
-		if(u.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
+		if(u.getPermissionLevel() < BewomUser.PERM_LEVEL_MOD){
 			DeniedBlocks.on(game, event);
 		}
 		
@@ -182,7 +192,7 @@ public class EventsHandler {
 		
 		playerUpdateGameMode(player);
 		
-		if(u.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
+		if(u.getPermissionLevel() < BewomUser.PERM_LEVEL_MOD){
 			DeniedBlocks.on(game, event);
 		}
 		
@@ -194,7 +204,7 @@ public class EventsHandler {
 		Player player = event.getPlayer();
 		BewomUser u = BewomUser.getUser(player);
 		
-		if(u.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
+		if(u.getPermissionLevel() < BewomUser.PERM_LEVEL_MOD){
 			DeniedBlocks.on(game, event);
 		}
 		
@@ -208,7 +218,7 @@ public class EventsHandler {
 		
 		playerUpdateGameMode(player);
 				
-		if(u.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
+		if(u.getPermissionLevel() < BewomUser.PERM_LEVEL_MOD){
 			DeniedBlocks.on(game, event);
 		}
 		
@@ -222,7 +232,7 @@ public class EventsHandler {
 		
 		playerUpdateGameMode(player);		
 		
-		if(u.getPermissionLevel() < BewomUser.PERM_LEVEL_ADMIN){
+		if(u.getPermissionLevel() < BewomUser.PERM_LEVEL_MOD){
 			DeniedBlocks.on(game, event);
 		}
 		

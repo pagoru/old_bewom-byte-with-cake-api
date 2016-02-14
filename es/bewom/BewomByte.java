@@ -35,7 +35,7 @@ import es.bewom.util.mysql.MySQL;
 
 public class BewomByte {
 	
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	public static Game game;
 	public static Log log;

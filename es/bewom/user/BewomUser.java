@@ -376,7 +376,11 @@ public class BewomUser {
 	}
 	
 	public int getTimeVip(){
-		return Integer.parseInt(BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + player.getUniqueID() + "'", "timeVip").get(0));
+		String i = BewomByte.m.executeQuery("SELECT * FROM `users` WHERE `uuid`='" + player.getUniqueID() + "'", "timeVip").get(0);
+		if(!i.isEmpty()){
+			return Integer.parseInt(i);
+		}
+		return 0;
 	}
 	
 	public void addTimeVip(int o){
@@ -465,8 +469,8 @@ public class BewomUser {
 						score.removePlayerFromTeams(player);
 						score.addPlayerToTeam(player, team);
 					}
-					BewomByte.game.getCommandDispacher().executeCommand(BewomByte.game.getServer().getCommandSender(), "/deop " + player.getName());
-					player.setGameMode(2);
+					BewomByte.game.getCommandDispacher().executeCommand(BewomByte.game.getServer().getCommandSender(), "/op " + player.getName());
+					player.setGameMode(1);
 				}
 				break;
 			case PERM_VIP:

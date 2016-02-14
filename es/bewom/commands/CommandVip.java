@@ -52,7 +52,7 @@ public class CommandVip extends CommandBase {
 						int t = Integer.parseInt(time.get(0));
 						BewomUser.getUser(player).addTimeVip(t);
 						
-						BewomByte.m.executeQuery("UPDATE `vip_codes` SET `VIC_uuid`='" + player.getUniqueID() + "' WHERE `VIC_uuid`='null' AND `VIC_code`='" + args[0] + "'", null);
+						BewomByte.m.executeQuery("UPDATE `vip_codes` SET `VIC_uuid`='" + player.getUniqueID() + "' WHERE `VIC_uuid` IS NULL AND `VIC_code`='" + args[0] + "'", null);
 						
 						player.sendMessage(TextFormating.DARK_AQUA + "Tu código se ha verificado correctamente, en breve serás vip.");
 					}

@@ -47,9 +47,9 @@ public class CommandEvs extends CommandBase {
 					
 					int HPEVs 			= n.getInteger("EVHP");
 					int attackEVs 		= n.getInteger("EVAttack");
-					int defenseEVs		= n.getInteger("EVDefense");
+					int defenseEVs		= n.getInteger("EVDefence");
 					int spAttackEVs 	= n.getInteger("EVSpecialAttack");
-					int spDefenseEVs	= n.getInteger("EVSpecialDefense");
+					int spDefenseEVs	= n.getInteger("EVSpecialDefence");
 					int speedEVs 		= n.getInteger("EVSpeed");
 					int total 			= HPEVs + attackEVs + defenseEVs + spAttackEVs + spDefenseEVs + speedEVs;
 					int percent 		= (total * 100) / 510;

@@ -47,7 +47,7 @@ public class CommandIvs extends CommandBase {
 					
 					int HPIVs 			= n.getInteger("IVHP");
 					int attackIVs 		= n.getInteger("IVAttack");
-					int defenseIVs		= n.getInteger("IVDefense");
+					int defenseIVs		= n.getInteger("IVDefence");
 					int spAttackIVs 	= n.getInteger("IVSpAtt");
 					int spDefenseIVs	= n.getInteger("IVSpDef");
 					int speedIVs 		= n.getInteger("IVSpeed");
